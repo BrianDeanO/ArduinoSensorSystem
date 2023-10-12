@@ -1,14 +1,15 @@
 #include "src/drivers/example_driver.hpp"
 
+#define CACHE_SIZE 100
+#define DEVICE_COUNT 2
+
 unsigned record_interval = 3600; // 1 hour
 unsigned retry_interval = 300; // 5 minutes
-unsigned device_count = 2;
-DeviceDriver* devices[device_count];
+DeviceDriver* devices[DEVICE_COUNT];
 
-unsigned cache_size = 100;
 unsigned cache_index = 0;
-double cache[device_count][cache_size];
-time_t cache_times[cache_size];
+double cache[DEVICE_COUNT][CACHE_SIZE];
+long long unsigned cache_times[CACHE_SIZE];
 
 bool send_cached_data() {
     // TODO
@@ -19,7 +20,7 @@ bool reconnect() {
 }
 
 void record_data() {
-    for(unsigned i = 0; i < device_count; i++) {
+    for(unsigned i = 0; i < DEVICE_COUNT; i++) {
         DeviceDriver* device = devices[i];
         double value = device->acquire_data_point();
         if(isnan(value)) {
@@ -55,5 +56,5 @@ void loop() {
         }
     }
 
-    delay(record_interval - total_retry_time);
+    delay(record_interval - elapsed_retry_time);
 }
