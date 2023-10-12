@@ -1,3 +1,5 @@
+Static App URL - https://purple-forest-0cc3e4c1e.3.azurestaticapps.net
+
 Making README.md test.
 
 Cyrus edit.
