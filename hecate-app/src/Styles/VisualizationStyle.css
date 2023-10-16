@@ -1,0 +1,32 @@
+/* 
+*****************************************
+CSS Styles for Hecate App Visualizations (Graph)
+*****************************************
+*/
+
+.mainVisualizationBox {
+    display: flex;
+    flex-direction: row;
+    width: 800px;
+    height: 600px;
+    background-color: rgb(247, 247, 247);
+    margin: auto;
+}
+
+/* 
+  Graph Container Styles
+*/
+.mainGraphBox {
+    display: flex;
+    flex-direction: column;
+    height: 590px;
+    width: 750px;
+    margin: 50px auto auto auto;
+    text-align: center;
+}
+
+.chartBox {
+  height: 100%;
+  width:100%;
+  max-width:700px
+}

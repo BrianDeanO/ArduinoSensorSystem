@@ -1,3 +1,11 @@
+@import "./Styles/HeaderStyle.css";
+@import "./Styles/SelectorStyles.css";
+@import "./Styles/VisualizationStyle.css";
+
+:root {
+  --sheetBackground: rgb(177, 174, 174);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +18,24 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+html {
+  background-color: rgb(232, 244, 255)
+}
+
+
+.MainPage {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+.HecateBody {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--sheetBackground);
+  margin: 0px auto;
+  width: 1000px;
+  max-width: 100%;
+  border-style: solid;
 }
