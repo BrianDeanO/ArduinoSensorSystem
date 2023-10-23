@@ -1,0 +1,66 @@
+/* 
+*****************************************
+CSS Styles for Hecate App Header
+*****************************************
+*/
+
+/* 
+  Main Hecate Header Style
+*/
+.MainHecateHeader {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  height: 120px;
+  max-height: 100%;
+  width: 1000px;
+  padding-bottom: 10px;
+  background-color: var(--sheetBackground);
+  margin: 0px auto 0px auto;
+  border-style: solid;
+  border-bottom: none;
+}
+
+/* 
+  Hecate Image Container Styles
+*/
+.ImageBox {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 10px 10px 0px;
+  max-height: 100%;
+  min-width: 200px;
+}
+.HecateLogo {
+  display: flex;
+  height: 100px;
+  width: 395px;
+  margin: auto 10px;
+}
+
+/* 
+  Login Button Styles
+*/
+.MainHeaderLogin {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  width: 80px;
+  color: white;
+  margin: 0px 15px 0px auto;
+}
+.mainLoginButton {
+  height: 40px;
+  width: 85px;
+  background-color: #f7fcff;
+  border-radius: 13px;
+  border-style: solid;
+  color: rgb(0, 0, 0);
+  margin: 10px 0px 10px 0px;
+  font-size: 12pt;
+  font-weight: bold;  
+  &:hover {
+    background-color: #e4e8eb;
+    cursor: pointer;
+  }
+} 
