@@ -11,7 +11,7 @@ CSS Styles for Hecate App Header
   display: flex;
   flex-direction: row;
   flex: auto;
-  height: 120px;
+  height: 130px;
   max-height: 100%;
   width: 1000px;
   padding-bottom: 10px;
@@ -22,11 +22,24 @@ CSS Styles for Hecate App Header
 }
 
 /* 
+  Hecate Version Container Styles
+*/
+.VersionBox {
+  display: flex;
+  height: 20px;
+  width: 395px;
+  margin: 4px 0px 0px 28px;
+  font-size: 10pt;
+  font-weight: bold;
+  color: black;
+}
+
+/* 
   Hecate Image Container Styles
 */
 .ImageBox {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   margin: 10px 10px 10px 0px;
   max-height: 100%;
   min-width: 200px;
@@ -45,18 +58,66 @@ CSS Styles for Hecate App Header
   display: flex;
   flex-direction: column;
   height: 130px;
-  width: 80px;
+  width: 250px;
   color: white;
   margin: 0px 15px 0px auto;
 }
-.mainLoginButton {
-  height: 40px;
+.mainLoginInputBox {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  width: 250px;
+  margin: 0px 15px 0px auto;
+}
+.userNameLoginBox, .passwordLoginBox {
+  display: flex;
+  flex-direction: row;
+  margin: 10px auto;
+  height: 20px;
+  width: 250px;
+  /* background-color: #f7fcff;
+  border-radius: 13px;
+  border-style: solid; */
+  color: rgb(0, 0, 0);
+  font-size: 9.5pt;
+} 
+.loginHeaderText {
+  height: 20px;
   width: 85px;
+  margin: 2px 2px 0px 0px;
+  color: rgb(0, 0, 0);
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: center;
+}
+.loginInputTextArea {
+  margin: 0px 0px 0px 0px;
+  height: 20px;
+  max-height: 20px;
+  width: 150px;
+  color: rgb(0, 0, 0);
+  font-size: 11pt;
+  resize: none;
+} 
+.loggedInText {
+  height: 20px;
+  width: 150px;
+  margin: 2px 2px 0px 0px;
+  color: rgb(0, 0, 0);
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: center;
+  background-color: #e4e8eb;
+}
+.mainLoginButton {
+  margin: 10px auto;
+  height: 40px;
+  width: 100px;
   background-color: #f7fcff;
   border-radius: 13px;
   border-style: solid;
   color: rgb(0, 0, 0);
-  margin: 10px 0px 10px 0px;
+  /* margin: 10px 0px 10px 0px; */
   font-size: 12pt;
   font-weight: bold;  
   &:hover {

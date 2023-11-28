@@ -4,6 +4,15 @@ CSS Styles for Hecate App Selectors (Sensor Type and Time Frame)
 *****************************************
 */
 
+.MainSensorBox {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--sheetBackground);
+    margin: 5px auto 0px auto;
+    height: 115px;
+    width: 1000px;
+    border-bottom-style: solid;
+}
 .mainSelectorBox {
     display: flex;
     flex-direction: row;
@@ -23,7 +32,7 @@ CSS Styles for Hecate App Selectors (Sensor Type and Time Frame)
     flex-direction: column;
     height: 100px;
     width: 200px;
-    margin: 5px 0px 0px auto;
+    margin: 5px 5px 5px auto;
     text-align: center;
     background-color: rgb(92, 92, 92);
     border-radius: 5px;
@@ -61,6 +70,32 @@ CSS Styles for Hecate App Selectors (Sensor Type and Time Frame)
     font-size: 13pt;
 }
 .timeTypeSelector {
+    width: 150px;
+    height: 35px;
+    font-size: 11pt;
+    margin: 10px auto;
+}
+
+/* 
+  Channel Type Selector Styles
+*/
+.channelTypeSelectorBox {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    width: 200px;
+    margin: 5px auto -20px auto;
+    text-align: center;
+    background-color: rgb(92, 92, 92);
+    border-radius: 5px;
+}
+.channelTypeSelectorText {
+    font-weight: bold;
+    color:rgb(255, 255, 255);
+    margin: 10px 0px 0px 0px;
+    font-size: 13pt;
+}
+.channelTypeSelector {
     width: 150px;
     height: 35px;
     font-size: 11pt;

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
-const SensorSelector = () => {
-    const [selectorType, setSelectorType] = useState("");
-    // const [selectorType, setSelectorType] = useState(document.getElementById('sensorType')?.value ? document.getElementById('sensorType')?.value : '');
+const SensorSelector = (sensorList) => {
+    const [selectorType, setSelectorType] = useState('');
 
     // Need to put selectorType in local storage.
 
@@ -16,9 +15,19 @@ const SensorSelector = () => {
                     //@ts-ignore
                     setSelectorType(e.target.value);
                 }}>
-                    <option value={'---'}>---</option>
+                    {
+                        sensorList.map((sensor) => {
+                            return (
+                                <option value={sensor.sensor_type}>
+                                    {sensor.sensor_type}
+                                </option>
+                            )
+                            
+                        })
+                    }
+                    {/* <option value={'---'}>---</option>
                     <option value={'Temperature'}>Temperature</option>
-                    <option value={'Irridiance'}>Irridiance</option>
+                    <option value={'Irradiance'}>Irradiance</option> */}
             </select>
         </div>
     )
