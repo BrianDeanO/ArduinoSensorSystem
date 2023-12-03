@@ -1,10 +1,10 @@
-#include "../device_driver.hpp"
+#include "../driver.hpp"
 
-class ExampleDevice : public DeviceDriver {
+class ExampleDriver : public SensorDriver {
 public:
-	ExampleDevice(const char* id) : _id(id) {}
+	ExampleDriver(const char* id) : _id(id) {}
 
-	const char* id() override {
+	const char* sensor_type_id() override {
 		return _id;
 	}
 

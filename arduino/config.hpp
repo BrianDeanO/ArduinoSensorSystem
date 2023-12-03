@@ -1,0 +1,5 @@
+#pragma once
+
+#define DATAPOINT_CACHE_SIZE 50
+#define SEND_BUFFER_SIZE 256
+#define DEFAULT_RECORD_INTERVAL 3600

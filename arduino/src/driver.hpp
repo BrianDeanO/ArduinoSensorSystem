@@ -1,9 +1,11 @@
+#pragma once
+
 // Interface for device drivers which report a single
 // data point, and the units for that point.
-class DeviceDriver {
+class SensorDriver {
 public:
 	// Request a new data point from the device.
-	virtual const char* id() = 0;
+	virtual const char* sensor_type_id() = 0;
 
 	// Request a new data point from the device.
 	virtual double acquire_data_point() = 0;
