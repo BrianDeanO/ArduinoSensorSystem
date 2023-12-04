@@ -23,12 +23,19 @@ public:
 		record_interval = interval;
 	}
 
+	// The timestamp of the next update
 	time_t next_update() {
 		return last_update + record_interval;
 	}
 
-	virtual void register_device();
+	// Register this device with the server. This should be called once on startup.
+	virtual bool register_device();
+
+	// Instruct sensors to acquire and cache a new data point.
 	virtual void get_data();
+
+	// Send all cached data to the server. This may send multiple packets
+	// to the server if the data does not fit in a single buffer.
 	virtual bool send_data();
 
 private:

@@ -8,9 +8,11 @@ project(device-sim
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(OpenSSL)
+
 add_executable(device-sim
 	simulator/main.cpp
 	src/device.cpp
 )
-target_include_directories(device-sim PRIVATE simulator src)
+target_include_directories(device-sim PRIVATE simulator src src/lib)
 target_compile_definitions(device-sim PRIVATE SIMULATOR)

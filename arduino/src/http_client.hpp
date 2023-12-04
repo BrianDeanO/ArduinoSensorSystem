@@ -6,9 +6,14 @@
 
 class HttpClient {
   public:
-    virtual int get(const char* addr, unsigned port, const char* route,
-                    char* response, unsigned max_size) = 0;
-    virtual int post(const char* addr, unsigned port, const char* route,
-                     const char* body, const char* content_type, char* response,
+    HttpClient(const char* addr, unsigned port) : _addr(addr), _port(port) {}
+
+    virtual int get(const char* route, char* response, unsigned max_size) = 0;
+    virtual int post(const char* route, const char* body,
+                     const char* content_type, char* response,
                      unsigned max_size) = 0;
+
+protected:
+    const char* _addr;
+    unsigned _port;
 };

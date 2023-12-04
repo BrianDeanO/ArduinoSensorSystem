@@ -4,6 +4,7 @@
 #include "src/drivers/example_driver.hpp"
 
 TimeClient time_client;
+// TODO: Implement the sparkfun_tcp class and build a client for it
 // HttpClient http_client;
 
 ExampleDriver driver("temp");

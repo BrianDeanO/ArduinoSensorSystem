@@ -6,6 +6,7 @@
 
 #include "../config.hpp"
 #include "driver.hpp"
+#include "util.hpp"
 
 struct Datapoint {
 	double value;
@@ -27,22 +28,52 @@ public:
 		point.time = time;
 	}
 
-	virtual void serialize(char* buffer) {
-		sprintf(buffer, "{\"id\":\"%s\",\"data\":[", _id);
-		buffer += strlen(buffer) - 1;
+	virtual bool serialize_info(CString& str) {
+		TRY_APPEND(str, "{\"id\":\"");
+		TRY_APPEND(str, _id);
+		TRY_APPEND(str, "\",\"units\":\"");
+		TRY_APPEND(str, _driver->units());
+		TRY_APPEND(str, "\"},");
+		return true;
+	}
+
+	// Serialize this sensor's info into the given buffer.
+	virtual bool serialize_data(CString& str) {
+		// TODO: I am starting to think that json is going to be too inefficient
+		// for the limited memory we have, consider using a binary stream and just
+		// sending the raw bytes over the wire.
+		TRY_APPEND(str, "{\"id\":\"");
+		TRY_APPEND(str, _id);
+		TRY_APPEND(str, "\",\"data\":[");
 
 		if(_cache_index == 0) {
-			sprintf(buffer, "]}");
-			return;
+			TRY_APPEND(str, "]}");
+			return true;
 		}
 
 		while(_cache_index > 0) {
+			if(str.len() + 50 > str.capacity()) {
+				break;
+			}
+
 			Datapoint& point = _cache[--_cache_index];
-			sprintf(buffer, "{\"v\":%lf,\"t\":%ld},", point.value, point.time);
-			buffer += strlen(buffer) - 1;
+			char buffer[16];
+
+			TRY_APPEND(str, "{\"v\":");
+			sprintf(buffer, "%.13lf", point.value);
+			if(!str.append(buffer)) {
+				break;
+			}
+
+			TRY_APPEND(str, ",\"t\":");
+			sprintf(buffer, "%ld", point.time);
+			if(!str.append(buffer)) {
+				break;
+			}
+			TRY_APPEND(str, "},");
 		}
 
-		sprintf(buffer - 1, "]}"); // -1 to cut off trailing comma
+		TRY_APPEND(str, "]}", -1); // -1 to cut off trailing comma
 	}
 
 	void reset() {

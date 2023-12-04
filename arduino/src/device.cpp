@@ -1,11 +1,25 @@
 #include "device.hpp"
 #include "../config.hpp"
+#include "util.hpp"
 
-void Device::register_device() {
+bool Device::register_device() {
 	char buffer[SEND_BUFFER_SIZE];
+	CString str(buffer, SEND_BUFFER_SIZE);
+
+	str.append(R"({"cmd":"r","id":")");
+	str.append(id);
+	str.append(R"(","sensors":[)");
 	for(unsigned i = 0; i < num_sensors; i++) {
 		// TODO: build json string with each sensor's id/units, or have the sensor do it
+		if(!sensors[i].serialize_info(str)) {
+			// TODO: Error handling
+			break;
+		}
 	}
+	str.append("]}");
+
+	int result = http->post("/api/device/register", buffer, "application/json", NULL, 0);
+	return result == 200;
 }
 
 void Device::update() {
@@ -36,7 +50,19 @@ void Device::get_data() {
 
 bool Device::send_data() {
 	char buffer[SEND_BUFFER_SIZE];
+	CString str(buffer, SEND_BUFFER_SIZE);
+
+	str.append(R"({"cmd":"d","id":")");
+	str.append(id);
+	str.append(R"(","data":[)");
 	for(unsigned i = 0; i < num_sensors; i++) {
-		// TODO
+		if(!sensors[i].serialize_data(str)) {
+			// TODO: Error handling
+			break;
+		}
 	}
+	str.append("]}");
+
+	int result = http->post("/api/device/data", buffer, "application/json", NULL, 0);
+	return result == 200;
 }

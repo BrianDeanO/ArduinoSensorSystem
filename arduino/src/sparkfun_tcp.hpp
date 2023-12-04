@@ -5,10 +5,12 @@
 
 #include <Client.h>
 
-class Sparkfun_TCP : public Client {
 // A network client class similar to the Arduino EthernetClient class, made for the SparkFun LTE Shield,
 // the code for which can be found here: https://github.com/sparkfun/SparkFun_LTE_Shield_Arduino_Library 
 
+// A wrapper around the Sparkfun client library, allowing it to be used 
+// as an Arduino Client object, so derivers can use.
+class Sparkfun_TCP : public Client {
 public:
     virtual int connect(IPAddress ip, uint16_t port) =0;
     virtual int connect(const char *host, uint16_t port) =0;

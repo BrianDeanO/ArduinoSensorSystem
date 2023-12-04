@@ -2,7 +2,7 @@
 
 class ExampleDriver : public SensorDriver {
 public:
-	ExampleDriver(const char* id) : _id(id) {}
+	ExampleDriver(const char* id, const char* units) : _id(id), _units(units) {}
 
 	const char* sensor_type_id() override {
 		return _id;
@@ -15,9 +15,10 @@ public:
 
 	// The units this device reports in.
 	const char* units() override {
-		return "C";
+		return _units;
 	}
 
 private:
 	const char* _id;
+	const char* _units;
 };
