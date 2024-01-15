@@ -27,7 +27,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <SparkFun_LTE_Shield_Arduino_Library.h>
+#include "SparkFun_LTE_Shield.h"
 
 #define LTE_SHIELD_STANDARD_RESPONSE_TIMEOUT 1000
 #define LTE_SHIELD_SET_BAUD_TIMEOUT 500

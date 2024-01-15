@@ -1,20 +1,16 @@
 #pragma once
 
-#include <bits/types/time_t.h>
-
 #include "../config.hpp"
 #include "sensor.hpp"
-#include "http_client.hpp"
-#include "time_client.hpp"
+#include "client.hpp"
 
 class Device {
 public:
-	Device(const char* id, Sensor* sensors, int num_sensors, HttpClient* client, TimeClient* time_client) {
-		this->id = id;
+	Device(const char* id, Sensor* sensors, int num_sensors, DataClient* client) {
+		this->_id = id;
 		this->sensors = sensors;
 		this->num_sensors = num_sensors;
-		this->http = client;
-		this->time = time_client;
+		this->client = client;
 	}
 
 	virtual void update();
@@ -24,7 +20,7 @@ public:
 	}
 
 	// The timestamp of the next update
-	time_t next_update() {
+	uint64_t next_update() {
 		return last_update + record_interval;
 	}
 
@@ -39,13 +35,11 @@ public:
 	virtual bool send_data();
 
 private:
-	const char* id;
+	const char* _id;
 	Sensor* sensors;
-	unsigned num_sensors;
+	uint16_t num_sensors;
 
 	unsigned record_interval = DEFAULT_RECORD_INTERVAL;
-	time_t last_update;
-
-	HttpClient* http;
-	TimeClient* time;
+	uint64_t last_update;
+	DataClient* client;
 };

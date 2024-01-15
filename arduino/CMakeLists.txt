@@ -16,3 +16,4 @@ add_executable(device-sim
 )
 target_include_directories(device-sim PRIVATE simulator src src/lib)
 target_compile_definitions(device-sim PRIVATE SIMULATOR)
+target_compile_definitions(device-sim PRIVATE NO_LTE)

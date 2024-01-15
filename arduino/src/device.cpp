@@ -4,35 +4,34 @@
 
 bool Device::register_device() {
 	char buffer[SEND_BUFFER_SIZE];
-	CString str(buffer, SEND_BUFFER_SIZE);
+	SizedBuf buf(buffer, SEND_BUFFER_SIZE);
 
-	str.append(R"({"cmd":"r","id":")");
-	str.append(id);
-	str.append(R"(","sensors":[)");
+	uint8_t command = 1;
+	buf.append((void*)&command, sizeof(uint8_t));
+	buf.append((void*)this->_id, 32);
+	buf.append((void*)this->num_sensors, sizeof(this->num_sensors));
+
 	for(unsigned i = 0; i < num_sensors; i++) {
-		// TODO: build json string with each sensor's id/units, or have the sensor do it
-		if(!sensors[i].serialize_info(str)) {
-			// TODO: Error handling
+		if(!sensors[i].copy_sensor_info(buf)) {
+			// TODO: Error handling on too many sensors for buffer
 			break;
 		}
 	}
-	str.append("]}");
 
-	int result = http->post("/api/device/register", buffer, "application/json", NULL, 0);
-	return result == 200;
+	return client->send(buffer);
 }
 
 void Device::update() {
-	time->update(); // Periodically sync time with the NTP server
+	uint64_t current_time = client->get_time();
 
-	if(time->get_time() >= next_update()) {
+	if(current_time >= next_update()) {
 		get_data();
 		if(send_data()) {
 			// Data successfully sent, reset sensors
 			for(unsigned i = 0; i < num_sensors; i++) {
 				sensors[i].reset();
 			}
-			last_update = time->get_time();
+			last_update = current_time;
 		}
 		else {
 			// Send failed, try again in a minute
@@ -44,25 +43,25 @@ void Device::update() {
 void Device::get_data() {
 	for(unsigned i = 0; i < num_sensors; i++) {
 		Sensor& sensor = sensors[i];
-		sensor.acquire_data_point(time->get_time());
+		sensor.acquire_data_point(client->get_time());
 	}
 }
 
 bool Device::send_data() {
 	char buffer[SEND_BUFFER_SIZE];
-	CString str(buffer, SEND_BUFFER_SIZE);
+	SizedBuf buf(buffer, SEND_BUFFER_SIZE);
 
-	str.append(R"({"cmd":"d","id":")");
-	str.append(id);
-	str.append(R"(","data":[)");
+	uint8_t command = 2;
+	buf.append((void*)&command, sizeof(uint8_t));
+	buf.append((void*)this->_id, 32);
+	buf.append((void*)this->num_sensors, sizeof(this->num_sensors));
+
 	for(unsigned i = 0; i < num_sensors; i++) {
-		if(!sensors[i].serialize_data(str)) {
+		if(!sensors[i].copy_points(buf)) {
 			// TODO: Error handling
 			break;
 		}
 	}
-	str.append("]}");
 
-	int result = http->post("/api/device/data", buffer, "application/json", NULL, 0);
-	return result == 200;
+	return client->send(buffer);
 }
