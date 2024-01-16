@@ -5,7 +5,58 @@
 bool Device::register_device() {
 	char buffer[SEND_BUFFER_SIZE];
 	SizedBuf buf(buffer, SEND_BUFFER_SIZE);
+	get_register_command(buf);
 
+	DEBUG(Serial.println("Sending register command"));
+	return client->send(buf.buffer);
+}
+
+void Device::update() {
+	uint64_t current_time = client->get_time();
+
+	if(current_time >= next_update()) {
+		DEBUG(Serial.println("Starting update"));
+		acquire_data(); // Read data from sensors into cache
+
+		char buffer[SEND_BUFFER_SIZE];
+		SizedBuf buf(buffer, SEND_BUFFER_SIZE);
+
+		bool done = false;
+		while(!done) {
+			done = get_data_command(buf);
+
+			if(client->send(buf.buffer)) {
+				// Data successfully sent, reset sensors that had all
+				// their data sent
+				for(unsigned i = 0; i <= _last_read_sensor; i++) {
+					sensors[i].reset();
+				}
+			}
+			else {
+				// Send failed, try again in a minute
+				for(unsigned i = 0; i <= num_sensors; i++) {
+					// Tell all sensors with data to resend all their
+					// data again next time we read from them.
+					sensors[i].reset_last_sent();
+				}
+
+				Serial.println("Failed to send data, retrying in 60 seconds");
+				delay(60000);
+			}
+		}
+
+		last_update = current_time;
+	}
+}
+
+void Device::acquire_data() {
+	for(unsigned i = 0; i < num_sensors; i++) {
+		Sensor& sensor = sensors[i];
+		sensor.acquire_data_point(client->get_time());
+	}
+}
+
+void Device::get_register_command(SizedBuf& buf) {
 	uint8_t command = 1;
 	buf.append((void*)&command, sizeof(uint8_t));
 	buf.append((void*)this->_id, 32);
@@ -17,40 +68,9 @@ bool Device::register_device() {
 			break;
 		}
 	}
-
-	return client->send(buffer);
 }
 
-void Device::update() {
-	uint64_t current_time = client->get_time();
-
-	if(current_time >= next_update()) {
-		get_data();
-		if(send_data()) {
-			// Data successfully sent, reset sensors
-			for(unsigned i = 0; i < num_sensors; i++) {
-				sensors[i].reset();
-			}
-			last_update = current_time;
-		}
-		else {
-			// Send failed, try again in a minute
-			last_update += 60;
-		}
-	}
-}
-
-void Device::get_data() {
-	for(unsigned i = 0; i < num_sensors; i++) {
-		Sensor& sensor = sensors[i];
-		sensor.acquire_data_point(client->get_time());
-	}
-}
-
-bool Device::send_data() {
-	char buffer[SEND_BUFFER_SIZE];
-	SizedBuf buf(buffer, SEND_BUFFER_SIZE);
-
+bool Device::get_data_command(SizedBuf& buf) {
 	uint8_t command = 2;
 	buf.append((void*)&command, sizeof(uint8_t));
 	buf.append((void*)this->_id, 32);
@@ -58,10 +78,10 @@ bool Device::send_data() {
 
 	for(unsigned i = 0; i < num_sensors; i++) {
 		if(!sensors[i].copy_points(buf)) {
-			// TODO: Error handling
-			break;
+			return false;
 		}
+		_last_read_sensor = i;
 	}
 
-	return client->send(buffer);
+	return true;
 }

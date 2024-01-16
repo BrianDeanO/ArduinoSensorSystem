@@ -12,11 +12,11 @@
 // }
 
 struct SizedBuf {
-	char* buf;
+	char* buffer;
 	uint32_t len;
 	uint32_t max_size;
 
-	SizedBuf(char* array, uint32_t max_size) : buf(array), max_size(max_size) {}
+	SizedBuf(char* array, uint32_t max_size) : buffer(array), max_size(max_size) {}
 	bool has_capacity(uint32_t size) {
 		return (this->len + size + 1 > max_size); // +1 to account for a null terminator
 	}
@@ -28,8 +28,8 @@ struct SizedBuf {
 			return;
 		}
 
-		memcpy(this->buf + len, src, size);
+		memcpy(this->buffer + len, src, size);
 		len += size;
-		*(this->buf + len) = 0; // Null terminate
+		*(this->buffer + len) = 0; // Null terminate
 	}
 };

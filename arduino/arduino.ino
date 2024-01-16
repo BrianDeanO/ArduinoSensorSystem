@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+#include "config.hpp"
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
 
@@ -21,7 +22,8 @@ Device device("test", sensors, 1, &client);
 
 void setup() {
     Serial.begin(9600);
-    while(!Serial); // Wait for Serial (USB Serial connection) to start up for logging
+    DEBUG(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
+    DEBUG(Serial.println("Program Start"));
 
 #ifndef NO_LTE
     // Use hardware serial port 1 to communicate with the lte shield
@@ -45,5 +47,11 @@ void setup() {
 
 void loop() {
     device.update();
-    delay(device.next_update() - client.get_time());
+
+    uint16_t ms = device.next_update() - client.get_time();
+    DEBUG(Serial.println("Waiting " + String(ms)));
+    delay(ms);
+#ifdef NO_LTE
+    client.fake_last_time += ms;
+#endif
 }

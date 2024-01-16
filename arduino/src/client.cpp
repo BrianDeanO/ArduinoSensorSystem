@@ -8,7 +8,7 @@ uint64_t DataClient::get_time() {
 	#ifdef SIMULATOR
 		return time(NULL);
 	#else
-		return 0;
+		return fake_last_time;
 	#endif
 }
 

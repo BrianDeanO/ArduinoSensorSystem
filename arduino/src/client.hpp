@@ -6,6 +6,10 @@ class DataClient {
 public:
     virtual bool send(const char* command);
     virtual uint64_t get_time();
+
+#ifdef NO_LTE
+    uint64_t fake_last_time = 0;
+#endif
 };
 
 #ifndef NO_LTE
