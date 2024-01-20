@@ -4,7 +4,7 @@
 
 class DataClient {
 public:
-    virtual bool send(const char* command);
+    virtual bool send(const char* command, uint32_t size);
     virtual uint64_t get_time();
 
 #ifdef NO_LTE
@@ -18,7 +18,7 @@ public:
 class LTEClient : public DataClient {
 public:
     LTEClient(LTE_Shield* lte);
-    bool send(const char* command) override;
+    bool send(const char* command, uint32_t size) override;
     uint64_t get_time() override;
 
     LTE_Shield* lte;

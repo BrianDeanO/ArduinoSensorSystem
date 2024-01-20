@@ -1267,6 +1267,27 @@ LTE_Shield_error_t LTE_Shield::socketWrite(int socket, const char *str)
     return err;
 }
 
+LTE_Shield_error_t LTE_Shield::socketWrite(int socket, const char *str, size_t len)
+{
+    char *command;
+    LTE_Shield_error_t err;
+
+    command = lte_calloc_char(strlen(LTE_SHIELD_WRITE_SOCKET) + 8);
+    if (command == NULL)
+        return LTE_SHIELD_ERROR_OUT_OF_MEMORY;
+    sprintf(command, "%s=%d,%d", LTE_SHIELD_WRITE_SOCKET, socket, len);
+
+    err = sendCommandWithResponse(command, "@", NULL,
+                                  LTE_SHIELD_STANDARD_RESPONSE_TIMEOUT);
+
+    hwWrite(str, len);
+
+    err = waitForResponse(LTE_SHIELD_RESPONSE_OK, LTE_SHIELD_SOCKET_WRITE_TIMEOUT);
+
+    free(command);
+    return err;
+}
+
 LTE_Shield_error_t LTE_Shield::socketWrite(int socket, String str)
 {
     return socketWrite(socket, str.c_str());
@@ -1917,6 +1938,22 @@ size_t LTE_Shield::hwPrint(const char *s)
     else if (_softSerial != NULL)
     {
         return _softSerial->print(s);
+    }
+#endif
+
+    return (size_t)0;
+}
+
+size_t LTE_Shield::hwWrite(const char *s, size_t size)
+{
+    if (_hardSerial != NULL)
+    {
+        return _hardSerial->write(s, size);
+    }
+#ifdef LTE_SHIELD_SOFTWARE_SERIAL_ENABLED
+    else if (_softSerial != NULL)
+    {
+        return _softSerial->write(s, size);
     }
 #endif
 

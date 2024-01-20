@@ -1,7 +1,19 @@
 #include "client.hpp"
 
-bool DataClient::send(const char* command) {
-	Serial.println("COMMAND: " + String(command));
+bool DataClient::send(const char* command, uint32_t size) {
+	DEBUG(
+		Serial.print("COMMAND BYTES: ");
+		char* c = command;
+		while(*c) {
+			Serial.print(*c, HEX);
+			Serial.print(" ");
+			c += 1;
+		}
+		Serial.println();
+	)
+
+	Serial.print("COMMAND: [" + String(size) + "]:");
+	Serial.write(command, size);
 }
 
 uint64_t DataClient::get_time() {
@@ -15,7 +27,7 @@ uint64_t DataClient::get_time() {
 #ifndef NO_LTE
 LTEClient::LTEClient(LTE_Shield* lte) : lte(lte) {}
 
-bool LTEClient::send(const char* command) {
+bool LTEClient::send(const char* command, uint32_t size) {
 	LTE_Shield_error_t err;
 	int socket = lte->socketOpen(LTE_SHIELD_TCP);
 
@@ -24,7 +36,7 @@ bool LTEClient::send(const char* command) {
 		Serial.println("Error connecting during send: LTE Error " + String(err));
 	}
 
-	err = lte->socketWrite(socket, command);
+	err = lte->socketWrite(socket, command, size);
 	if(err != LTE_SHIELD_ERROR_SUCCESS){
 		Serial.println("Error writing to socket during send: LTE Error " + String(err));
 	}

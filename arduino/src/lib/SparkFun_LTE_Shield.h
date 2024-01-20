@@ -286,6 +286,7 @@ public:
     LTE_Shield_error_t socketClose(int socket, int timeout = 1000);
     LTE_Shield_error_t socketConnect(int socket, const char *address, unsigned int port);
     LTE_Shield_error_t socketWrite(int socket, const char *str);
+    LTE_Shield_error_t socketWrite(int socket, const char *str, size_t len);
     LTE_Shield_error_t socketWrite(int socket, String str);
     LTE_Shield_error_t socketRead(int socket, int length, char *readDest);
     LTE_Shield_error_t socketListen(int socket, unsigned int port);
@@ -382,6 +383,7 @@ private:
     // UART Functions
     size_t hwPrint(const char *s);
     size_t hwWrite(const char c);
+    size_t hwWrite(const char *s, size_t size);
     int readAvailable(char *inString);
     char readChar(void);
     int hwAvailable(void);

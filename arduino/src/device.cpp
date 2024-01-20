@@ -8,7 +8,7 @@ bool Device::register_device() {
 	get_register_command(buf);
 
 	DEBUG(Serial.println("Sending register command"));
-	return client->send(buf.buffer);
+	return client->send(buf.buffer, buf.len);
 }
 
 void Device::update() {
@@ -23,9 +23,11 @@ void Device::update() {
 
 		bool done = false;
 		while(!done) {
+			buf.clear();
 			done = get_data_command(buf);
 
-			if(client->send(buf.buffer)) {
+			DEBUG(Serial.println("Command len: " + String(buf.len)));
+			if(client->send(buf.buffer, buf.len)) {
 				// Data successfully sent, reset sensors that had all
 				// their data sent
 				for(unsigned i = 0; i <= _last_read_sensor; i++) {
@@ -51,8 +53,9 @@ void Device::update() {
 
 void Device::acquire_data() {
 	for(unsigned i = 0; i < num_sensors; i++) {
-		Sensor& sensor = sensors[i];
-		sensor.acquire_data_point(client->get_time());
+		for(unsigned j = 0; j < 10; j++) {
+			sensors[i].acquire_data_point(client->get_time());
+		}
 	}
 }
 
@@ -77,7 +80,9 @@ bool Device::get_data_command(SizedBuf& buf) {
 	buf.append((void*)this->num_sensors, sizeof(this->num_sensors));
 
 	for(unsigned i = 0; i < num_sensors; i++) {
+		DEBUG(Serial.println("Getting points from sensor " + String(i)));
 		if(!sensors[i].copy_points(buf)) {
+			DEBUG(Serial.println("Sensor " + String(i) + " copy_points returned false. buf.len = " + String(buf.len)));
 			return false;
 		}
 		_last_read_sensor = i;
