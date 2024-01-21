@@ -1,13 +1,12 @@
 #pragma once
 
 #define NO_LTE
-
-// Debug macro, if 
 #define DEBUG_MODE 1
-#if DEBUG_MODE == 1
+
+#if DEBUG_MODE == 1 && !defined(SIMULATOR)
 	#define DEBUG(expr) expr
 #else
-	#define DEBUG(expr) (void)
+	#define DEBUG(expr)
 #endif
 
 #define DATAPOINT_CACHE_SIZE 50
@@ -19,4 +18,7 @@
 #ifndef SIMULATOR
 	#include "Arduino.h"
 	#define LTE_SHIELD_HW_SERIAL Serial1
+#else
+	#include <cstdint>
+	#include <cstring>
 #endif

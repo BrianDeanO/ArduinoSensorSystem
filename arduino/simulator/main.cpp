@@ -1,10 +1,11 @@
 #include <iostream>
 
-#include "sim_http_client.hpp"
-#include "time_client.hpp"
+#include "sim_client.hpp"
 #include "device.hpp"
-
 #include "drivers/example_driver.hpp"
+
+#include <unistd.h>
+#include <vector>
 
 void print_menu() {
 	std::cout << "1) Start simulated device\n"
@@ -17,8 +18,7 @@ void print_menu() {
 }
 
 void run_sim_device(std::string addr, unsigned port) {
-	TimeClient time;
-	HttpSim http(addr.c_str(), port);
+	SimClient client(addr.c_str(), port);
 
 	std::vector<Sensor> sensors;
 	std::string id, input;
@@ -31,7 +31,7 @@ void run_sim_device(std::string addr, unsigned port) {
 
 	ExampleDriver driver("temp", "C");
 	sensors.push_back(Sensor("Temperature 1", &driver));
-	Device device(id.c_str(), sensors.data(), sensors.size(), &http, &time);
+	Device device(id.c_str(), sensors.data(), sensors.size(), &client);
 	device.set_record_interval(update_interval);
 
 	std::cout << "Registering device..." << std::endl;
@@ -41,7 +41,7 @@ void run_sim_device(std::string addr, unsigned port) {
 	while(true) {
 		std::cout << "Update event." << std::endl;
 		device.update();
-		sleep(device.next_update() - time.get_time());
+		usleep((device.next_update() - client.get_time()) * 1000000);
 	}
 }
 

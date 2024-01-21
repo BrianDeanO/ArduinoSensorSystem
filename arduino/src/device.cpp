@@ -33,6 +33,7 @@ void Device::update() {
 				for(unsigned i = 0; i <= _last_read_sensor; i++) {
 					sensors[i].reset();
 				}
+				break;
 			}
 			else {
 				// Send failed, try again in a minute
@@ -42,8 +43,7 @@ void Device::update() {
 					sensors[i].reset_last_sent();
 				}
 
-				Serial.println("Failed to send data, retrying in 60 seconds");
-				delay(60000);
+				DEBUG(Serial.println("Failed to send packet"));
 			}
 		}
 
@@ -63,7 +63,7 @@ void Device::get_register_command(SizedBuf& buf) {
 	uint8_t command = 1;
 	buf.append((void*)&command, sizeof(uint8_t));
 	buf.append((void*)this->_id, 32);
-	buf.append((void*)this->num_sensors, sizeof(this->num_sensors));
+	buf.append((void*)&this->num_sensors, sizeof(this->num_sensors));
 
 	for(unsigned i = 0; i < num_sensors; i++) {
 		if(!sensors[i].copy_sensor_info(buf)) {
@@ -77,7 +77,7 @@ bool Device::get_data_command(SizedBuf& buf) {
 	uint8_t command = 2;
 	buf.append((void*)&command, sizeof(uint8_t));
 	buf.append((void*)this->_id, 32);
-	buf.append((void*)this->num_sensors, sizeof(this->num_sensors));
+	buf.append((void*)&this->num_sensors, sizeof(this->num_sensors));
 
 	for(unsigned i = 0; i < num_sensors; i++) {
 		DEBUG(Serial.println("Getting points from sensor " + String(i)));

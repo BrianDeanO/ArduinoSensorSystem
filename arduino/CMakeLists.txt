@@ -12,8 +12,14 @@ find_package(OpenSSL)
 
 add_executable(device-sim
 	simulator/main.cpp
+	simulator/sim_client.cpp
 	src/device.cpp
+	src/client.cpp
 )
 target_include_directories(device-sim PRIVATE simulator src src/lib)
 target_compile_definitions(device-sim PRIVATE SIMULATOR)
 target_compile_definitions(device-sim PRIVATE NO_LTE)
+
+add_executable(serial-proxy
+	serial_proxy/main.cpp
+)

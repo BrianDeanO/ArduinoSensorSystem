@@ -12,7 +12,7 @@ Sensor sensors[1] = { Sensor("Temperature 1", &driver) };
     #define LTE_POWER_PIN 5
     #define LTE_RESET_PIN 6
     LTE_Shield g_lte(LTE_POWER_PIN, LTE_RESET_PIN);
-    LTEClient client(&g_lte);
+    LTEClient client(&g_lte, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 #else
     DataClient client;
 #endif
