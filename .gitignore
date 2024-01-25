@@ -1,2 +1,5 @@
-# dependencies from web app
-/hecate-app/node_modules
+node_modules
+hecate-app/node_modules
+.vscode
+backend-app/bin
+backend-app/obj

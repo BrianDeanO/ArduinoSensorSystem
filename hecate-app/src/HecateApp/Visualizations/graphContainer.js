@@ -10,7 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { monthsOfTheYear as labels } from "../Helpers/monthsOfTheYear";
+import NoData from "../Helpers/NoDataPopUp.tsx";
 
 ChartJS.register(
   CategoryScale,
@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+export const options = (min, max, dataLabel, dataTitle) => ({
   responsive: true,
   plugins: {
     legend: {
@@ -30,48 +30,52 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Stonks',
+      text: dataTitle,
     }
   },
   scales: {
     y: {
-      min: 0,
-      max: 20,
+      min: (((min - Math.ceil(min / 4) < 0) && (min > 0)) ? 0 : (min - Math.ceil(min / 4))),
+      max: max + Math.ceil(max / 4),
       ticks: {
-        // Include a dollar sign in the ticks
         callback: function(value, index, ticks) {
-          return '$' + value + ' mil';
+          // return value + ` ${dataLabel}`;
+          return value;
       }
       }
     }
   }
-};
+});
 
-export const data = {
-  labels,
+export const data = (values, times) => ({
+  labels: times,
   datasets: [
     {
       label: 'Hecate Project',
-      data: [5, 12, 8, 5, 5, 11, 14, 8, 11, 5, 6, 12],
+      data: values,
       // Could do  different colors based on sensor type
       borderColor: 'rgb(0, 128, 0)',
       backgroundColor: 'rgba(0, 128, 0, 0.856)',
-    },
-  //   {
-  //     label: 'Dataset 2',
-  //     data: [0, 2, 8, 16, 8, 4, 15, 11, 10, 7, 4, 15],
-  //     borderColor: 'rgb(53, 162, 235)',
-  //     backgroundColor: 'rgba(53, 162, 235, 0.5)',
-  //   },
+    }
   ],
-};
+});
 
-const GraphContainer = () => {
-    return (
-        <div className="mainGraphBox">
-            <Line options={options} data={data}/>
-        </div>
-    )
+const GraphContainer = (values, times, dataLabel, dataTitle, maxValue, minValue) => {
+  // console.log('graph recieved data', values.values);
+  // console.log('graph recieved times', values.times);
+  // console.log('graph recieved dataLabel', values.dataLabel);
+  // console.log('graph recieved maxValue', values.maxValue);
+  // console.log('graph recieved minValue', values.minValue);
+
+  return (
+      <div className="mainGraphBox">
+          { 
+            values.values ? 
+              <Line options = {options(values.minValue, values.maxValue, values.dataLabel, values.dataTitle)} data={data(values.values, values.times)}/> : 
+              <NoData />
+          }
+      </div>
+  )
 }
 
 export default GraphContainer;
