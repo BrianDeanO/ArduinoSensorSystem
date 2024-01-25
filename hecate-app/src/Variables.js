@@ -1,7 +1,31 @@
-export const version = '1.0';
+export const version = "1.0";
+export const proxyURL = "https://localhost:7239";
 
-export  const variables = {
-    API_URL: 'http://localhost:7239/api/'
+export  const apiInfo = {
+    USERS: {
+        URL: `${proxyURL}/api/Users`,
+        INDEX: 1
+    },
+    DEVICES: {
+        URL: `${proxyURL}/api/Devices`,
+        INDEX: 2
+    },
+    USER_DEVICES: {
+        URL: `${proxyURL}/api/UserDevices`,
+        INDEX: 3
+    },
+    SENSORS: {
+        URL: `${proxyURL}/api/Sensors`,
+        INDEX: 4
+    },
+    DEVICE_SENSORS: {
+        URL: `${proxyURL}/api/DeviceSensors`,
+        INDEX: 5
+    },
+    SENSOR_DATA: {
+        URL: `${proxyURL}/api/SensorDatas`,
+        INDEX: 6
+    },
 }
 
 export const dataObject = (temp, unit, time) => {
@@ -13,38 +37,170 @@ export const dataObject = (temp, unit, time) => {
 }
 
 export const userTable = [
-    {user_ID: 1, user_type: 'admin', user_name: 'Han', user_password: '123', user_email: ''},
-    {user_ID: 2, user_type: 'basic', user_name: 'Luke', user_password: '456', user_email: ''},
-    {user_ID: 3, user_type: 'basic', user_name: 'Leia', user_password: '789', user_email: ''},
+    {
+        user_ID: 1, 
+        user_type: "admin", 
+        user_name: "Han", 
+        user_password: "123", 
+        user_email: "",
+        user_phone: "",
+        user_notifications: true
+    },
+    {
+        user_ID: 2,
+        user_type: "basic", 
+        user_name: "Leia", 
+        user_password: "456", 
+        user_email: "",
+        user_phone: "",
+        user_notifications: false
+    },
+    {
+        user_ID: 3, 
+        user_type: "basic", 
+        user_name: "Luke", 
+        user_password: "789", 
+        user_email: "",
+        user_phone: "",
+        user_notifications: true
+    },
 ]
 
-export const userSensorEntriesTable = [
-    {user_ID: 1, sensor_ID: 1},
-    {user_ID: 1, sensor_ID: 2},
-    {user_ID: 1, sensor_ID: 3},
-    {user_ID: 2, sensor_ID: 1},
-    {user_ID: 3, sensor_ID: 1},
-    {user_ID: 3, sensor_ID: 2}
+export const deviceTable = [
+    {device_ID: 1, device_name: "RICHLAND_NW_1", device_type: "ARDUINO", zip_code: 99352},
+    {device_ID: 2, device_name: "KENNEWICK_N_1", device_type: "ARDUINO", zip_code: 99336},
+    {device_ID: 3, device_name: "PASCO_E_1", device_type: "ARDUINO", zip_code: 99301}
+]
+
+export const userDeviceEntriesTable = [
+    {user_ID: 1, device_ID: 1},
+    {user_ID: 1, device_ID: 2},
+    {user_ID: 1, device_ID: 3},
+    {user_ID: 2, device_ID: 1},
+    {user_ID: 3, device_ID: 1},
+    {user_ID: 3, device_ID: 2}
+]
+
+export const deviceSensorEntriesTable = [
+    {device_ID: 1, "sensorID": 1},
+    {device_ID: 1, "sensorID": 2},
+    {device_ID: 2, "sensorID": 3},
+    {device_ID: 3, "sensorID": 4},
 ]
 
 export const sensorTable = [
-    {sensor_ID: 1, sensor_name: 'TEMP_1', sensor_type: 'Temperature', channel_count: 2},
-    {sensor_ID: 2, sensor_name: 'IRRAD_1', sensor_type: 'Irradiance', channel_count: 1},
-    {sensor_ID: 3, sensor_name: 'PRESSURE_1', sensor_type: 'Pressure', channel_count: 2}
+    {"sensorID": 1, "sensorName": "TEMP_1", "sensorType": "Temperature", "channelCount": 2},
+    {"sensorID": 2, "sensorName": "IRRAD_1", "sensorType": "Irradiance", "channelCount": 1},
+    {"sensorID": 3, "sensorName": "PRESSURE_1", "sensorType": "Pressure", "channelCount": 2},
+    {"sensorID": 4, "sensorName": "TEMP_2", "sensorType": "Temperature", "channelCount": 2},
 ]
 
 export const sensorDataTable = [
-    {data_ID: 1, sensor_ID: 1, channel_ID: 1, data_value: 13, data_unit: 'F', time_recorded: '08:00'},
-    {data_ID: 2, sensor_ID: 1, channel_ID: 1, data_value: 14, data_unit: 'F', time_recorded: '09:00'},
-    {data_ID: 3, sensor_ID: 1, channel_ID: 2, data_value: 15, data_unit: 'F', time_recorded: '10:00'},
-    {data_ID: 4, sensor_ID: 1, channel_ID: 2, data_value: 12, data_unit: 'F', time_recorded: '11:00'},
-    {data_ID: 5, sensor_ID: 1, channel_ID: 2, data_value: 16, data_unit: 'F', time_recorded: '12:00'},
-    {data_ID: 6, sensor_ID: 1, channel_ID: 1, data_value: 19, data_unit: 'F', time_recorded: '13:00'},
-    {data_ID: 7, sensor_ID: 2, channel_ID: 1, data_value: 1361, data_unit: 'W/m^2', time_recorded: '14:00'},
-    {data_ID: 8, sensor_ID: 2, channel_ID: 1, data_value: 1459, data_unit: 'W/m^2', time_recorded: '15:00'},
-    {data_ID: 9, sensor_ID: 3, channel_ID: 1, data_value: 30, data_unit: 'atm', time_recorded: '16:00'},
-    {data_ID: 10, sensor_ID: 3, channel_ID: 2, data_value: 31, data_unit: 'atm', time_recorded: '17:00'},
-    {data_ID: 11, sensor_ID: 3, channel_ID: 1, data_value: 33, data_unit: 'atm', time_recorded: '18:00'},
-    {data_ID: 12, sensor_ID: 3, channel_ID: 2, data_value: 29, data_unit: 'atm', time_recorded: '19:00'},
-    {data_ID: 13, sensor_ID: 3, channel_ID: 1, data_value: 31, data_unit: 'atm', time_recorded: '20:00'}
+    {sensorDataID: 1, "sensorID": 1, "channelID": 1, "dataValue": 13, "dataUnit": "F", "timeRecorded": "08:00"},
+    {sensorDataID: 2, "sensorID": 1, "channelID": 1, "dataValue": 14, "dataUnit": "F", "timeRecorded": "09:00"},
+    {sensorDataID: 3, "sensorID": 1, "channelID": 2, "dataValue": 15, "dataUnit": "F", "timeRecorded": "10:00"},
+    {sensorDataID: 4, "sensorID": 1, "channelID": 2, "dataValue": 12, "dataUnit": "F", "timeRecorded": "11:00"},
+    {sensorDataID: 5, "sensorID": 1, "channelID": 2, "dataValue": 16, "dataUnit": "F", "timeRecorded": "12:00"},
+    {sensorDataID: 6, "sensorID": 1, "channelID": 1, "dataValue": 19, "dataUnit": "F", "timeRecorded": "13:00"},
+    {sensorDataID: 7, "sensorID": 2, "channelID": 1, "dataValue": 1361, "dataUnit": "W/m^2", "timeRecorded": "14:00"},
+    {sensorDataID: 8, "sensorID": 2, "channelID": 1, "dataValue": 1459, "dataUnit": "W/m^2", "timeRecorded": "15:00"},
+    {sensorDataID: 9, "sensorID": 3, "channelID": 1, "dataValue": 30, "dataUnit": "atm", "timeRecorded": "16:00"},
+    {sensorDataID: 10, "sensorID": 3, "channelID": 2, "dataValue": 31, "dataUnit": "atm", "timeRecorded": "17:00"},
+    {sensorDataID: 11, "sensorID": 3, "channelID": 1, "dataValue": 33, "dataUnit": "atm", "timeRecorded": "18:00"},
+    {sensorDataID: 12, "sensorID": 3, "channelID": 2, "dataValue": 29, "dataUnit": "atm", "timeRecorded": "19:00"},
+    {sensorDataID: 13, "sensorID": 3, "channelID": 1, "dataValue": 31, "dataUnit": "atm", "timeRecorded": "20:00"}
+]
+
+export const sensorDataTable2 = [
+    {
+        "channelID": 1, 
+        "dataValue": 13, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-01T18:42:27.069Z",
+        "sensorID": 1
+    },
+    {
+        "channelID": 1, 
+        "dataValue": 14, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-02T18:42:27.069Z",
+        "sensorID": 1
+    },
+    { 
+        "channelID": 2, 
+        "dataValue": 15, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-03T18:42:27.069Z",
+        "sensorID": 1
+    },
+    {
+        "channelID": 2, 
+        "dataValue": 12, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-04T18:42:27.069Z",
+        "sensorID": 1
+    },
+    { 
+        "channelID": 2, 
+        "dataValue": 16, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-05T18:42:27.069Z",
+        "sensorID": 1
+    },
+    {
+        "channelID": 1, 
+        "dataValue": 19, 
+        "dataUnit": "F", 
+        "timeRecorded": "2024-01-06T18:42:27.069Z",
+        "sensorID": 1
+    },
+    { 
+        "channelID": 1, 
+        "dataValue": 1361, 
+        "dataUnit": "W/m^2", 
+        "timeRecorded": "2024-01-07T18:42:27.069Z",
+        "sensorID": 2
+    },
+    { 
+        "channelID": 1, 
+        "dataValue": 1459,
+        "dataUnit": "W/m^2",
+        "timeRecorded": "2024-01-08T18:42:27.069Z",
+        "sensorID": 2
+    },
+    { 
+        "channelID": 1, 
+        "dataValue": 30,
+        "dataUnit": "atm",
+        "timeRecorded": "2024-01-09T18:42:27.069Z",
+        "sensorID": 3
+    },
+    { 
+        "channelID": 2, 
+        "dataValue": 31,
+        "dataUnit": "atm", 
+        "timeRecorded": "2024-01-10T18:42:27.069Z",
+        "sensorID": 3
+    },
+    { 
+        "channelID": 1, 
+        "dataValue": 33,
+        "dataUnit": "atm",
+        "timeRecorded": "2024-01-11T18:42:27.069Z",
+        "sensorID": 3
+    },
+    { 
+        "channelID": 2, 
+        "dataValue": 29,
+        "dataUnit": "atm", 
+        "timeRecorded": "2024-01-12T18:42:27.069Z",
+        "sensorID": 3
+    },
+    { 
+        "channelID": 1, 
+        "dataValue": 31, 
+        "dataUnit": "atm", 
+        "timeRecorded": "2024-01-13T18:42:27.069Z",
+        "sensorID": 3
+    }
 ]

@@ -5,33 +5,171 @@ import HecateBody  from "./HecateApp/HecateBody.tsx";
 // import TemperatureVisualizationBox from "./Visualizations/visualizationBox";
 import TemperatureVisualizationBox from "./HecateApp/Visualizations/TemperatureVisualizationBox.tsx";
 import VisualizationBox from "./HecateApp/Visualizations/VisualizationBox.tsx";
+import DataSelectors from "./HecateApp/Visualizations/DataSelectors.tsx"
 import {BrowserRouter, Route, Routes, NavLink } from 'react-router-dom';
 import GraphContainer from "./HecateApp/Visualizations/graphContainer";
-import { sensorTable, version } from "./Variables.js";
-import { userTable, userSensorEntriesTable, sensorDataTable } from "./Variables.js";
-
-
+import { 
+    userTable, 
+    deviceTable, 
+    deviceInfoType,
+    userDeviceEntriesTable, 
+    deviceSensorEntriesTable,
+    sensorTable, 
+    sensorDataTable, 
+    userDeviceEntries, 
+    version,
+    apiInfo
+} from "./Variables.js";
+import { 
+    fetchList, 
+    fetchUserList, 
+    fetchDeviceList,
+    fetchUserDevice,
+    fetchUserDevicesList 
+} from "./HecateApp/Helpers/FetchDataFunctions.tsx";
 
 const HecateApp = () => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log('userInfo', userInfo)
+    // const userInfo = {};
+    // console.log('userInfo', userInfo)
 
-    const [loggedIn, setLoggedIn] = useState((userInfo && (userInfo.currentUserID !== '')) ? true : false);
+    const [loggedIn, setLoggedIn] = useState((userInfo && (userInfo.currentUserID !== null)) ? true : false);
     const [selectedSensorInfo, setSelectedSensorInfo] = useState('---');
+    const [selectedDevice, setSelectedDevice] = useState({});
     const [timeType, setTimeType] = useState('');
     const [userName, setUserName] = useState(userInfo ? userInfo.currentUserName : '');
     const [password, setPassword] = useState('');
     const [userID, setUserID] = useState(userInfo ? userInfo.currentUserID : null);
-    const [userSensors, setUserSensors] = useState(userInfo ? userInfo.sensors : []);
-    // console.log('usernmae', userName);
-    // console.log('password', password)
+    const [users, setUsers] = useState([]);
+    const [devices, setDevices] = useState([]);
+    const [sensors, setSensors] = useState([]);
+    const [sensorData, setSensorData] = useState([]);
+    const [userDevices, setUserDevices] = useState([]);
+    const [deviceSensors, setDeviceSensors] = useState([]);
 
-    console.log('selectedSensorInfo', selectedSensorInfo)
+
+    const [refreshInterval, setRefreshInterval] = useState(10000);
+    // console.log('BEFORE DEVICES', devices);
+
+    // console.log('totla refresh?????????')
+
+    useEffect(() => {
+        if(loggedIn) {
+            console.log('userName', userName)
+            logInUser(userName, password);
+        }
+    })
+
+
+    useEffect(() => {
+        const fetchData = async (apiURL, apiIndex) => {
+            await fetch(apiURL)
+                .then((response) => {return response.json().then((responseData) => {
+                    // console.log('responseData', responseData)
+
+                    switch(apiIndex) {
+                        case apiInfo.USERS.INDEX:
+                            setUsers(responseData);
+                            break;
+
+                        case apiInfo.DEVICES.INDEX:
+                            setDevices(responseData);
+
+                            // if(userID && loggedIn) {
+                            //     const tempUserDeviceURL = `${apiInfo.USER_DEVICES.URL}/${userID}:${responseData.deviceID}`;
+                            //     fetchData(tempUserDeviceURL, apiInfo.USER_DEVICES.INDEX);
+                            // }
+                            break;
+
+                        case apiInfo.USER_DEVICES.INDEX:
+                            // let tempUserDeviceArray = userDevices;
+                            // console.log('PUSH USER DEVICES', apiURL)
+                            // tempUserDeviceArray.push(responseData);
+                            setUserDevices(responseData);
+                            // console.log('NEW ARRAY', userDevices)
+                            break;
+
+                        case apiInfo.SENSORS.INDEX:
+                            setSensors(responseData);
+                            break;
+                        case apiInfo.DEVICE_SENSORS.INDEX:
+                            setDeviceSensors(responseData);
+                            break;
+                        case apiInfo.SENSOR_DATA.INDEX:
+                            setSensorData(responseData);
+                            break;                          
+
+                        default:
+                            break;
+                    }
+                        }).catch((error) => {
+                            console.log("Authorization Failed: " + error.message)
+                    })
+                });
+        }
+
+        let interval = setInterval(() => {
+            fetchData(apiInfo.USERS.URL, apiInfo.USERS.INDEX);
+            fetchData(apiInfo.DEVICES.URL, apiInfo.DEVICES.INDEX);
+            fetchData(apiInfo.USER_DEVICES.URL, apiInfo.USER_DEVICES.INDEX);
+            fetchData(apiInfo.SENSORS.URL, apiInfo.SENSORS.INDEX);
+            fetchData(apiInfo.DEVICE_SENSORS.URL, apiInfo.DEVICE_SENSORS.INDEX);
+            fetchData(apiInfo.SENSOR_DATA.URL, apiInfo.SENSOR_DATA.INDEX);
+        }, refreshInterval)
+
+        fetchData(apiInfo.USERS.URL, apiInfo.USERS.INDEX);
+        fetchData(apiInfo.DEVICES.URL, apiInfo.DEVICES.INDEX);
+        fetchData(apiInfo.USER_DEVICES.URL, apiInfo.USER_DEVICES.INDEX);
+        fetchData(apiInfo.SENSORS.URL, apiInfo.SENSORS.INDEX);
+        fetchData(apiInfo.DEVICE_SENSORS.URL, apiInfo.DEVICE_SENSORS.INDEX);
+        fetchData(apiInfo.SENSOR_DATA.URL, apiInfo.SENSOR_DATA.INDEX);
+
+        return () => clearInterval(interval);
+    },  [refreshInterval])
+
+    console.log('DEVICES', devices);
+    console.log('SENSORS', sensors);
+    console.log('USERS', users);
+    console.log('USER DEVICES', userDevices);
+    console.log('DEVICE SENSORS', deviceSensors);
+    console.log('SENSOR DATA', sensorData);
 
     function logInUser(userName, userPassword) {
         let foundUser = false;
         let tempUserID;
-        let tempSensorArray = [];
+        let tempUserDevicesArray = [];
+        // console.log('LOGGED IN?????', loggedIn)
+        
+        const fetchUserDeviceData = async (userId, deviceID, device) => {
+            console.log('USRE DEVICE URL', `${apiInfo.USER_DEVICES.URL}/${userID}:${deviceID}`);
+
+            await fetch(`${apiInfo.USER_DEVICES.URL}/${userID}:${deviceID}`)
+                .then((response) => {return response.json().then((responseData) => {
+                    console.log('responseData', responseData)
+
+                    if(Object.keys(responseData).length !== 0) {
+                        // console.log('PUSHING USER DEVICES ARRAY', responseData)
+                        // console.log('DVICE PUSEHD', device)
+                        tempUserDevicesArray.push(device);
+                        // userDevices.push(device)
+                        // setUserDevices(tempUserDevicesArray);
+    
+                        // deviceTable.forEach((device, deviceIndex) => {
+                        //     if(device.device_ID === dEntry.device_ID) {
+                        //         console.log('PUSH')
+                        //         tempDeviceArray.push(device);
+                        //     }
+                        // })
+    
+    
+                    }
+                        }).catch((error) => {
+                            console.log("Authorization Failed: " + error.message)
+                    })
+                });
+        }
+
+
         
         // console.log('LOGGING IN')
         // console.log('usernmae', userName);
@@ -39,31 +177,40 @@ const HecateApp = () => {
 
         // console.log('user table', userTable);
 
-        userTable.forEach((entry, index) => {
-            if((entry.user_name === userName) && (entry.user_password === userPassword)) {
-                tempUserID = entry.user_ID;
-                foundUser = true;
-                return;
-            }
+        users.forEach((entry, index) => {
+            // console.log(index, 'entry', entry);
+            if( (loggedIn && (entry.userName === userName)) || 
+                (!loggedIn && ((entry.userName === userName) && (entry.userPassword === userPassword)))) {
+                    console.log('FOUND')
+                    tempUserID = entry.userID;
+                    foundUser = true;
+                    return;
+            } 
+            // if((entry.userName === userName) && (entry.userPassword === userPassword)) {
+
+            // }
         });
         
-        console.log('user ID', tempUserID);
+        setUserID(tempUserID);
+        setUserName(userName);
+        
+        // console.log('user ID', tempUserID);
 
         if(foundUser) {
-            console.log(' userSensorEntriesTable', userSensorEntriesTable);
-            userSensorEntriesTable.forEach((entry, index) => {
-                console.log('entry', entry);
-                if(entry.user_ID === tempUserID) {
-                    tempSensorArray.push(entry.sensor_ID)
-                }
-            })
-            console.log('sesnor  array', tempSensorArray);
-            setUserID(tempUserID);
-            setUserName(userName);
-            setUserSensors(tempSensorArray);
+            devices.forEach((dEntry, dIndex) => {
+                // console.log('D entry', dEntry);
+                // const tempUserDevice = fetchUserDevice(tempUserID, dEntry.deviceID);
+                // fetchUserDeviceData(userID, dEntry.deviceID, dEntry);
+            });
+
+            // console.log('FINAL USER DEVICES array', tempUserDevicesArray);
+            // setUserDevices(tempUserDevicesArray);
+
+            // getAttachedSensors(tempUserDevicesArray);
+
             setLoggedIn(true);
         }
-        console.log('final user id', userID);
+        // console.log('final user id', userID);
 
         setPassword('');
     }
@@ -72,15 +219,64 @@ const HecateApp = () => {
         setUserName('');
         setPassword('');
         setUserID('');
-        setUserSensors([]);
-        setSelectedSensorInfo('---')
+        setSensors([]);
+        setDevices([]);
+        setUserDevices([]);
+        setSelectedSensorInfo('---');
+        setTimeType('---');
         setLoggedIn(false);
+    }
+
+    function getAttachedSensors(selectedDeviceID) {
+        console.log('selected device', selectedDeviceID);
+        let tempSensorArray = [];
+        deviceSensors.forEach((sEntry, sIndex) => {
+            console.log('sEntry', sEntry);
+            if(sEntry.deviceID === selectedDeviceID) {
+                sensors.forEach((sensor, sensorIndex) => {
+                    if(sensor.sensorID === sEntry.sensorID) {
+                        console.log('PUSH')
+                        tempSensorArray.push(sensor);
+                    }
+                })
+            }
+
+        })
+        console.log('SESNORS ARRAy after full dentry', tempSensorArray);
+        setSensors(tempSensorArray);
+    }
+
+    function getSelectedDevice(deviceID) {
+        devices.forEach((device, index) => {
+            if(device.deviceID === deviceID) {
+                console.log('SET DEVICE', device);
+                setSelectedDevice(device);
+                getAttachedSensors(deviceID);
+                return;
+            }
+        })
     }
 
     useEffect(() => {
         localStorage.setItem("userInfo", JSON.stringify(
-            {currentUserName: userName, currentUserID: userID, sensors: userSensors}));
-    }, [userName, userID, userSensors]);
+            {
+                currentUserName: userName, 
+                currentUserID: userID, 
+                // sensors: sensors, 
+                // devices: devices, 
+                // userDevices: userDevices
+            }));
+    }, [userName, userID]);
+
+    const displayDeviceArray = [];
+    devices.forEach((deviceEntry, dIndex) => {
+        console.log('device', deviceEntry)
+        userDevices.forEach((userDeviceEntry, uDIndex) => {
+            if((userID === userDeviceEntry.userID) && (deviceEntry.deviceID === userDeviceEntry.deviceID)) {
+                displayDeviceArray.push(deviceEntry);
+            }
+        })
+    })
 
     return (
         <div className="MainPage">
@@ -143,56 +339,59 @@ const HecateApp = () => {
                 </div>
             </div>
             <div className="HecateBody">
-                <div className="MainSensorBox">
-                    <div className="sensorTypeSelectorBox">
-                        <div className="sensorTypeSelectorText">Sensor</div>
-                        <select 
-                            className="sensorTypeSelector" 
-                            id="sensorType"
-                            onClick={(e) => {
-                                console.log('e.target.value', e.target.value)
-                                if(e.target.value === 0) {
-                                    setSelectedSensorInfo('---');
-                                } else {
-                                    //@ts-ignore
-                                    setSelectedSensorInfo(sensorTable[e.target.value - 1]);
-                                }
-                            }}>
-                                <option value={0}>---</option>
-                                {
-                                    sensorTable.map((sensor, index) => {
-                                        if(sensor.sensor_ID !== userSensors[index]) return null;
+                <div className="MainDevicesBox">
+                    <div className="deviceSelectorTitleText">Devices</div>
+                    <div className="MainDeviceSelectorBox">
+                            {
+                                    displayDeviceArray.map((device, i) => {
                                         return (
-                                            <option value={sensor.sensor_ID} key={index}>
-                                                {sensor.sensor_name}
-                                            </option>
+                                            <span 
+                                                className={((device.deviceID === selectedDevice.deviceID)) ? "SelectedDeviceNameBox" : "DeviceNameBox"}
+                                                value={device.deviceID} 
+                                                key={i} 
+                                                onClick={(e) => {
+                                                    console.log('e', e.target);
+                                                    console.log('e.target.value', e.target.getAttribute("value"))
+                                                    const tempDeviceID = parseInt(e.target.getAttribute("value"));
+                                                    setSelectedSensorInfo('---');
+        
+                                                    // if((e.target.getAttribute("value")) === '---') {
+                                                    //     setSelectedDevice('---');
+                                                    // } else {
+                                                    //     // setSelectedDevice(deviceTable[e.target.getAttribute("value") - 1]);
+        
+                                                    //     getSelectedDevice(e.target.getAttribute("value"));
+                                                    //     getAttachedSensors(selectedDevice);
+                                                    // }
+        
+                                                    getSelectedDevice(tempDeviceID);
+                                                    console.log('selectedSensorInfo', selectedSensorInfo)
+                                            }}>
+                                                {device.deviceName}
+                                            </span>
                                         )
                                     })
-                                }
-                        </select>
-                    </div>
-                    <div className="timeTypeSelectorBox">
-                        <div className="timeTypeSelectorText">Time Frame</div>
-                        <select 
-                            className="timeTypeSelector" 
-                            id="sensorType"
-                            onClick={(e) => {
-                                //@ts-ignore
-                                setTimeType(e.target.value);
-                            }}>
-                                <option value={'---'}>---</option>
-                                <option value={'Past Day'}>Past Day</option>
-                                <option value={'Past Week'}>Past Week</option>
-                                <option value={'Past Month'}>Past Month</option>
-                                <option value={'Past Six Months'}>Past Six Months</option>
-                                <option value={'Lifetime'}>Lifetime</option>
-                        </select>
+                        
+                            }                
                     </div>
                 </div>
 
-                {((selectedSensorInfo !== '---') && (selectedSensorInfo !== undefined)) ? 
+                {/* {((selectedSensorInfo !== '---') && (selectedSensorInfo !== undefined)) ? 
                     <VisualizationBox sensorInfo={selectedSensorInfo}/> : 
-                    null}
+                    null} */}
+                {/* {((selectedDevice !== '---') && (selectedDevice !== undefined)) ? 
+                    <DataSelectors sensorInfo={selectedSensorInfo}/> : 
+                    null} */}
+
+                <DataSelectors
+                    selectedDevice={selectedDevice}
+                    sensorDataTable={sensorDataTable}
+                    sensors={sensors}
+                />
+
+
+
+
             </div>
         </div>
     );

@@ -1,67 +1,87 @@
 import React, { useEffect, useState, useCallback } from "react";
 import GraphContainer, { data } from "./graphContainer";
-import { sensorDataTable, variables, sensorTable } from "../../Variables";
+import { sensorDataTable, sensorTable } from "../../Variables";
 
-export type sensorData = {
-    data_ID: number;
-    sensor_ID: number;
-    channel_ID: number;
-    data_value: number;
-    data_unit: string;
-    time_recorded: string;
+export type sensorDataType = {
+    sensorDataID: number;
+    sensorID: number;
+    channelID: number;
+    dataValue: number;
+    dataUnit: string;
+    timeRecorded: string;
 }
 
 export type sensorInfoType = {
-    sensor_ID: number;
-    sensor_name: string;
-    sensor_type: string;
-    channel_count: number;
+    sensorID: number;
+    sensorName: string;
+    sensorType: string;
+    channelCount: number;
 }
 
-const VisualizationBox = (
-    sensorInfo: string
-) => {
+export type deviceInfoType = {
+    device_ID: number;
+    deviceName: string;
+    deviceType: string;
+    zipCode: number;
+}
+
+interface VisualizationBoxProps {
+    sensor: sensorInfoType;
+    sensorData: sensorDataType[];
+}
+
+const VisualizationBox: React.FC<VisualizationBoxProps> = ({
+    sensor,
+    sensorData
+}) => {
     // const [data, setData] = useState([]);
     const [selectedChannel, setSelectedChannel] = useState(0);
-    let dataArray: sensorData[] = [];
+    let dataArray: sensorDataType[] = [];
     let minValue;
     let maxValue;
-    let channels: number[] = [];
+    // const ch = function() {
+    //     const tempArray = [];
+    //     for(let i = 0; i > sensor.channelCount; i++) {
+    //         tempArray.push(i);
+    //     }
+    // }
+    const channels = new Array(sensor.channelCount);
+    for(let i = 0; i < sensor.channelCount; i++) {
+        channels[i] = i+1;
+    }
     let dataType = '';
     let dataLabel = '';
 
-    console.log('sensorDataTable', sensorDataTable)
+    console.log('FINAL SENSOR DATA ', sensorData)
+    console.log('GINAL  SENSORS', sensor);
 
     //@ts-ignore
 
-    if(sensorInfo.sensorInfo) {
-        //@ts-ignore
-        const cArray = new Array(sensorInfo.sensorInfo.channel_count);
-        console.log('carray ', cArray)
-        sensorDataTable.forEach((entry, index) => {
-            //@ts-ignore
-            if(entry.sensor_ID === sensorInfo.sensorInfo.sensor_ID) {
-                //@ts-ignore
-                dataType = sensorInfo.sensorInfo.sensor_type;
-                dataArray.push(entry);
-            }
-        })
-        //@ts-ignore
-        for(let i = 0; i <= sensorInfo.sensorInfo.channel_count; i++) {
-            cArray[i] = i + 1;
-            // channels.push(i);
-        }
-        console.log('carray 2', cArray)
-        channels = cArray;
-    }
+    // if(sensor) {
+    //     const cArray = new Array(sensor.channelCount);
+    //     console.log('carray ', cArray)
+    //     Object.keys(sensorData).forEach(function(dataKey) {
+    //         if(sensorData[dataKey].sensorID === sensor.sensorID) {
+    //             dataType = sensor.sensorType;
+    //             dataArray.push(sensorData[dataKey]);
+    //         }
+    //     });
+
+    //     for(let i = 0; i <= sensor.channelCount; i++) {
+    //         cArray[i] = i + 1;
+    //         // channels.push(i);
+    //     }
+    //     console.log('carray 2', cArray)
+    //     channels = cArray;
+    // }
     //@ts-ignore
 
-    console.log('sensor info', sensorInfo.sensorInfo);
+    console.log('sensor info', sensor);
     console.log('dataArray', dataArray)
 
     // function refreshList() {
     //     //@ts-ignore
-    //     fetch(variables.API_URL + sensorInfo.sensor_type)
+    //     fetch(variables.API_URL + sensorInfo.sensorType)
     //     .then(response => response.json())
     //     .then(data => {
     //         setData(data)
@@ -87,24 +107,24 @@ const VisualizationBox = (
     //     dataArray ? dataArray.map((d, index) => {
     //         if(selectedChannel === 0) {
     //             if(index === 0) {
-    //                 dataLabel = d.data_unit;
-    //                 minValue = d.data_value;
-    //                 maxValue = d.data_value;
+    //                 dataLabel = d.dataUnit;
+    //                 minValue = d.dataValue;
+    //                 maxValue = d.dataValue;
     //             }
-    //             if(minValue >= d.data_value) {minValue = d.data_value};
-    //             if(maxValue <= d.data_value) {maxValue = d.data_value};
-    //             return d.data_value
+    //             if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //             if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //             return d.dataValue
     //         } 
     //         else {
-    //             if(d.channel_ID === selectedChannel) {
+    //             if(d.channelID === selectedChannel) {
     //                 if(index === 0) {
-    //                     dataLabel = d.data_unit;
-    //                     minValue = d.data_value;
-    //                     maxValue = d.data_value;
+    //                     dataLabel = d.dataUnit;
+    //                     minValue = d.dataValue;
+    //                     maxValue = d.dataValue;
     //                 }
-    //                 if(minValue >= d.data_value) {minValue = d.data_value};
-    //                 if(maxValue <= d.data_value) {maxValue = d.data_value};
-    //                 return d.data_value
+    //                 if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //                 if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //                 return d.dataValue
     //             }
     //         }
     //     }) : return [];
@@ -119,79 +139,79 @@ const VisualizationBox = (
     // const test = useCallback((d, index) => {
     //     if(selectedChannel === 0) {
     //         if(index === 0) {
-    //             dataLabel = d.data_unit;
-    //             minValue = d.data_value;
-    //             maxValue = d.data_value;
+    //             dataLabel = d.dataUnit;
+    //             minValue = d.dataValue;
+    //             maxValue = d.dataValue;
     //         }
-    //         if(minValue >= d.data_value) {minValue = d.data_value};
-    //         if(maxValue <= d.data_value) {maxValue = d.data_value};
-    //         return d.data_value
+    //         if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //         if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //         return d.dataValue
     //     } 
     //     else {
-    //         if(d.channel_ID === selectedChannel) {
+    //         if(d.channelID === selectedChannel) {
     //             if(index === 0) {
-    //                 dataLabel = d.data_unit;
-    //                 minValue = d.data_value;
-    //                 maxValue = d.data_value;
+    //                 dataLabel = d.dataUnit;
+    //                 minValue = d.dataValue;
+    //                 maxValue = d.dataValue;
     //             }
-    //             if(minValue >= d.data_value) {minValue = d.data_value};
-    //             if(maxValue <= d.data_value) {maxValue = d.data_value};
-    //             return d.data_value
+    //             if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //             if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //             return d.dataValue
     //         }
     //     }
     // }, [selectedChannel]);
 
     // console.log('test', test)
 
-    const dataValues = dataArray ? dataArray.map((d, index) => {
-        console.log('selectedChannel', selectedChannel)
-        if(selectedChannel === 0) {
-            console.log('ALLLLLL', d);
-            if(index === 0) {
-                dataLabel = d.data_unit;
-                minValue = d.data_value;
-                maxValue = d.data_value;
-            }
-            if(minValue >= d.data_value) {minValue = d.data_value};
-            if(maxValue <= d.data_value) {maxValue = d.data_value};
-            return d.data_value
-        } 
-        else {
-            console.log('d', d)
-            if(d.channel_ID === selectedChannel) {
-                if(index === 0) {
-                    dataLabel = d.data_unit;
-                    minValue = d.data_value;
-                    maxValue = d.data_value;
-                }
-                if(minValue >= d.data_value) {minValue = d.data_value};
-                if(maxValue <= d.data_value) {maxValue = d.data_value};
-                return d.data_value
-            } else {
-                return null;
-            }
-        }
-    }) : [];
+    // const dataValues = dataArray ? dataArray.map((d, index) => {
+    //     console.log('selectedChannel', selectedChannel)
+    //     if(selectedChannel === 0) {
+    //         console.log('ALLLLLL', d);
+    //         if(index === 0) {
+    //             dataLabel = d.dataUnit;
+    //             minValue = d.dataValue;
+    //             maxValue = d.dataValue;
+    //         }
+    //         if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //         if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //         return d.dataValue
+    //     } 
+    //     else {
+    //         console.log('d', d)
+    //         if(d.channelID === selectedChannel) {
+    //             if(index === 0) {
+    //                 dataLabel = d.dataUnit;
+    //                 minValue = d.dataValue;
+    //                 maxValue = d.dataValue;
+    //             }
+    //             if(minValue >= d.dataValue) {minValue = d.dataValue};
+    //             if(maxValue <= d.dataValue) {maxValue = d.dataValue};
+    //             return d.dataValue
+    //         } else {
+    //             return null;
+    //         }
+    //     }
+    // }) : [];
 
-    const dataTimes = dataArray ? dataArray.map((d) => {
-        if(selectedChannel === 0) {
-            return d.time_recorded
-        }
-        else {
-            if(d.channel_ID === selectedChannel) {
-                return d.time_recorded
-            } else {
-                return null;
-            }
-        }
-    }) : [];
+    // const dataTimes = dataArray ? dataArray.map((d) => {
+    //     if(selectedChannel === 0) {
+    //         return d.timeRecorded
+    //     }
+    //     else {
+    //         if(d.channelID === selectedChannel) {
+    //             return d.timeRecorded
+    //         } else {
+    //             return null;
+    //         }
+    //     }
+    // }) : [];
     
-    console.log('dataValues', dataValues);
+    // console.log('dataValues', dataValues);
     console.log('channels', channels)
 
     return (
         <div className="mainVisualizationBox">
-            <div className="channelTypeSelectorBox">
+            {/* <div className="channelTypeSelectorBox">
                 <div className="channelTypeSelectorText">Sensor Channel</div>
                 <select 
                     className="channelTypeSelector" 
@@ -202,7 +222,7 @@ const VisualizationBox = (
                     }}>
                         <option value={0}>All</option>
                         {
-                            channels.map((channel) => {
+                            channels.map((channel, index) => {
                                 return (
                                     <option value={channel} key={channel}>
                                         {channel}
@@ -212,8 +232,39 @@ const VisualizationBox = (
                             })
                         }
                 </select>
+            </div> */}
+            <div>
+                {(sensor === null || sensor === undefined) ?
+                    null :
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data ID</th>
+                                    <th>Data Value</th>
+                                    <th>Data Unit</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {
+                                     Object.keys(sensorData).map(function(dataKey) {
+                                        return (
+                                            <tr key={sensorData[dataKey].sensorDataID}>
+                                                <td>{sensorData[dataKey].sensorDataID}</td>
+                                                <td>{sensorData[dataKey].dataValue}</td>
+                                                <td>{sensorData[dataKey].dataUnit}</td>
+                                            </tr>
+                                        )
+                                        
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
-            <GraphContainer 
+            {/* <GraphContainer 
                 values={dataValues} 
                 times={dataTimes} 
                 dataLabel={dataLabel} 
@@ -221,7 +272,7 @@ const VisualizationBox = (
                 dataTitle={`${dataType} (${dataLabel})`} 
                 maxValue={maxValue}
                 minValue={minValue}
-            /> 
+            />  */}
         </div>
     )
 }

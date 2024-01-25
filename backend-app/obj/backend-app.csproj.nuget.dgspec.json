@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_421\\ArduinoSensorSystem\\backend-app\\backend-app.csproj": {}
+    "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_423\\ArduinoSensorSystem\\backend-app\\backend-app.csproj": {}
   },
   "projects": {
-    "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_421\\ArduinoSensorSystem\\backend-app\\backend-app.csproj": {
+    "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_423\\ArduinoSensorSystem\\backend-app\\backend-app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_421\\ArduinoSensorSystem\\backend-app\\backend-app.csproj",
+        "projectUniqueName": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_423\\ArduinoSensorSystem\\backend-app\\backend-app.csproj",
         "projectName": "backend-app",
-        "projectPath": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_421\\ArduinoSensorSystem\\backend-app\\backend-app.csproj",
+        "projectPath": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_423\\ArduinoSensorSystem\\backend-app\\backend-app.csproj",
         "packagesPath": "C:\\Users\\brian\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_421\\ArduinoSensorSystem\\backend-app\\obj\\",
+        "outputPath": "C:\\Users\\brian\\OneDrive - Washington State University (email.wsu.edu)\\WSU\\CPTS_423\\ArduinoSensorSystem\\backend-app\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\brian\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -38,6 +38,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Microsoft.AspNet.WebApi.Cors": {
+              "target": "Package",
+              "version": "[5.3.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.13, )"
