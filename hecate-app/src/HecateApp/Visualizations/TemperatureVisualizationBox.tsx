@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import GraphContainer, { data } from "./graphContainer";
-import { variables } from "../../Variables";
 
 const TemperatureVisualizationBox = () => {
     const [tData, setTData] = useState([]);
@@ -9,7 +8,7 @@ const TemperatureVisualizationBox = () => {
     let dataLabel = '';
 
     function refreshList() {
-        fetch(variables.API_URL + 'Temperature')
+        fetch('Temperature')
         .then(response => response.json())
         .then(data => {
             setTData(data)

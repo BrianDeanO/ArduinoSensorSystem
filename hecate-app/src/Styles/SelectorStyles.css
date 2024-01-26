@@ -1,16 +1,25 @@
 /* 
 *****************************************
-CSS Styles for Hecate App Selectors (Sensor Type and Time Frame)
+CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 *****************************************
 */
+.MainDevicesBox {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--sheetBackground);
+    background-color: aqua;
+    margin: 5px auto 0px auto;
+    height: 795px;
+    width: 200px;
 
+}
 .MainSensorBox {
     display: flex;
     flex-direction: row;
     background-color: var(--sheetBackground);
     margin: 5px auto 0px auto;
     height: 115px;
-    width: 1000px;
+    width: 800px;
     border-bottom-style: solid;
 }
 .mainSelectorBox {
@@ -22,6 +31,43 @@ CSS Styles for Hecate App Selectors (Sensor Type and Time Frame)
     border-bottom: 2px;
     border-color: black;
     border-bottom-style: solid;
+}
+
+/* 
+  Device Selector Styles
+*/
+.deviceSelectorTitleText {
+    width: 175px;
+    height: 40px;
+    font-weight: bold;
+    color: black;
+    margin: 5px auto 0px auto;
+    font-size: 16pt;
+    text-align: center;
+    border-bottom: 2px;
+    border-color: black;
+    border-bottom-style: solid;
+}
+.MainDeviceSelectorBox {
+    display: flex;
+    flex-direction: column;
+    width: 175px;
+    height: auto;
+    background-color: rgb(230, 230, 230);
+    color: black;
+    margin: 5px auto 0px auto;
+    font-size: 16pt;
+    text-align: center;
+}
+.DeviceNameBox {
+    height: auto;
+    background-color: rgb(240, 57, 57);
+    margin: 5px auto 0px auto;
+}
+.SelectedDeviceNameBox {
+    height: auto;
+    background-color: rgb(116, 24, 24);
+    margin: 5px auto 0px auto;
 }
 
 /* 
