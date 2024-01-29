@@ -1,45 +1,36 @@
 #include "sim_client.hpp"
+#include <string.h>
 #include <time.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/ip.h>
-#include <arpa/inet.h>
 
-bool SimClient::send(const char* command, uint32_t size) {
-	struct sockaddr_in serv_addr;
-	int status, client_fd;
-	if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		printf("\nSocket creation error\n");
-		return false;
-	}
+int SimClient::handle_response(httplib::Response res)
+{
+	if (res) {
+		if(res->status / 100 != 2) {
+			return -res->status; // Bad status code
+		}
 
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(this->port);
-	if(inet_pton(AF_INET, this->addr, &serv_addr.sin_addr) <= 0) {
-		printf("\nInvalid address\n");
-		return false;
+		strncpy(response, res->body.c_str(), response_size);
+		return res->body.size();
 	}
+	return -1;
+}
 
-	status = connect(client_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-	if (status < 0) {
-		printf("\nConnection failed\n");
-		return false;
-	}
+int SimClient::get(const char* url, char* response, unsigned response_size)
+{
+	auto res = http.Get(route);
+	return handle_response(res);
+}
 
-	::send(client_fd, (void*)command, (size_t)size, 0);
+int SimClient::post(const char* url, const char* body, char* response, unsigned response_size)
+{
+	http.Post(url, body, "application/json");
+	return handle_response(res);
+}
 
-	// Read verification response, must match "ok"
-	char response[16];
-	read(client_fd, response, 15);
-	if(response[0] == 'o' && response[1] == 'k') {
-		close(client_fd);
-		return true;
-	}
-	else {
-		close(client_fd);
-		return false;
-	}
+int SimClient::put(const char* url, const char* body, char* response, unsigned response_size)
+{
+	http.Put(url, body, "application/json");
+	return handle_response(res);
 }
 
 uint64_t SimClient::get_time() {

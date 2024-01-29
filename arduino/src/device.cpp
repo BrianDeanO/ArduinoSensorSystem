@@ -2,13 +2,50 @@
 #include "../config.hpp"
 #include "util.hpp"
 
-bool Device::register_device() {
-	char buffer[SEND_BUFFER_SIZE];
-	SizedBuf buf(buffer, SEND_BUFFER_SIZE);
-	get_register_command(buf);
+#define DEFAULT_DEVICE_JSON  R"({"deviceIdent":")" DEVICE_IDENT R"(","deviceName":")" DEFAULT_DEVICE_NAME R"(","deviceType":")" DEFAULT_DEVICE_TYPE R"("})"
 
-	DEBUG(Serial.println("Sending register command"));
-	return client->send(buf.buffer, buf.len);
+bool Device::register_device() {
+	JsonDocument j;
+
+	DEBUG("Sending register command");
+	char buf[RESPONSE_BUFFER_SIZE];
+	int result = client.get("/api/Devices/ident/" DEVICE_IDENTIFIER, buf, RESPONSE_BUFFER_SIZE);
+
+	if(result > 0) {
+		deserializeJson(j, buf);
+		if(!j.containsKey("deviceID")) {
+			DEBUG("Registration response contained no id!");
+			return false;
+		}
+
+		this->id = j["deviceID"].as<uint32_t>();
+		// TODO: Set poll time
+	}
+	// Check for 400 level response codes, indicating the identifier does not 
+	// yet exist
+	else if(result / -100 == 4) {
+		// Register a new device with our defaults
+		result = client.post("/api/Devices", DEFAULT_DEVICE_JSON, buf, RESPONSE_BUFFER_SIZE);
+		if(result > 0) {
+			if(!j.containsKey("deviceID")) {
+				DEBUG("New Registration response contained no id!");
+				return false;
+			}
+
+			this->id = j["deviceID"].as<uint32_t>();
+			// TODO: Set poll time
+		}
+		else {
+			return false;
+		}
+	}
+	else {
+		return false;
+	}
+
+	// TODO: Register sensors and device/sensor associations
+
+	return true;
 }
 
 void Device::update() {
@@ -18,33 +55,9 @@ void Device::update() {
 		DEBUG(Serial.println("Starting update"));
 		acquire_data(); // Read data from sensors into cache
 
-		char buffer[SEND_BUFFER_SIZE];
-		SizedBuf buf(buffer, SEND_BUFFER_SIZE);
-
 		bool done = false;
 		while(!done) {
-			buf.clear();
-			done = get_data_command(buf);
-
-			DEBUG(Serial.println("Command len: " + String(buf.len)));
-			if(client->send(buf.buffer, buf.len)) {
-				// Data successfully sent, reset sensors that had all
-				// their data sent
-				for(unsigned i = 0; i <= _last_read_sensor; i++) {
-					sensors[i].reset();
-				}
-				break;
-			}
-			else {
-				// Send failed, try again in a minute
-				for(unsigned i = 0; i <= num_sensors; i++) {
-					// Tell all sensors with data to resend all their
-					// data again next time we read from them.
-					sensors[i].reset_last_sent();
-				}
-
-				DEBUG(Serial.println("Failed to send packet"));
-			}
+			// TODO: Redo sending points again 
 		}
 
 		last_update = current_time;
@@ -53,40 +66,9 @@ void Device::update() {
 
 void Device::acquire_data() {
 	for(unsigned i = 0; i < num_sensors; i++) {
-		for(unsigned j = 0; j < 10; j++) {
+		// TODO: What was this for? Reliability?
+		// for(unsigned j = 0; j < 10; j++) {
 			sensors[i].acquire_data_point(client->get_time());
-		}
+		// }
 	}
-}
-
-void Device::get_register_command(SizedBuf& buf) {
-	uint8_t command = 1;
-	buf.append((void*)&command, sizeof(uint8_t));
-	buf.append((void*)this->_id, 32);
-	buf.append((void*)&this->num_sensors, sizeof(this->num_sensors));
-
-	for(unsigned i = 0; i < num_sensors; i++) {
-		if(!sensors[i].copy_sensor_info(buf)) {
-			// TODO: Error handling on too many sensors for buffer
-			break;
-		}
-	}
-}
-
-bool Device::get_data_command(SizedBuf& buf) {
-	uint8_t command = 2;
-	buf.append((void*)&command, sizeof(uint8_t));
-	buf.append((void*)this->_id, 32);
-	buf.append((void*)&this->num_sensors, sizeof(this->num_sensors));
-
-	for(unsigned i = 0; i < num_sensors; i++) {
-		DEBUG(Serial.println("Getting points from sensor " + String(i)));
-		if(!sensors[i].copy_points(buf)) {
-			DEBUG(Serial.println("Sensor " + String(i) + " copy_points returned false. buf.len = " + String(buf.len)));
-			return false;
-		}
-		_last_read_sensor = i;
-	}
-
-	return true;
 }

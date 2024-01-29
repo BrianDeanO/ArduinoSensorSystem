@@ -1,12 +1,17 @@
-#include "client.hpp"
+#include "dataClient.hpp"
+#include "httplib.h"
 
 class SimClient : public DataClient {
 public:
 	SimClient(const char* addr, unsigned port) 
-		: addr(addr), port(port) {}
-    virtual bool send(const char* command, uint32_t size) override;
-    virtual uint64_t get_time() override;
+		: http(addr, port) {}
 
-    const char* addr;
-    unsigned port;
+    int get(const char* url, char* response, unsigned response_size) override;
+    int post(const char* url, const char* body, char* response, unsigned response_size) override;
+    int put(const char* url, const char* body, char* response, unsigned response_size) override;
+    uint64_t get_time() override;
+
+private:
+    int handle_response(httplib::Response re);
+    httplib::Client http;
 };
