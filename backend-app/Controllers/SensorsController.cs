@@ -113,6 +113,7 @@ namespace backEndApp.Controllers {
 
         private static SensorDTO SensorToDTO(Sensor sensor) => new SensorDTO {
             SensorID = sensor.SensorID,
+            SensorIdent = sensor.SensorIdent,
             SensorType = sensor.SensorType,
             SensorName = sensor.SensorName,
             ChannelCount = sensor.ChannelCount,

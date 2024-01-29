@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 using backEndApp.Models;
+using Newtonsoft.Json;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -66,6 +67,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         public async Task<ActionResult<Device>> PostDevice(Device deviceDTO) {
             var device = new Device {
+                DeviceIdent = deviceDTO.DeviceIdent,
                 DeviceType = deviceDTO.DeviceType,
                 DeviceName = deviceDTO.DeviceName,
                 ZipCode = deviceDTO.ZipCode,
@@ -99,6 +101,27 @@ namespace backEndApp.Controllers {
             return NoContent();
         }
 
+        // This endpoint is only used by the device to check if a device by `deviceIdent`
+        // already exists, so only return fields relevant to the device.
+        [HttpGet("ident/{deviceIdent}")]
+        public async Task<ActionResult<DeviceDTO>> GetDevice(String deviceIdent) {
+            var device = await _context.Devices
+                .Where(e => e.DeviceIdent == deviceIdent)
+                .FirstOrDefaultAsync();
+
+            if (device == null) {
+                return NotFound();
+            }
+
+            var dto = new DeviceDTO {
+                DeviceID = device.DeviceID
+                // Poll time
+            };
+            return new JsonResult(dto, new JsonSerializerSettings() {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+        }
+
         private bool DeviceExists(int deviceId) {
             return _context.Devices.Any(e => e.DeviceID == deviceId);
         }
@@ -112,6 +135,7 @@ namespace backEndApp.Controllers {
 
         private static DeviceDTO DeviceToDTO(Device device) => new DeviceDTO {
             DeviceID = device.DeviceID,
+            DeviceIdent = device.DeviceIdent,
             DeviceType = device.DeviceType,
             DeviceName = device.DeviceName,
             ZipCode = device.ZipCode,

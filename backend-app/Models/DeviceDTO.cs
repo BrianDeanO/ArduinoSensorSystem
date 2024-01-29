@@ -6,6 +6,7 @@ namespace backEndApp.Models;
 public class DeviceDTO {
     [Key]
     public int DeviceID { get; set; }    
+    public string DeviceIdent { get; set; }    
     public string DeviceName { get; set; }
     public string DeviceType { get; set; }
     public string ZipCode { get; set; }
