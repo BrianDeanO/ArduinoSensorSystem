@@ -3,7 +3,7 @@
 #include "Client.h"
 #include "lib/SparkFun_LTE_Shield.h"
 
-#define CLIENT_BUFFER_SIZE 1024
+#define CLIENT_BUFFER_SIZE 256
 
 class LTEClient : public Client {
 public:

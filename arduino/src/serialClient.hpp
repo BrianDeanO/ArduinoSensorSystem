@@ -72,4 +72,4 @@ private:
 	HardwareSerial* serial = nullptr;
 };
 
-#endif // NO_LTE
+#endif // SIMULATOR

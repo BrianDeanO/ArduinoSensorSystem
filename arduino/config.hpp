@@ -1,7 +1,7 @@
 #pragma once
 
 // Compile flags
-// #define NO_LTE
+#define NO_LTE
 #define DEBUG_MODE 1
 
 // Identifiers
