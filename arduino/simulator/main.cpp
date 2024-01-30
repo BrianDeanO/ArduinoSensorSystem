@@ -1,11 +1,15 @@
 #include <iostream>
 
+#include "../config.hpp"
 #include "sim_client.hpp"
 #include "device.hpp"
 #include "drivers/example_driver.hpp"
 
 #include <unistd.h>
 #include <vector>
+
+// Used by DEBUG macros defined in config.hpp
+char _dbg_msg[256];
 
 void print_menu() {
 	std::cout << "1) Start simulated device\n"
@@ -20,7 +24,7 @@ void print_menu() {
 void run_sim_device(std::string addr, unsigned port) {
 	SimClient client(addr.c_str(), port);
 
-	std::vector<Sensor> sensors;
+	std::vector<Sensor*> sensors;
 	std::string id, input;
 
 	std::cout << "Enter a device ID > " << std::endl;
@@ -29,9 +33,8 @@ void run_sim_device(std::string addr, unsigned port) {
 	std::getline(std::cin, input);
 	time_t update_interval = std::stoi(input);
 
-	ExampleDriver driver("temp", "C");
-	sensors.push_back(Sensor("Temperature 1", &driver));
-	Device device(id.c_str(), sensors.data(), sensors.size(), &client);
+	sensors.push_back(new ExampleSensor("sim_temp"));
+	Device device(sensors.data(), sensors.size(), &client);
 	device.set_record_interval(update_interval);
 
 	std::cout << "Registering device..." << std::endl;

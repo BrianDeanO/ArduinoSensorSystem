@@ -1,18 +1,13 @@
 #pragma once
 
-#ifndef NO_LTE
-
 #include "Client.h"
+#include "lib/SparkFun_LTE_Shield.h"
+
 #define CLIENT_BUFFER_SIZE 1024
 
-class SF_LTEClient : public Client {
-	SF_LTEClient(LTE_Shield* shield = nullptr)
-	{
-		if(!shield)
-			this->shield = LTE_Shield();
-		else
-			this->shield = shield;
-	}
+class LTEClient : public Client {
+public:
+	LTEClient(LTE_Shield* shield) : shield(shield) {}
 
 	virtual int connect(IPAddress ip, uint16_t port) override
 	{
@@ -42,11 +37,11 @@ class SF_LTEClient : public Client {
 	{
 		if(write_cursor + size < CLIENT_BUFFER_SIZE) {
 			memcpy(write_buf + write_cursor, buf, size);
-			write_buf_cursor += size;
+			write_cursor += size;
 		}
 		else {
 			this->flush();
-			this->socketWrite(socket, (char*)buf, size);
+			shield->socketWrite(socket, (char*)buf, size);
 		}
 		return size; 
 	}
@@ -95,7 +90,7 @@ class SF_LTEClient : public Client {
 
 	virtual void flush()
 	{
-		this->socketWrite(socket, (char*)write_buffer, write_cursor);
+		shield->socketWrite(socket, (char*)write_buf, write_cursor);
 		write_cursor = 0;
 	}
 
@@ -117,5 +112,3 @@ private:
 	uint8_t write_buf[CLIENT_BUFFER_SIZE];
 	uint16_t write_cursor = 0;
 };
-
-#endif // NO_LTE

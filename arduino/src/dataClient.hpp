@@ -15,12 +15,14 @@ public:
 #ifndef SIMULATOR
 #include <ArduinoHttpClient.h>
 #include "serialClient.hpp"
+#include "lteClient.hpp"
 #include "time.hpp"
 #include "lib/SparkFun_LTE_Shield.h"
 
 class SerialDataClient : public DataClient {
+public:
     SerialDataClient(HardwareSerial* serial, const char* addr, uint16_t port) 
-        : http(SerialClient(serial), addr, port) {}
+        : serial_client(serial), http(serial_client, addr, port) {}
 
     int get(const char* url, char* response, unsigned response_size) override;
     int post(const char* url, const char* body, char* response, unsigned response_size) override;
@@ -28,13 +30,14 @@ class SerialDataClient : public DataClient {
     uint64_t get_time() override { return fake_last_time; }
 
     uint64_t fake_last_time = 0;
+    SerialClient serial_client;
     HttpClient http;
 };
 
 class LTEDataClient : public DataClient {
 public:
     LTEDataClient(LTE_Shield* lte, const char* addr, unsigned port)
-        : lte(lte), http(SF_LTEClient(lte), addr, port) {}
+        : lte(lte), lte_client(lte), http(lte_client, addr, port) {}
 
     int get(const char* url, char* response, unsigned response_size) override;
     int post(const char* url, const char* body, char* response, unsigned response_size) override;
@@ -42,6 +45,7 @@ public:
     uint64_t get_time() override;
 
     LTE_Shield* lte;
+    LTEClient lte_client;
     HttpClient http;
 };
 

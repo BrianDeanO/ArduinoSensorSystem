@@ -1,137 +1,43 @@
 #pragma once
-
 #include "../config.hpp"
-#include "driver.hpp"
-#include "util.hpp"
+#include "lib/ArduinoJson.h"
+#include "dataClient.hpp"
 
 struct Datapoint {
 	double value;
 	uint64_t time;
+	uint8_t channel;
 };
 
 class Sensor {
 public:
-	Sensor(const char* id, SensorDriver* driver) {
-		this->_id = id;
-		this->_driver = driver;
+	Sensor(const char* identifier) {
+		this->_ident = identifier;
 	}
+
+	uint32_t id() const { return _id; }
+	const char* ident() const { return _ident; }
+
+	virtual bool acquire_channel_value(uint8_t channel, double& value) = 0;
+	virtual bool read_config(JsonObject config) = 0;
+	virtual bool write_config(JsonObject config) = 0;
+
+	virtual uint8_t channel_count() const = 0;
+	virtual const char* channel_units(uint8_t channel) const = 0;
+	virtual const char* sensor_type() const = 0;
 
 	// Acquire a new data point from the sensor, storing it in this sensor's cache.
 	// Use pop_data_point() to retrieve the data point.
-	virtual void acquire_data_point(uint64_t time) {
-		Datapoint& point = _cache[_cache_index++];
-		point.value = _driver->acquire_data_point();
-		point.time = time;
-	}
+	virtual void cache_data_point(uint64_t time);
+	bool get_last_point(Datapoint& point);
+	void pop_last_point();
+	void reset();
 
-	// Returns true if all points were successfully added, false if there
-	// wasn't enough room for all points.
-	// 
-	// Layout:
-	//    char[32]: id
-	//    char[32]: units
-	virtual bool copy_sensor_info(SizedBuf& buf) {
-		if(!buf.has_capacity(64))
-			return false;
-
-		buf.append((void*)_id, 32);
-		buf.append((void*)_driver->units(), 32);
-
-		return true;
-	}
-
-	// Serialize this sensor's info into the given buffer.
-	// Returns true if all points were successfully added, false if there
-	// wasn't enough room for all points.
-	//
-	// Layout:
-	//    Header
-	//        char[32]: id
-	//        unsigned: num_points
-	//    Points[num_points]
-	//        double: value
-	//        unsigned long long: time_recorded
-	virtual bool copy_points(SizedBuf& buf) {
-		if(_cache_index == 0) {
-			// No points to report
-			return true;
-		}
-
-		// Copy the sensor header:
-		//    char[32]: id
-		//    unsigned: num_points
-		if(!buf.has_capacity(32 + sizeof(uint32_t))) {
-			return false;
-		}
-		buf.append((void*)this->_id, 32);
-
-		// First send since reset
-		if(_last_sent_point == 0) {
-			// We set up this _last_sent_point variable so we know to resend 
-			// the points between last_sent_point..cache_index if the send over
-			// the network fails. If a network send ever fails, the device can
-			// just set _last_sent_point.
-			//
-			// Note: After this whole device is successfully sent, its reset()
-			// should be called or else it'll keep resending all its data.
-			_last_sent_point = _cache_index;
-		}
-
-		// Calculate how many points we can fit in the remaining space of buf
-		uint32_t reportable_points = buf.remaining() / sizeof(Datapoint);
-		if(reportable_points > _last_sent_point) {
-			// Don't report more points than we have.
-			reportable_points = _last_sent_point - 1;
-			// -1 as both cache_index and last_sent_point point to the index
-			// after the most recent data value.
-		}
-		// Append the number of points we'll be writing
-		buf.append((void*)&reportable_points, sizeof(uint32_t));
-
-		if(reportable_points == 0) {
-			// No room to report any points. We know there are points left
-			// from the above check, so return false
-			return false;
-		}
-
-		while(reportable_points > 0) {
-			if(!buf.has_capacity(sizeof(Datapoint))) {
-				// This should be covered by the above reportable_points
-				// check, but just in case break here
-				return false;
-			}
-
-			Datapoint& point = _cache[reportable_points];
-			_last_sent_point = reportable_points;
-			reportable_points -= 1;
-			buf.append((void*)&point, sizeof(Datapoint));
-		}
-
-		return _last_sent_point == 0;
-	}
-
-	void reset() {
-		_cache_index = 0;
-		_last_sent_point = 0;
-	}
-
-	// Call if a send failed and points from this sensor need to be resent
-	void reset_last_sent() {
-		_last_sent_point = 0;
-	}
-
-	uint32_t last_sent_point() {
-		return _last_sent_point;
-	}
-
-	const char* id() {
-		return _id;
-	}
+	bool register_sensor(DataClient* client, char* buf, uint16_t buf_size);
 
 private:
-	uint32_t _cache_index = 0;
-	uint32_t _last_sent_point = 0;
+	const char* _ident;
+	uint32_t _id = 0;
+	uint16_t _cache_index = 0;
 	Datapoint _cache[DATAPOINT_CACHE_SIZE];
-	const char* _id;
-	SensorDriver* _driver;	
 };

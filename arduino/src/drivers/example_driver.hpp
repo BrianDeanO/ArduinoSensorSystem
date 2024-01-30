@@ -1,24 +1,40 @@
-#include "../driver.hpp"
+#include "../../config.hpp"
+#include "../sensor.hpp"
+#include "../lib/ArduinoJson.h"
 
-class ExampleDriver : public SensorDriver {
+class ExampleSensor : public Sensor {
 public:
-	ExampleDriver(const char* id, const char* units) : _id(id), _units(units) {}
+	ExampleSensor(const char* id) : Sensor(id) {}
 
-	const char* sensor_type_id() override {
-		return _id;
+	virtual bool acquire_channel_value(uint8_t channel, double& value) override
+	{
+		switch(channel) {
+		case 0: 
+			value =  fake_value;
+			break;
+		case 2: 
+			value = fake_value / 2;
+			break;
+		}
+
+		fake_value += 1;
+		return true;
 	}
 
-	// Request a new data point from the device.
-	double acquire_data_point() override {
-		return 0.0;
+	virtual bool read_config(JsonObject config) override { return true; }
+	virtual bool write_config(JsonObject config) override { return true; }
+
+	virtual uint8_t channel_count() const override { return 2; }
+	virtual const char* channel_units(uint8_t channel) const override
+	{
+		switch(channel) {
+		case 0: return "C";
+		case 1: return "atm";
+		}
 	}
 
-	// The units this device reports in.
-	const char* units() override {
-		return _units;
-	}
+	virtual const char* sensor_type() const { return "example"; }
 
 private:
-	const char* _id;
-	const char* _units;
+	double fake_value = 0;
 };

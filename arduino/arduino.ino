@@ -3,27 +3,27 @@
 #include "config.hpp"
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
+char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
 
-ExampleDriver driver("temp", "Celsius");
-Sensor sensors[1] = { Sensor("Temperature 1", &driver) };
+ExampleSensor sen1("demo_sensor1");
+Sensor* sensors[] = { &sen1 };
 
 #ifndef NO_LTE
     #include "src/lib/SparkFun_LTE_Shield.h"
     #define LTE_POWER_PIN 5
     #define LTE_RESET_PIN 6
     LTE_Shield g_lte(LTE_POWER_PIN, LTE_RESET_PIN);
-    LTEClient client(&g_lte, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
+    LTEDataClient client(&g_lte, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 #else
-    DataClient client;
+    SerialDataClient client(&Serial, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 #endif
 
-Device device("test", sensors, 1, &client);
-
+Device device(sensors, 1, &client);
 
 void setup() {
     Serial.begin(9600);
-    DEBUG(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
-    DEBUG(Serial.println("Program Start"));
+    DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
+    DEBUG("Program Start");
 
 #ifndef NO_LTE
     // Use hardware serial port 1 to communicate with the lte shield
@@ -49,7 +49,7 @@ void loop() {
     device.update();
 
     uint16_t ms = device.next_update() - client.get_time();
-    DEBUG(Serial.println("Waiting " + String(ms)));
+    DEBUG("Waiting %d", ms);
     delay(ms);
 #ifdef NO_LTE
     client.fake_last_time += ms;

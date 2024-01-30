@@ -8,13 +8,14 @@ project(device-sim
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(OpenSSL)
+# find_package(OpenSSL)
 
 add_executable(device-sim
 	simulator/main.cpp
 	simulator/sim_client.cpp
 	src/device.cpp
-	src/client.cpp
+	src/dataClient.cpp
+	src/sensor.cpp
 )
 target_include_directories(device-sim PRIVATE simulator src src/lib)
 target_compile_definitions(device-sim PRIVATE SIMULATOR)

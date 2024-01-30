@@ -2,11 +2,11 @@
 
 #include "../config.hpp"
 #include "sensor.hpp"
-#include "client.hpp"
+#include "dataClient.hpp"
 
 class Device {
 public:
-	Device(Sensor* sensors, int num_sensors, DataClient* client) {
+	Device(Sensor** sensors, int num_sensors, DataClient* client) {
 		this->sensors = sensors;
 		this->num_sensors = num_sensors;
 		this->client = client;
@@ -32,11 +32,10 @@ public:
 	virtual bool register_device();
 
 private:
-	const char* _id;
-	Sensor* sensors;
+	Sensor** sensors;
 	uint8_t num_sensors; // MAX: 254
 
-	uint32_t id; // The id we get from the database (our primary key)
+	uint32_t _id; // The id we get from the database (our primary key)
 	unsigned record_interval = DEFAULT_RECORD_INTERVAL;
 	uint64_t last_update;
 	DataClient* client;

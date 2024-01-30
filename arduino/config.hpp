@@ -1,7 +1,7 @@
 #pragma once
 
 // Compile flags
-#define NO_LTE
+// #define NO_LTE
 #define DEBUG_MODE 1
 
 // Identifiers
@@ -28,10 +28,15 @@
 #endif
 
 #if DEBUG_MODE == 1 && !defined(SIMULATOR)
-	char _dbg_msg[256];
+	extern char _dbg_msg[256];
 	#define DEBUG(...) sprintf(_dbg_msg, __VA_ARGS__); Serial.write(_dbg_msg, 256)
-#else if defined(SIMULATOR)
-	#define DEBUG(...) printf(_dbg_msg, __VA_ARGS__)
+	#define DEBUG_EXPR(expr) expr
+#elif defined(SIMULATOR)
+	#define DEBUG(...) printf(__VA_ARGS__)
+	#define DEBUG_EXPR(expr)
 #else
 	#define DEBUG(...)
+	#define DEBUG_EXPR(expr)
 #endif
+
+#define ARDUINOJSON_USE_LONG_LONG 1

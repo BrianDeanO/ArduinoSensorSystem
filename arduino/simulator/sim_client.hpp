@@ -12,6 +12,6 @@ public:
     uint64_t get_time() override;
 
 private:
-    int handle_response(httplib::Response re);
+    int handle_result(httplib::Result res, char* response, unsigned response_size);
     httplib::Client http;
 };

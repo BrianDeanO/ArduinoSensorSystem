@@ -6,6 +6,7 @@
 #include "Client.h"
 
 class SerialClient : public Client {
+public:
 	SerialClient(HardwareSerial* serial)
 	{
 		this->serial = serial;
@@ -13,16 +14,17 @@ class SerialClient : public Client {
 
 	virtual int connect(IPAddress ip, uint16_t port) override
 	{
-		char addr[16];
-		sprintf(addr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-		return connect(addr, port);
+		// char addr[16];
+		// sprintf(addr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+		// return connect(addr, port);
+		return 0;
 	}
 
 	virtual int connect(const char* host, uint16_t port) override
 	{
-		char buf[36];
-		sprintf("CONNECT:%s:%d\n", host, port);
-		serial->write(buf, 36)
+		// char buf[36];
+		// sprintf("CONNECT:%s:%d\n", host, port);
+		// serial->write(buf, 36);
 		return 0;
 	}
 

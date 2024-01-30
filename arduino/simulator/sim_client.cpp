@@ -2,12 +2,15 @@
 #include <string.h>
 #include <time.h>
 
-int SimClient::handle_response(httplib::Response res)
+int SimClient::handle_result(httplib::Result res, char* response, unsigned response_size)
 {
 	if (res) {
 		if(res->status / 100 != 2) {
 			return -res->status; // Bad status code
 		}
+
+		if(!response)
+			return 0;
 
 		strncpy(response, res->body.c_str(), response_size);
 		return res->body.size();
@@ -17,20 +20,20 @@ int SimClient::handle_response(httplib::Response res)
 
 int SimClient::get(const char* url, char* response, unsigned response_size)
 {
-	auto res = http.Get(route);
-	return handle_response(res);
+	auto res = http.Get(url);
+	return handle_result(std::move(res), response, response_size);
 }
 
 int SimClient::post(const char* url, const char* body, char* response, unsigned response_size)
 {
-	http.Post(url, body, "application/json");
-	return handle_response(res);
+	auto res = http.Post(url, body, "application/json");
+	return handle_result(std::move(res), response, response_size);
 }
 
 int SimClient::put(const char* url, const char* body, char* response, unsigned response_size)
 {
-	http.Put(url, body, "application/json");
-	return handle_response(res);
+	auto res = http.Put(url, body, "application/json");
+	return handle_result(std::move(res), response, response_size);
 }
 
 uint64_t SimClient::get_time() {
