@@ -9,4 +9,7 @@ namespace backEndApp.Models;
 public class UserDevice {
     public int UserID { get; set; }
     public int DeviceID { get; set; }
+    
+    public User User { get; set; }
+    public Device Device { get; set; }
 }
