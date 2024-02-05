@@ -10,7 +10,7 @@ public class Sensor {
     public int SensorID { get; set; }    
     [Required]
     public string SensorIdent { get; set; }
-    public string SensorName { get; set; }
-    public string SensorType { get; set; }
+    public string? SensorName { get; set; }
+    public string? SensorType { get; set; }
     public int ChannelCount { get; set; }
 }

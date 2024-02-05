@@ -17,19 +17,15 @@ void print_menu() {
 	        //   << "3) Send datapoint command\n"
 	        //   << "3) Get device configuration\n"
 			  << "\n"
-	          << "0) Exit menu\n"
-			  << std::endl;
+	          << "0) Exit menu" << std::endl;
 }
 
 void run_sim_device(std::string addr, unsigned port) {
 	SimClient client(addr.c_str(), port);
 
 	std::vector<Sensor*> sensors;
-	std::string id, input;
-
-	std::cout << "Enter a device ID > " << std::endl;
-	std::getline(std::cin, id);
-	std::cout << "Enter an update interval in seconds > " << std::endl;
+	std::string input;
+	std::cout << "Enter an update interval in seconds > ";
 	std::getline(std::cin, input);
 	time_t update_interval = std::stoi(input);
 
@@ -44,7 +40,9 @@ void run_sim_device(std::string addr, unsigned port) {
 	while(true) {
 		std::cout << "Update event." << std::endl;
 		device.update();
-		usleep((device.next_update() - client.get_time()) * 1000000);
+		time_t duration = (device.next_update() - client.get_time()) * 1000000;
+		duration = duration > 0 ? duration : 0; // Ensure we don't sleep for a negative duration
+		usleep(duration);
 	}
 }
 
@@ -63,6 +61,7 @@ int main(int argc, char** argv) {
 	std::string input;
 	while(true) {
 		print_menu();
+		std::cout << "> ";
 		std::getline(std::cin, input);
 
 		int option = -1;

@@ -42,7 +42,7 @@ bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size)
 		JsonDocument j;
 		deserializeJson(j, buf);
 		if(!j.containsKey("sensorID")) {
-			DEBUG("Sensor registration response contained no id!");
+			DEBUG("Sensor registration response contained no id!\n");
 			return false;
 		}
 
@@ -64,13 +64,16 @@ bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size)
 		if(result > 0) {
 			j.clear();
 			deserializeJson(j, buf);
-			if(!j.containsKey("deviceID")) {
-				DEBUG("New sensor registration response contained no id!");
+			if(!j.containsKey("sensorID")) {
+				DEBUG("New sensor registration response contained no id!\n");
 				return false;
 			}
 
 			this->_id = j["sensorID"].as<uint32_t>();
 			return true;
+		}
+		else {
+			DEBUG("Failed to register new sensor: %d", result);
 		}
 	}
 

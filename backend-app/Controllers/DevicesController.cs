@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SqlClient;
 using backEndApp.Models;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -117,8 +118,9 @@ namespace backEndApp.Controllers {
                 DeviceID = device.DeviceID
                 // Poll time
             };
-            return new JsonResult(dto, new JsonSerializerSettings() {
-                NullValueHandling = NullValueHandling.Ignore
+            return new JsonResult(dto, new JsonSerializerOptions() {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             });
         }
 

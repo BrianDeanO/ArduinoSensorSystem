@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 using backEndApp.Models;
+using System.Text.Json;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -38,6 +39,28 @@ namespace backEndApp.Controllers {
             return SensorToDTO(sensor);
         }
 
+        // This endpoint is only used by the device to check if a device by `deviceIdent`
+        // already exists, so only return fields relevant to the device.
+        [HttpGet("ident/{sensorIdent}")]
+        public async Task<ActionResult<SensorDTO>> GetSensorIdent(String sensorIdent) {
+            var sensor = await _context.Sensors
+                .Where(e => e.SensorIdent == sensorIdent)
+                .FirstOrDefaultAsync();
+
+            if (sensor == null) {
+                return NotFound();
+            }
+
+            var dto = new SensorDTO {
+                SensorID = sensor.SensorID
+                // Poll time
+            };
+            return new JsonResult(dto, new JsonSerializerOptions() {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
+        }
+
         [HttpPut("{sensorId}")]
         public async Task<IActionResult> PutSensor(int sensorId, Sensor sensorDTO) {
             if (sensorId != sensorDTO.SensorID) {
@@ -49,6 +72,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
+            sensor.SensorIdent = sensorDTO.SensorIdent;
             sensor.SensorType = sensorDTO.SensorType;
             sensor.SensorName = sensorDTO.SensorName;
             sensor.ChannelCount = sensorDTO.ChannelCount;
@@ -66,6 +90,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         public async Task<ActionResult<Sensor>> PostSensor(Sensor sensorDTO) {
             var sensor = new Sensor {
+                SensorIdent = sensorDTO.SensorIdent,
                 SensorType = sensorDTO.SensorType,
                 SensorName = sensorDTO.SensorName,
                 ChannelCount = sensorDTO.ChannelCount,

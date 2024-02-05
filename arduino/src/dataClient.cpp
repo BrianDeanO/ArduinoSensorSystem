@@ -7,7 +7,7 @@ int handle_httpclient_response(HttpClient& http, const char* url, char* response
 {
 	int statusCode = http.responseStatusCode();
 	if(statusCode / 100 != 2) { // Check for 200 status code (Success)
-		DEBUG("Status code %d returned from request %s", statusCode, url);
+		DEBUG("Status code %d returned from request %s\n", statusCode, url);
 		return -statusCode;
 	}
 
@@ -61,7 +61,7 @@ uint64_t LTEDataClient::get_time() {
 	uint8_t tz;
 	LTE_Shield_error_t err = lte->clock(&tm.Year, &tm.Month, &tm.Day, &tm.Hour, &tm.Minute, &tm.Second, &tz);
 	if(err != LTE_SHIELD_ERROR_SUCCESS) {
-		DEBUG("Error getting lte time: lte err code %d", err);
+		DEBUG("Error getting lte time: lte err code %d\n", err);
 		return 0;
 	}
 	else {

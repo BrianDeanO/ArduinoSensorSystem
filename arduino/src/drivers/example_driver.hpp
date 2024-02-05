@@ -31,6 +31,7 @@ public:
 		case 0: return "C";
 		case 1: return "atm";
 		}
+		return "unknown";
 	}
 
 	virtual const char* sensor_type() const { return "example"; }

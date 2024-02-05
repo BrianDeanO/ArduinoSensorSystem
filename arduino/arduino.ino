@@ -23,7 +23,7 @@ Device device(sensors, 1, &client);
 void setup() {
     Serial.begin(9600);
     DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
-    DEBUG("Program Start");
+    DEBUG("Program Start\n");
 
 #ifndef NO_LTE
     // Use hardware serial port 1 to communicate with the lte shield
@@ -49,7 +49,7 @@ void loop() {
     device.update();
 
     uint16_t ms = device.next_update() - client.get_time();
-    DEBUG("Waiting %d", ms);
+    DEBUG("Waiting %d\n", ms);
     delay(ms);
 #ifdef NO_LTE
     client.fake_last_time += ms;

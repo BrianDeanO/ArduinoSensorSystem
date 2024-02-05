@@ -73,6 +73,10 @@ namespace backEndApp.Controllers {
 
             // Checking to see if both the user and device exists (simulating foreign key)
             if(SensorExists(deviceSensorDTO.SensorID) && DeviceExists(deviceSensorDTO.DeviceID)) {
+                if(DeviceSensorExists(deviceSensorDTO.DeviceID, deviceSensorDTO.SensorID)) {
+                    return NoContent();
+                }
+
                 _context.DeviceSensors.Add(deviceSensor);
                 await _context.SaveChangesAsync();
 

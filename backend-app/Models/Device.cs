@@ -11,7 +11,7 @@ public class Device {
 
     [Required]
     public string DeviceIdent { get; set; }
-    public string DeviceName { get; set; }
-    public string DeviceType { get; set; }
-    public string ZipCode { get; set; }
+    public string? DeviceName { get; set; }
+    public string? DeviceType { get; set; }
+    public string? ZipCode { get; set; }
 }

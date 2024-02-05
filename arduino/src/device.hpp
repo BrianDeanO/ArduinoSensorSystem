@@ -33,10 +33,10 @@ public:
 
 private:
 	Sensor** sensors;
-	uint8_t num_sensors; // MAX: 254
+	uint8_t num_sensors = 0; // MAX: 254
 
 	uint32_t _id; // The id we get from the database (our primary key)
 	unsigned record_interval = DEFAULT_RECORD_INTERVAL;
-	uint64_t last_update;
+	uint64_t last_update = 0;
 	DataClient* client;
 };

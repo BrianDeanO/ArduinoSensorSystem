@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backEndApp.Models;
 
@@ -11,9 +12,11 @@ using backEndApp.Models;
 namespace backEndApp.Migrations
 {
     [DbContext(typeof(SensorSystemContext))]
-    partial class SensorSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20240205044009_NullFields")]
+    partial class NullFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

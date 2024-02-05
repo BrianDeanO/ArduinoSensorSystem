@@ -4,7 +4,7 @@
 #define DEFAULT_DEVICE_JSON  R"({"deviceIdent":")" DEVICE_IDENT R"(","deviceName":")" DEFAULT_DEVICE_NAME R"(","deviceType":")" DEFAULT_DEVICE_TYPE R"("})"
 
 bool Device::register_device() {
-	DEBUG("Sending register command");
+	DEBUG("Sending register command\n");
 	char buf[RESPONSE_BUFFER_SIZE];
 
 	int result = client->get("/api/Devices/ident/" DEVICE_IDENT, buf, RESPONSE_BUFFER_SIZE);
@@ -12,11 +12,12 @@ bool Device::register_device() {
 		JsonDocument j;
 		deserializeJson(j, buf);
 		if(!j.containsKey("deviceID")) {
-			DEBUG("Registration response contained no id!");
+			DEBUG("Registration response contained no id!\n");
 			return false;
 		}
 
 		this->_id = j["deviceID"].as<uint32_t>();
+		DEBUG("Got device db ID: %d\n", this->_id);
 		// TODO: Set poll time
 	}
 	// Check for 400 level response codes, indicating the identifier does not 
@@ -28,18 +29,21 @@ bool Device::register_device() {
 			JsonDocument j;
 			deserializeJson(j, buf);
 			if(!j.containsKey("deviceID")) {
-				DEBUG("New Registration response contained no id!");
+				DEBUG("New Registration response contained no id!\n");
 				return false;
 			}
 
 			this->_id = j["deviceID"].as<uint32_t>();
+			DEBUG("Got new device db ID: %d\n", this->_id);
 			// TODO: Set poll time
 		}
 		else {
+			DEBUG("Error sending device register command: %d\n", result);
 			return false;
 		}
 	}
 	else {
+		DEBUG("Error sending device get command: %d\n", result);
 		return false;
 	}
 
@@ -64,7 +68,7 @@ void Device::update() {
 	uint64_t current_time = client->get_time();
 
 	if(current_time >= next_update()) {
-		DEBUG("Starting update");
+		DEBUG("Starting update\n");
 		acquire_data(); // Read data from sensors into cache
 
 		JsonDocument j;
@@ -73,28 +77,26 @@ void Device::update() {
 			Sensor* sensor = sensors[i];
 
 			Datapoint point;
-			if(!sensor->get_last_point(point)) {
-				// Out of points for this sensor
-				continue;
-			}
+			while(sensor->get_last_point(point)) {
+				j.clear();
+				j["sensorID"] = sensor->id();
+				j["channelID"] = point.channel;
+				j["dataValue"] = point.value;
+				j["timeRecorded"] = point.time;
+				j["dataUnit"] = sensor->channel_units(point.channel);
+				serializeJson(j, buf);
 
-			j.clear();
-			j["sensorID"] = sensor->id();
-			j["channelID"] = point.channel;
-			j["dataValue"] = point.value;
-			j["timeRecorded"] = point.time;
-			j["dataUnit"] = sensor->channel_units(point.channel);
-			serializeJson(j, buf);
-
-			int retries = 0;
-			while(retries < 3) {
-				int result = client->post("/api/SensorDatas", buf, nullptr, 0);
-				if(result < 0) {
-					retries++;
+				int retries = 0;
+				while(retries < 2) {
+					int result = client->post("/api/SensorDatas", buf, nullptr, 0);
+					if(result < 0) {
+						retries++;
+					}
+					else {
+						break;
+					}
 				}
-				else {
-					break;
-				}
+				sensor->pop_last_point(); // Point sucessfully sent, remove it from the cache
 			}
 		}
 
