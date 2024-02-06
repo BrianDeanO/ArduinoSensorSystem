@@ -8,8 +8,6 @@ namespace backEndApp.Interfaces {
         UserDevice GetUserDevice(int userId, int deviceId);
         User GetUserDeviceUser(int userId);
         Device GetUserDeviceDevice(int deviceId);
-        ICollection<User> GetUserDeviceUsers(int userId);
-        ICollection<Device> GetUserDeviceDevices(int deviceId);
         bool UserDeviceExists(int userId, int deviceId);
         bool UserDeviceExistsWithUserID(int userId);
         bool UserDeviceExistsWithDeviceID(int deviceId);

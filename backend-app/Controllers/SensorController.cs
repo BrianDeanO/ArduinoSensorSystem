@@ -168,7 +168,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(userId);
+            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(sensorId);
             var sensorToDelete = _sensorRepository.GetSensor(sensorId);
 
             if(!ModelState.IsValid) {

@@ -22,8 +22,8 @@ namespace backEndApp.Controllers {
         public DeviceController(
             IDeviceRepository deviceRepository, 
             IMapper mapper,
-            IUserDeviceRepository _userDeviceRepository,
-            ISensorRepository _sensorRepository
+            IUserDeviceRepository userDeviceRepository,
+            ISensorRepository sensorRepository
         ) {
             _deviceRepository = deviceRepository;
             _mapper = mapper;

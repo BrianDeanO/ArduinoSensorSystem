@@ -12,6 +12,7 @@ namespace backEndApp.Interfaces {
         bool CreateSensor(Sensor sensor);
         bool UpdateSensor(Sensor sensor);
         bool DeleteSensor(Sensor sensor);
+        bool DeleteSensors(List<Sensor> sensors);
         bool Save();
     }
 }

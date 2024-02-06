@@ -30,16 +30,6 @@ namespace backEndApp.Repository {
             return _context.Devices.Where(d => d.DeviceID == deviceId).FirstOrDefault();
         }
 
-    MAKE THIS GOOD
-
-        public ICollection<User> GetUserDeviceUsers(int userId) {
-            return _context.UserDevices.Where(ud => ud.UserID == userId).Select(u => u.User).ToList();
-        }
-
-        public ICollection<Device> GetUserDeviceDevices(int deviceId) {
-            return _context.UserDevices.Where(ud => ud.DeviceID == deviceId).Select(d => d.Device).ToList();
-        }
-
         public bool UserDeviceExists(int userId, int deviceId) {
             return _context.UserDevices
                 .Any(ud => ((ud.UserID == userId) && (ud.DeviceID == deviceId)));

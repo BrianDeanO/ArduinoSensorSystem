@@ -95,37 +95,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("UserDevice/{userId}/Users")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDeviceUsers(int userId) {
-            var users = _mapper.Map<List<UserDTO>>(_userDeviceRepository.GetUserDeviceUsers(userId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(users);
-            }
-        }
-
-        [HttpGet("UserDevice/{deviceId}/Devices")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Device>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDeviceDevices(int deviceId) {
-            // Make another UserDeviceExits????
-            // if(!_userDeviceRepository.UserDeviceExists(userId, deviceId)) {
-            //     return NotFound();
-            // }
-
-            var devices = _mapper.Map<List<DeviceDTO>>(_userDeviceRepository.GetUserDeviceDevices(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(devices);
-            }             
-        }
-
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -167,7 +136,7 @@ namespace backEndApp.Controllers {
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public IActionResult DeleteUserDevice(int userId, int deviceId) {
-            if(!_userRepository.UserDeviceExists(userId, deviceId)) {
+            if(!_userDeviceRepository.UserDeviceExists(userId, deviceId)) {
                 return NotFound();
             }
 
@@ -184,51 +153,9 @@ namespace backEndApp.Controllers {
             return Ok("Successfully Deleted.");
         }
         /*
-            Doesn't make sense to have a update for this. 
+            Doesn't make sense to have a update method for this. 
                 We would delete a UserDevice (i.e., take away access)
                 Then add the UserDevice back (i.e., give them access)
         */
-        // [HttpPut("{userId}:{deviceId}")]
-        // [ProducesResponseType(204)]
-        // [ProducesResponseType(400)]
-        // [ProducesResponseType(404)]
-        // public IActionResult UpdateUserDevice(int userId, int deviceId, [FromBody] UserDeviceDTO updatedUserDevice) {
-        //     if(updatedUserDevice == null) {
-        //         return BadRequest(ModelState);
-        //     }
-
-        //     else if(!_userDeviceRepository.UserDeviceExists(userId, deviceId)) {
-        //         return NotFound();
-        //     }
-
-        //     else if((!_deviceRepository.DeviceExists(updatedUserDevice.DeviceID) || 
-        //             !_userRepository.UserExists(updatedUserDevice.UserID)) ||
-        //             (_userDeviceRepository.UserDeviceExists(updatedUserDevice.UserID, updatedUserDevice.DeviceID))
-        //     ) {
-        //         return BadRequest(ModelState);
-        //     }
-
-        //     else if(!ModelState.IsValid) {
-        //         return BadRequest();
-        //     }
-
-        //     // var userDeviceMap = _mapper.Map<UserDevice>(updatedUserDevice);
-        //     // userDeviceMap.User = _userRepository.GetUser(updatedUserDevice.UserID);
-        //     // userDeviceMap.Device = _deviceRepository.GetDevice(updatedUserDevice.DeviceID);
-
-        //     var userDevice = new UserDevice() {
-        //         UserID = updatedUserDevice.UserID,
-        //         User = _userRepository.GetUser(updatedUserDevice.UserID),
-        //         DeviceID = updatedUserDevice.DeviceID,
-        //         Device = _deviceRepository.GetDevice(updatedUserDevice.DeviceID),
-        //     };
-
-        //     if(!_userDeviceRepository.UpdateUserDevice(userDevice)) {
-        //         ModelState.AddModelError("", "Something Went Wrong While Updating UserDevice.");
-        //         return StatusCode(500, ModelState);
-        //     }
-
-        //     return Ok("Successfully Updated.");
-        // }
     }
 }
