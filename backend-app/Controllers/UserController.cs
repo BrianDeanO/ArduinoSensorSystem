@@ -149,39 +149,31 @@ namespace backEndApp.Controllers {
             return Ok("Successfully Updated.");
         }
 
+        [HttpDelete("{userId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteUser(int userId) {
+            if(!_userRepository.UserExists(userId)) {
+                return NotFound();
+            }
 
+            var userDevicesToDelete = _userRepository.GetUserDevices(userId);
+            var userToDelete = _userRepository.GetUser(userId);
 
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
 
-        LEFT OFF HERE, WHERE WE NEED TO RETIREVE THE USERDEVICES TO DELEE
+            if(!_userDeviceRepository.DeleteUserDevices(userDevicesToDelete.ToList())) {
+                ModelState.AddModelError("", "Something went wrong when deleting UserDevices");
+            }
 
+            if(!_userRepository.DeleteUser(userToDelete)) {
+                ModelState.AddModelError("", "Something went wrong when deleting the User");
+            }
 
-
-        // [HttpDelete("{userId}")]
-        // [ProducesResponseType(400)]
-        // [ProducesResponseType(204)]
-        // [ProducesResponseType(404)]
-        // public IActionResult DeleteUser(int userId) {
-        //     if (!_userRepository.UserExists(userId)) {
-        //         return NotFound();
-        //     }
-
-        //     var userDevicesToDelete = _userDeviceRepository.GetReviewsOfAPokemon(pokeId);
-        //     var pokemonToDelete = _pokemonRepository.GetPokemon(pokeId);
-
-        //     if (!ModelState.IsValid)
-        //         return BadRequest(ModelState);
-
-        //     if (!_reviewRepository.DeleteReviews(reviewsToDelete.ToList()))
-        //     {
-        //         ModelState.AddModelError("", "Something went wrong when deleting reviews");
-        //     }
-
-        //     if (!_pokemonRepository.DeletePokemon(pokemonToDelete))
-        //     {
-        //         ModelState.AddModelError("", "Something went wrong deleting owner");
-        //     }
-
-        //     return NoContent();
-        // }
+            return Ok("Successfully Deleted.");
+        }
     }
 }

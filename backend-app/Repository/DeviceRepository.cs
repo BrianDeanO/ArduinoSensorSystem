@@ -29,9 +29,6 @@ namespace backEndApp.Repository {
         public ICollection<UserDevice> GetUserDevices(int deviceId) {
             // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
             return _context.UserDevices.Where(ud => (ud.DeviceID == deviceId)).ToList();
-
-            // Could try to do a nested query where, for each match in the table,
-            //  we retrieve the corresponding users. And return Icollection<User>
         }
 
         public ICollection<User> GetUsersFromDevice(int deviceId) {

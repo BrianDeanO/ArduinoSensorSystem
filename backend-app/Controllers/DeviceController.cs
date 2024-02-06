@@ -16,10 +16,19 @@ namespace backEndApp.Controllers {
 
         private readonly IDeviceRepository _deviceRepository;
         private readonly IMapper _mapper;
+        private readonly IUserDeviceRepository _userDeviceRepository;
+        private readonly ISensorRepository _sensorRepository;
 
-        public DeviceController(IDeviceRepository deviceRepository, IMapper mapper) {
+        public DeviceController(
+            IDeviceRepository deviceRepository, 
+            IMapper mapper,
+            IUserDeviceRepository _userDeviceRepository,
+            ISensorRepository _sensorRepository
+        ) {
             _deviceRepository = deviceRepository;
             _mapper = mapper;
+            _userDeviceRepository = userDeviceRepository;
+            _sensorRepository = sensorRepository;
         }
 
         [HttpGet]
@@ -165,5 +174,36 @@ namespace backEndApp.Controllers {
             return Ok("Successfully Updated.");
         }
 
+        [HttpDelete("{deviceId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteDevice(int deviceId) {
+            if(!_deviceRepository.DeviceExists(deviceId)) {
+                return NotFound();
+            }
+
+            var userDevicesToDelete = _deviceRepository.GetUserDevices(deviceId);
+            var deviceToDelete = _deviceRepository.GetDevice(deviceId);
+            var sensorsToDelete = _deviceRepository.GetDeviceSensors(deviceId);
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if(!_userDeviceRepository.DeleteUserDevices(userDevicesToDelete.ToList())) {
+                ModelState.AddModelError("", "Something went wrong when deleting UserDevices");
+            }
+
+            if(!_sensorRepository.DeleteSensors(sensorsToDelete.ToList())) {
+                ModelState.AddModelError("", "Something went wrong when deleting Sensors");
+            }
+
+            if(!_deviceRepository.DeleteDevice(deviceToDelete)) {
+                ModelState.AddModelError("", "Something went wrong when deleting the Device");
+            }
+
+            return Ok("Successfully Deleted.");
+        }
     }
 }

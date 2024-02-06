@@ -16,6 +16,7 @@ namespace backEndApp.Interfaces {
         bool CreateUserDevice(UserDevice userDevice);
         bool UpdateUserDevice(UserDevice userDevice);
         bool DeleteUserDevice(UserDevice userDevice);
+        bool DeleteUserDevices(List<UserDevice> userDevices);
         bool Save();
     }
 }

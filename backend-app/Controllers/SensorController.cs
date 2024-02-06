@@ -17,11 +17,18 @@ namespace backEndApp.Controllers {
         private readonly ISensorRepository _sensorRepository;
         private readonly IMapper _mapper;
         private readonly IDeviceRepository _deviceRepository;
+        private readonly ISensorDataRepository _sensorDataRepository;
 
-        public SensorController(ISensorRepository sensorRepository, IDeviceRepository deviceRepository, IMapper mapper) {
+        public SensorController(
+            ISensorRepository sensorRepository, 
+            IDeviceRepository deviceRepository, 
+            IMapper mapper,
+            ISensorDataRepository sensorDataRepository
+        ) {
             _sensorRepository = sensorRepository;
             _mapper = mapper;
             _deviceRepository = deviceRepository;
+            _sensorDataRepository = sensorDataRepository;
         }
 
         [HttpGet]
@@ -152,5 +159,31 @@ namespace backEndApp.Controllers {
             return Ok("Successfully Updated.");
         }
 
+        [HttpDelete("{sensorId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteSensor(int sensorId) {
+            if(!_sensorRepository.SensorExists(sensorId)) {
+                return NotFound();
+            }
+
+            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(userId);
+            var sensorToDelete = _sensorRepository.GetSensor(sensorId);
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if(!_sensorDataRepository.DeleteSensorDatas(sensorDatasToDelete.ToList())) {
+                ModelState.AddModelError("", "Something went wrong when deleting SensorDatas");
+            }
+
+            if(!_sensorRepository.DeleteSensor(sensorToDelete)) {
+                ModelState.AddModelError("", "Something went wrong when deleting the Sensor");
+            }
+
+            return Ok("Successfully Deleted.");
+        }
     }
 }

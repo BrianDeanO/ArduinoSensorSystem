@@ -68,6 +68,10 @@ namespace backEndApp.Repository {
             return Save();
         }
 
+        public bool DeleteUserDevices(List<UserDevice> userDevices) {
+            _context.RemoveRange(userDevices);
+            return Save();
+        }
 
         public bool Save() {
             var saved = _context.SaveChanges();

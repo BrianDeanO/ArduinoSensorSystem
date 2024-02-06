@@ -138,5 +138,27 @@ namespace backEndApp.Controllers {
 
             return Ok("Successfully Updated.");
         }
+
+        [HttpDelete("{sensorDataId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteSensorData(int sensorDataId) {
+            if(!_sensorDataRepository.SensorDataExists(sensorDataId)) {
+                return NotFound();
+            }
+
+            var sensorDataToDelete = _sensorDataRepository.GetSensorData(sensorDataId);
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if(!_sensorDataRepository.DeleteSensorData(sensorDataToDelete)) {
+                ModelState.AddModelError("", "Something went wrong when deleting the SensorData");
+            }
+
+            return Ok("Successfully Deleted.");
+        }
     }
 }

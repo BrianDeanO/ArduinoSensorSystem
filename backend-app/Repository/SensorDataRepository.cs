@@ -45,6 +45,11 @@ namespace backEndApp.Repository {
             return Save();
         }
 
+        public bool DeleteSensorDatas(List<SensorData> sensorDatas) {
+            _context.RemoveRange(sensorDatas);
+            return Save();
+        }
+
         public bool Save() {
             var saved = _context.SaveChanges();
             return (saved  > 0) ? true : false;

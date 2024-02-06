@@ -161,6 +161,28 @@ namespace backEndApp.Controllers {
                 return Ok("Successfully Created.");
             }
         }
+
+        [HttpDelete("{userId}:{deviceId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteUserDevice(int userId, int deviceId) {
+            if(!_userRepository.UserDeviceExists(userId, deviceId)) {
+                return NotFound();
+            }
+
+            var userDeviceToDelete = _userDeviceRepository.GetUserDevice(userId, deviceId);
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if(!_userDeviceRepository.DeleteUserDevice(userDeviceToDelete)) {
+                ModelState.AddModelError("", "Something went wrong when deleting the UserDevice");
+            }
+
+            return Ok("Successfully Deleted.");
+        }
         /*
             Doesn't make sense to have a update for this. 
                 We would delete a UserDevice (i.e., take away access)

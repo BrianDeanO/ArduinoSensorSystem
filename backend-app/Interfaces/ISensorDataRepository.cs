@@ -11,6 +11,7 @@ namespace backEndApp.Interfaces {
         bool CreateSensorData(SensorData sensorData);
         bool UpdateSensorData(SensorData sensorData);
         bool DeleteSensorData(SensorData sensorData);
+        bool DeleteSensorDatas(List<SensorData> sensorDatas);
         bool Save();
     }
 }
