@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "./images/Hecate_Logo.png";
-import HecateHeader from "./HecateApp/hecateHeader.tsx";
-import HecateBody  from "./HecateApp/HecateBody.tsx";
+import HecateHeader from "./HecateApp/HecateHeader";
+import HecateBody  from "./HecateApp/HecateBody";
 // import TemperatureVisualizationBox from "./Visualizations/visualizationBox";
 import TemperatureVisualizationBox from "./HecateApp/Visualizations/TemperatureVisualizationBox.tsx";
 import VisualizationBox from "./HecateApp/Visualizations/VisualizationBox.tsx";
@@ -134,98 +134,7 @@ const HecateApp = () => {
     console.log('DEVICE SENSORS', deviceSensors);
     console.log('SENSOR DATA', sensorData);
 
-    function logInUser(userName, userPassword) {
-        let foundUser = false;
-        let tempUserID;
-        let tempUserDevicesArray = [];
-        // console.log('LOGGED IN?????', loggedIn)
-        
-        const fetchUserDeviceData = async (userId, deviceID, device) => {
-            console.log('USRE DEVICE URL', `${apiInfo.USER_DEVICES.URL}/${userID}:${deviceID}`);
 
-            await fetch(`${apiInfo.USER_DEVICES.URL}/${userID}:${deviceID}`)
-                .then((response) => {return response.json().then((responseData) => {
-                    console.log('responseData', responseData)
-
-                    if(Object.keys(responseData).length !== 0) {
-                        // console.log('PUSHING USER DEVICES ARRAY', responseData)
-                        // console.log('DVICE PUSEHD', device)
-                        tempUserDevicesArray.push(device);
-                        // userDevices.push(device)
-                        // setUserDevices(tempUserDevicesArray);
-    
-                        // deviceTable.forEach((device, deviceIndex) => {
-                        //     if(device.device_ID === dEntry.device_ID) {
-                        //         console.log('PUSH')
-                        //         tempDeviceArray.push(device);
-                        //     }
-                        // })
-    
-    
-                    }
-                        }).catch((error) => {
-                            console.log("Authorization Failed: " + error.message)
-                    })
-                });
-        }
-
-
-        
-        // console.log('LOGGING IN')
-        // console.log('usernmae', userName);
-        // console.log('password', userPassword)
-
-        // console.log('user table', userTable);
-
-        users.forEach((entry, index) => {
-            // console.log(index, 'entry', entry);
-            if( (loggedIn && (entry.userName === userName)) || 
-                (!loggedIn && ((entry.userName === userName) && (entry.userPassword === userPassword)))) {
-                    console.log('FOUND')
-                    tempUserID = entry.userID;
-                    foundUser = true;
-                    return;
-            } 
-            // if((entry.userName === userName) && (entry.userPassword === userPassword)) {
-
-            // }
-        });
-        
-        setUserID(tempUserID);
-        setUserName(userName);
-        
-        // console.log('user ID', tempUserID);
-
-        if(foundUser) {
-            devices.forEach((dEntry, dIndex) => {
-                // console.log('D entry', dEntry);
-                // const tempUserDevice = fetchUserDevice(tempUserID, dEntry.deviceID);
-                // fetchUserDeviceData(userID, dEntry.deviceID, dEntry);
-            });
-
-            // console.log('FINAL USER DEVICES array', tempUserDevicesArray);
-            // setUserDevices(tempUserDevicesArray);
-
-            // getAttachedSensors(tempUserDevicesArray);
-
-            setLoggedIn(true);
-        }
-        // console.log('final user id', userID);
-
-        setPassword('');
-    }
-
-    function logOutUser() {
-        setUserName('');
-        setPassword('');
-        setUserID('');
-        setSensors([]);
-        setDevices([]);
-        setUserDevices([]);
-        setSelectedSensorInfo('---');
-        setTimeType('---');
-        setLoggedIn(false);
-    }
 
     function getAttachedSensors(selectedDeviceID) {
         console.log('selected device', selectedDeviceID);

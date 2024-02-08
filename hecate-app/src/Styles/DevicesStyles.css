@@ -1,0 +1,65 @@
+/* 
+*****************************************
+CSS Styles for Hecate App Device Column
+*****************************************
+*/
+.MainDevicesBox {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--sheetBackground);
+    background-color: aqua;
+    /* margin: 5px auto 0px auto; */
+    height: 795px;
+    width: 1000px;
+}
+
+.MainDeviceSelectorBox {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: auto;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: blue;
+    color: black;
+    margin: 5px 10px 0px 10px;
+    font-size: 16pt;
+    text-align: center;
+}
+
+/* 
+  Device Selector Styles
+*/
+.deviceSelectorTitleText {
+    width: 175px;
+    height: 40px;
+    font-weight: bold;
+    color: black;
+    margin: 5px auto 0px auto;
+    font-size: 16pt;
+    text-align: center;
+    border-bottom: 2px;
+    border-color: black;
+    border-bottom-style: solid;
+}
+.DeviceButton {
+    display: flex;
+    flex-direction: column;
+    width: 175px;
+    height: auto;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: blue;
+    color: black;
+    margin: 5px auto 0px auto;
+    font-size: 16pt;
+    text-align: center;
+}
+.DeviceNameBox {
+    height: auto;
+    background-color: rgb(240, 57, 57);
+    margin: 5px auto 0px auto;
+}
+.SelectedDeviceNameBox {
+    height: auto;
+    background-color: rgb(116, 24, 24);
+    margin: 5px auto 0px auto;
+}

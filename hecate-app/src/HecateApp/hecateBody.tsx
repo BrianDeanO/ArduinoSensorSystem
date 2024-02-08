@@ -1,13 +1,16 @@
 import React, { useEffect, useState, Component } from "react";
-//@ts-ignore
 import Selectors from "./DataAndTimeSelectors/selectors.js";
-//@ts-ignore
 import TemperatureVisualizationBox from "./Visualizations/TemperatureVisualizationBox.js";
 
 // import { variables, dataObject } from "../variables.js";
 
+import Devices from "./Devices.tsx";
 
-const HecateBody = () => {
+interface BodyProps {
+    loggedIn: boolean;
+}
+
+const HecateBody: React.FC<BodyProps>  = ({loggedIn}: BodyProps) => {
     // const [tData, setTData] = useState([]);
 
     // function refreshList() {
@@ -26,8 +29,7 @@ const HecateBody = () => {
         <div className="HecateBody">
             {/* <Selectors /> */}
             {/* <TemperatureVisualizationBox /> */}
-            <div>
-            </div>
+            <Devices loggedIn={loggedIn}/>
         </div>  
     )
 }

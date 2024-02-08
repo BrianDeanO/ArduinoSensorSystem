@@ -11,7 +11,7 @@ public class SensorData {
     public string DataUnit { get; set; }
     public DateTime TimeRecorded { get; set; }
 
-    // Sensor ID Foreign Key
+    // The SensorID and Sensor object for the ONE sensor 
     public int SensorID { get; set; }
-    public Sensor Sensor { get; set; } // Definitely keep this in
+    public Sensor Sensor { get; set; }
 }

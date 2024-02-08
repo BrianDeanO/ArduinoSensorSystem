@@ -1,6 +1,8 @@
 @import "./Styles/HeaderStyle.css";
 @import "./Styles/SelectorStyles.css";
 @import "./Styles/VisualizationStyle.css";
+@import "./Styles/DevicesStyles.css";
+@import "./Styles/HeaderStyle.css";
 
 :root {
   --sheetBackground: rgb(177, 174, 174);
