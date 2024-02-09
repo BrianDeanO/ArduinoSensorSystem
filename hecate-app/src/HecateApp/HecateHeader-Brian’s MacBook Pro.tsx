@@ -1,53 +1,37 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "../images/Hecate_Logo.png";
 import { version } from "../Variables";
-import { CurrentUserType, UserType } from "../interfaces";
-import { localStorageTitles } from "../Variables.js";
-import axios from "axios";
-import { proxyURL } from "../Variables";
+import { CurrentUserType } from "../interfaces";
 
 interface HeaderProps {
-    logIn: (user: UserType) => void;
-    loggedInUser: CurrentUserType;
+    logIn: (userID: number) => void;
 }
 
-const client = axios.create({
-    baseURL: "http://localhost:5270/api" 
-  });
+const HecateHeader: React.FC<HeaderProps> = (
+    {logIn}: HeaderProps
+) => {
+    let userJSON = localStorage.getItem("currentUser");
+    const loggedInUser: CurrentUserType = (userJSON !== null) ? JSON.parse(userJSON) : {};
 
-  
-// const crypto = require('node:crypto');
-// console.log("hashes", crypto.getHashes())
-
-const HecateHeader: React.FC<HeaderProps> = ({
-    logIn,
-    loggedInUser
-}: HeaderProps) => {
-
-    const userJSON = localStorage.getItem(localStorageTitles.currentUser);
-    // const loggedInUser: CurrentUserType = (userJSON !== null) ? JSON.parse(userJSON) : {};
     const [loggedIn, setLoggedIn] = useState((loggedInUser && (loggedInUser.currentUserID !== 0)) ? true : false);
     const [userFirstName, setUserFirstName] = useState(loggedInUser ? loggedInUser.currentFirstName : '');
     const [userLastName, setUserLastName] = useState(loggedInUser ? loggedInUser.currentLastName : '');
     const [password, setPassword] = useState('');
     const [userID, setUserID] = useState(loggedInUser ? loggedInUser.currentUserID : 0);
 
-    const [users, setUsers] = useState([] as UserType[]);
-
     useEffect(() => {
-        // if(loggedIn) {
-        //     logIn(userID);
-        // }
+        if(loggedIn) {
+            logIn(userID);
+        }
+        localStorage.setItem("currentUser", JSON.stringify({
+                currentUserID: userID,
+                currentFirstName: userFirstName,
+                currentLastName: userLastName
+            }));
+    }, [ userID, userFirstName, userLastName ]);
 
-    }, [ userID, userFirstName, userLastName, loggedIn, logIn ]);
-
-        /**********
-             NEED TO USE AXIOS IN THE USEEFFECT SINCE IT REFRESHES 
-        *************/
-
-
-    async function logInUser(userFName: string, userPassword: string) {
-        console.log('logging in user', userFName, userPassword);
+    function logInUser(userFName: string, userPassword: string) {
+        console.log('logging in user');
         const tempUserID = 1;
 
         /**********
@@ -56,48 +40,12 @@ const HecateHeader: React.FC<HeaderProps> = ({
 
         *************/
 
+        setUserID(tempUserID);
+        setUserFirstName(userFName);
+        setUserLastName('Solo');
 
-        // async function getUsers() {
-        //     const response = await client.get('/User');
-        //     setUsers(response.data);
-        // }
-
-        const response = await client.get(`/User/${userFName}:${userPassword}`);
-
-        if(response) {
-            // const response = await client.get(`/User`);
-            setUsers(response.data);
-            console.log('response.data', response.data);
-            // getUsers();
-            
-            const tempUser: UserType = response.data;
-
-            console.log('temp  user', tempUser);
-            console.log('temp suer ID', tempUser.userID)
-            
-            // axios({
-            //     method: 'get',
-            //     url: `${proxyURL}/api/User`,
-            // })
-            //     .then(function (response) {
-            //         console.log('response', response);
-            //         setUsers(response.data);
-            //     }).catch(error => {
-            //         console.log(error);
-            //     })
-
-            setUserID(tempUserID);
-            setUserFirstName(userFName);
-            setUserLastName('Solo');
-            setLoggedIn(true);
-
-            // Calling the logIN function
-            logIn(tempUser);
-        } else {
-            console.log('ERROR COMMUNICATING TO API');
-        }
-
-
+        // Calling the logIN function
+        logIn(tempUserID);
     }
 
     function logOutUser() {
@@ -107,7 +55,7 @@ const HecateHeader: React.FC<HeaderProps> = ({
         setUserID(0);
         setLoggedIn(false);
 
-        logIn({} as UserType);
+        logIn(0);
     }
 
     // function logInUser(userName, userPassword) {
@@ -223,7 +171,7 @@ const HecateHeader: React.FC<HeaderProps> = ({
                     </div>
                     {
                         loggedIn ? 
-                            <div className="loggedInText"></div> :
+                            <div className="loggedInText"> {password} </div> :
                             <textarea
                                     className="loginInputTextArea"
                                     value={password}

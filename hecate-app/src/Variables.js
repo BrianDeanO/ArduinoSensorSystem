@@ -1,7 +1,15 @@
 export const version = "1.0";
-export const proxyURL = "https://localhost:7239";
+export const proxyURL_HTTPS = "https://localhost:7239";
+export const proxyURL = "http://localhost:5270";
 
-export  const apiInfo = {
+export const localStorageTitles = {
+    currentUser: "currentUser",
+    selectedDevice: "selectedDevice",
+    selectedSensor: "selectedSensor",
+    selectedSensorData: "selectedSensorData"
+}
+
+export const apiInfo = {
     USERS: {
         URL: `${proxyURL}/api/Users`,
         INDEX: 1

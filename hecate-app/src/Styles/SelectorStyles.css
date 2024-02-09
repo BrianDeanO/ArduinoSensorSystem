@@ -26,6 +26,17 @@ CSS Styles for Hecate App Selectors (Sensors, Times, Channels)
     border-bottom-style: solid;
 }
 
+.MainSelectorAndGraphBox {
+    display: flex;
+    flex-direction: column;
+    /* background-color: var(--sheetBackground); */
+    background-color: red;
+    margin: 0px 0px 0px 0px;
+    height: 785px;
+    width: 775px;
+    border-bottom-style: solid;
+}
+
 /* 
   Sensor Type Selector Styles
 */

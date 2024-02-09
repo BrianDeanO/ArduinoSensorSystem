@@ -60,6 +60,19 @@ namespace backEndApp.Controllers {
             }
         }
 
+        [HttpGet("{userFirstName}:{userPassword}")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400)]
+        public IActionResult GetUserWithLogin(string userFirstName, string userPassword) {
+            var user = _mapper.Map<UserDTO>(_userRepository.GetUserWithLogin(userFirstName, userPassword));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(user);
+            }
+        }
+
         [HttpGet("{userId}/UserDevices")]
         [ProducesResponseType(200, Type = typeof(ICollection<UserDevice>))]
         [ProducesResponseType(400)]
