@@ -85,7 +85,9 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var device = _mapper.Map<DeviceDTO>(_sensorRepository.GetSensorDevice(sensorId));
+            var sensor = _mapper.Map<SensorDTO>(_sensorRepository.GetSensor(sensorId));
+
+            var device = _mapper.Map<DeviceDTO>(_sensorRepository.GetSensorDevice(sensor.DeviceID));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);

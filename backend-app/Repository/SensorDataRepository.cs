@@ -20,6 +20,12 @@ namespace backEndApp.Repository {
         public SensorData GetSensorData(int sensorDataId) {
             return _context.SensorDatas.Where(sd => sd.SensorDataID == sensorDataId).FirstOrDefault();
         }
+        // public ICollection<SensorData> GetSensorDataInDateRange(DateTime parsedDateTime) {
+        //     return _context.SensorDatas
+        //         .Where(sd => (DateTime.Compare(sd.TimeRecorded, parsedDateTime) >= 0))
+        //         .Select(sd => sd)
+        //         .ToList();
+        // }
 
         public Sensor GetSensorDataSensor(int sensorId) {
             // var sensorList = _context.Sensors.Where(s => (s.SensorDataID == sensorDataId)).ToList();

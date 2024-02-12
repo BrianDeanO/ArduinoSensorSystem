@@ -109,7 +109,7 @@ CSS Styles for Hecate App Header
   text-align: center;
   background-color: #e4e8eb;
 }
-.mainLoginButton {
+.mainButton {
   margin: 10px auto;
   height: 40px;
   width: 100px;
@@ -125,3 +125,8 @@ CSS Styles for Hecate App Header
     cursor: pointer;
   } */
 } 
+
+.mainButton:hover {
+  background-color: rgb(219, 219, 219);
+  cursor: pointer;
+}

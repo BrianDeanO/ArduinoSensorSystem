@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "./images/Hecate_Logo.png";
-import HecateHeader from "./HecateApp/HecateHeader";
-import HecateBody  from "./HecateApp/HecateBody";
+import HecateHeader from "./HecateApp/HecateHeader.tsx";
+import HecateBody  from "./HecateApp/HecateBody.tsx";
 // import TemperatureVisualizationBox from "./Visualizations/visualizationBox";
 import TemperatureVisualizationBox from "./HecateApp/Visualizations/TemperatureVisualizationBox.tsx";
 import VisualizationBox from "./HecateApp/Visualizations/VisualizationBox.tsx";
@@ -33,7 +33,7 @@ const HecateApp = () => {
     // const userInfo = {};
     // console.log('userInfo', userInfo)
 
-    const [loggedIn, setLoggedIn] = useState((userInfo && (userInfo.currentUserID !== null)) ? true : false);
+    const [loggedIn, setLoggedIn] = useState(((Object.keys(userInfo).length !== 0) && (userInfo.currentUserID !== null)) ? true : false);
     const [selectedSensorInfo, setSelectedSensorInfo] = useState('---');
     const [selectedDevice, setSelectedDevice] = useState({});
     const [timeType, setTimeType] = useState('');
@@ -233,7 +233,7 @@ const HecateApp = () => {
                         </div>
                     </div>
                     <button 
-                        className="mainLoginButton"
+                        className="mainButton"
                         onClick={(e) => {
                             if(loggedIn) {
                                 logOutUser();

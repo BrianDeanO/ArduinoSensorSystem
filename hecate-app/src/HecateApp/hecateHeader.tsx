@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "../images/Hecate_Logo.png";
-import { version } from "../Variables";
-import { CurrentUserType, UserType } from "../interfaces";
+import { version, proxyURL } from "../Variables.js";
+import { CurrentUserType, UserType } from "../interfaces.js";
 import { localStorageTitles } from "../Variables.js";
 import axios from "axios";
-import { proxyURL } from "../Variables";
 
 interface HeaderProps {
     logIn: (user: UserType) => void;
@@ -13,7 +12,7 @@ interface HeaderProps {
 
 const client = axios.create({
     baseURL: "http://localhost:5270/api" 
-  });
+});
 
   
 // const crypto = require('node:crypto');
@@ -24,80 +23,46 @@ const HecateHeader: React.FC<HeaderProps> = ({
     loggedInUser
 }: HeaderProps) => {
 
-    const userJSON = localStorage.getItem(localStorageTitles.currentUser);
-    // const loggedInUser: CurrentUserType = (userJSON !== null) ? JSON.parse(userJSON) : {};
-    const [loggedIn, setLoggedIn] = useState((loggedInUser && (loggedInUser.currentUserID !== 0)) ? true : false);
-    const [userFirstName, setUserFirstName] = useState(loggedInUser ? loggedInUser.currentFirstName : '');
-    const [userLastName, setUserLastName] = useState(loggedInUser ? loggedInUser.currentLastName : '');
+    const [loggedIn, setLoggedIn] = useState(((Object.keys(loggedInUser).length !== 0) && (loggedInUser.currentUserID !== 0)) ? true : false);
+    const [userFirstName, setUserFirstName] = useState((Object.keys(loggedInUser).length !== 0) ? loggedInUser.currentFirstName : '');
+    const [userLastName, setUserLastName] = useState((Object.keys(loggedInUser).length !== 0) ? loggedInUser.currentLastName : '');
     const [password, setPassword] = useState('');
-    const [userID, setUserID] = useState(loggedInUser ? loggedInUser.currentUserID : 0);
-
+    const [userID, setUserID] = useState((Object.keys(loggedInUser).length !== 0) ? loggedInUser.currentUserID : 0);
     const [users, setUsers] = useState([] as UserType[]);
 
-    useEffect(() => {
-        // if(loggedIn) {
-        //     logIn(userID);
-        // }
+    async function logInUser(userFName: string, userPswrd: string) {
+        console.log('logging in user', userFName, userPswrd);
+        let tempUsers: UserType[] = [];
 
-    }, [ userID, userFirstName, userLastName, loggedIn, logIn ]);
+        await axios({
+            method: 'get',
+            url: `${proxyURL}/api/User`,
+        })
+            .then(function (response) {
+                console.log('response', response);
+                setUsers(response.data);
+                tempUsers = response.data;
+            }).catch(error => {
+                console.log(error);
+            })
 
-        /**********
-             NEED TO USE AXIOS IN THE USEEFFECT SINCE IT REFRESHES 
-        *************/
+        console.log('tempUsers', tempUsers)
 
-
-    async function logInUser(userFName: string, userPassword: string) {
-        console.log('logging in user', userFName, userPassword);
-        const tempUserID = 1;
-
-        /**********
-          USE AXIOS TO GET USER TABLE THEN CROSS REFERENCE TO LOG IN.
-          OBTAINGED THE USER ID
-
-        *************/
-
-
-        // async function getUsers() {
-        //     const response = await client.get('/User');
-        //     setUsers(response.data);
-        // }
-
-        const response = await client.get(`/User/${userFName}:${userPassword}`);
-
-        if(response) {
-            // const response = await client.get(`/User`);
-            setUsers(response.data);
-            console.log('response.data', response.data);
-            // getUsers();
-            
-            const tempUser: UserType = response.data;
-
-            console.log('temp  user', tempUser);
-            console.log('temp suer ID', tempUser.userID)
-            
-            // axios({
-            //     method: 'get',
-            //     url: `${proxyURL}/api/User`,
-            // })
-            //     .then(function (response) {
-            //         console.log('response', response);
-            //         setUsers(response.data);
-            //     }).catch(error => {
-            //         console.log(error);
-            //     })
-
-            setUserID(tempUserID);
-            setUserFirstName(userFName);
-            setUserLastName('Solo');
-            setLoggedIn(true);
-
-            // Calling the logIN function
-            logIn(tempUser);
+        if(tempUsers.length > 0) {
+            tempUsers.forEach((user, i) => {
+                if((user.userFirstName === userFName) && (user.userPassword === userPswrd)) {
+                    console.log('FOUND USER', user);
+                    setUserID(user.userID);
+                    setUserFirstName(user.userFirstName);
+                    setUserLastName(user.userLastName);
+                    setLoggedIn(true);
+                    logIn(user);
+                    return;
+                }
+            })
         } else {
             console.log('ERROR COMMUNICATING TO API');
         }
-
-
     }
 
     function logOutUser() {
@@ -106,9 +71,96 @@ const HecateHeader: React.FC<HeaderProps> = ({
         setPassword('');
         setUserID(0);
         setLoggedIn(false);
-
         logIn({} as UserType);
     }
+
+    return (
+        <div className="MainHecateHeader">
+        <div className="ImageBox">
+            <img src={HecateLogo} className="HecateLogo" alt="Hecate Software Logo" />
+            <div className="VersionBox">
+                Version {version}
+            </div>
+        </div>
+        <div className="MainHeaderLogin">
+            <div className="mainLoginInputBox">
+                <div className="userNameLoginBox">
+                    <div className="loginHeaderText">
+                        User Name
+                    </div>
+                    {
+                        loggedIn ? 
+                            <div className="loggedInText"> {`${userFirstName}`} </div> :
+                            <textarea
+                                    className="loginInputTextArea"
+                                    value={userFirstName}
+                                    id={'NAME'}
+                                    onChange={(e) => {setUserFirstName(e.target.value.toString());}}
+                                    cols={1}
+                                    rows={1}></textarea>
+                    }
+                </div>
+                <div className="passwordLoginBox">
+                    <div className="loginHeaderText">
+                        Password
+                    </div>
+                    {
+                        loggedIn ? 
+                            <div className="loggedInText"></div> :
+                            <textarea
+                                    className="loginInputTextArea"
+                                    value={password}
+                                    id={'PASWRD'}
+                                    onChange={(e) => {setPassword(e.target.value.toString());}}
+                                    cols={1}
+                                    rows={1}></textarea>
+                    }
+                </div>
+            </div>
+            <button 
+                className="mainButton"
+                onClick={(e) => {
+                    if(loggedIn) {
+                        logOutUser();
+                    }
+                    else {
+                        logInUser((document.getElementById('NAME') as HTMLInputElement).value,
+                                  (document.getElementById('PASWRD') as HTMLInputElement).value)
+                    }
+                }}>
+                    {loggedIn ? 'Log Out' : 'Log In'}
+            </button>
+        </div>
+    </div>
+    )
+}
+
+export default HecateHeader;
+
+
+    // useEffect(() => {
+    //     if(loggedIn) {
+    //         // logIn(userID);
+    //         // await axios({
+    //         //     method: 'get',
+    //         //     url: `${proxyURL}/api/User`,
+    //         // })
+    //         //     .then(function (response) {
+    //         //         console.log('response', response);
+    //         //         setUsers(response.data);
+    //         //         tempUsers = response.data;
+    //         //     }).catch(error => {
+    //         //         console.log(error);
+    //         //     })
+
+    //     }
+
+    // }, [ userID, userFirstName, userLastName, loggedIn, logIn ]);
+
+        /**********
+             NEED TO USE AXIOS IN THE USEEFFECT SINCE IT REFRESHES 
+        *************/
+
 
     // function logInUser(userName, userPassword) {
     //     let foundUser = false;
@@ -190,66 +242,3 @@ const HecateHeader: React.FC<HeaderProps> = ({
 
     //     setPassword('');
     // }
-
-    return (
-        <div className="MainHecateHeader">
-        <div className="ImageBox">
-            <img src={HecateLogo} className="HecateLogo" alt="Hecate Software Logo" />
-            <div className="VersionBox">
-                Version {version}
-            </div>
-        </div>
-        <div className="MainHeaderLogin">
-            <div className="mainLoginInputBox">
-                <div className="userNameLoginBox">
-                    <div className="loginHeaderText">
-                        User Name
-                    </div>
-                    {
-                        loggedIn ? 
-                            <div className="loggedInText"> {`${userFirstName}`} </div> :
-                            <textarea
-                                    className="loginInputTextArea"
-                                    value={userFirstName}
-                                    id={'NAME'}
-                                    onChange={(e) => {setUserFirstName(e.target.value.toString());}}
-                                    cols={1}
-                                    rows={1}></textarea>
-                    }
-                </div>
-                <div className="passwordLoginBox">
-                    <div className="loginHeaderText">
-                        Password
-                    </div>
-                    {
-                        loggedIn ? 
-                            <div className="loggedInText"></div> :
-                            <textarea
-                                    className="loginInputTextArea"
-                                    value={password}
-                                    id={'PASWRD'}
-                                    onChange={(e) => {setPassword(e.target.value.toString());}}
-                                    cols={1}
-                                    rows={1}></textarea>
-                    }
-                </div>
-            </div>
-            <button 
-                className="mainLoginButton"
-                onClick={(e) => {
-                    if(loggedIn) {
-                        logOutUser();
-                    }
-                    else {
-                        logInUser((document.getElementById('NAME') as HTMLInputElement).value,
-                                  (document.getElementById('PASWRD') as HTMLInputElement).value)
-                    }
-                }}>
-                    {loggedIn ? 'Log Out' : 'Log In'}
-            </button>
-        </div>
-    </div>
-    )
-}
-
-export default HecateHeader;

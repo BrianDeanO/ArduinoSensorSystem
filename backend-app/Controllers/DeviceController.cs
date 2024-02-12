@@ -60,6 +60,19 @@ namespace backEndApp.Controllers {
             }
         }
 
+        [HttpGet("DeviceName")]
+        [ProducesResponseType(200, Type = typeof(Device))]
+        [ProducesResponseType(400)]
+        public IActionResult GetDeviceWithName([FromQuery] string deviceName) {
+            var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDeviceWithName(deviceName));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(device);
+            }
+        }
+
         [HttpGet("{deviceId}/Sensors")]
         [ProducesResponseType(200, Type = typeof(ICollection<Sensor>))]
         [ProducesResponseType(400)]
@@ -114,7 +127,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateDevice([FromBody] DeviceDTO newDevice) {
+        public IActionResult CreateDevice([FromBody] DeviceDTO newDevice) {            
             if(newDevice == null) {
                 return BadRequest(ModelState);
             }
@@ -138,6 +151,8 @@ namespace backEndApp.Controllers {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
                     return StatusCode(500, ModelState);
                 }
+
+                
 
                 return Ok("Successfully Created.");
             }

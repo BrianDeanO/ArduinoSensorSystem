@@ -5,12 +5,12 @@ CSS Styles for Hecate App Device Column
 */
 .MainDevicesBox {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background-color: var(--sheetBackground);
-    background-color: aqua;
     /* margin: 5px auto 0px auto; */
-    height: 795px;
-    width: 1000px;
+    height: 800px;
+    width: 220px;
+    border-right-style: solid;
 }
 
 .MainDeviceSelectorBox {
@@ -18,12 +18,14 @@ CSS Styles for Hecate App Device Column
     flex-direction: column;
     width: 200px;
     height: auto;
-    /* background-color: rgb(230, 230, 230); */
-    background-color: blue;
+    max-height: 740px;
+    background-color: rgb(230, 230, 230);
+    /* background-color: blue; */
     color: black;
     margin: 5px 10px 0px 10px;
     font-size: 16pt;
     text-align: center;
+    border-radius: 2px;
 }
 
 /* 
@@ -42,24 +44,67 @@ CSS Styles for Hecate App Device Column
     border-bottom-style: solid;
 }
 .DeviceButton {
-    display: flex;
-    flex-direction: column;
-    width: 175px;
+    margin: 10px auto;
+    width: 150px;
     height: auto;
-    /* background-color: rgb(230, 230, 230); */
-    background-color: blue;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 10px auto 10px auto;
+    font-size: 14pt;
+    text-align: center;
+    overflow: auto;
+    overflow-wrap: break-word;
+    line-height: normal;
+    
+    /* &:hover {
+      background-color: #e4e8eb;
+      cursor: pointer;
+    } */
+}
+.SelectedDeviceButton {
+    margin: 10px auto;
+    width: 150px;
+    height: auto;
+    background-color: rgb(181, 181, 181);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 10px auto 10px auto;
+    font-size: 14pt;
+    text-align: center;
+    overflow: auto;
+    overflow-wrap: break-word;
+    line-height: normal;
+}
+
+.SelectedDeviceButton:hover, .DeviceButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+    /* box-shadow: 1px 1px 1px rgb(181, 181, 181); */
+}
+
+/* .SelectedDeviceButton:active,  .DeviceButton:active {
+    background-color: rgb(162, 162, 162);
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgb(181, 181, 181); 
+} */
+
+/* BLUE Background colors */
+/* background-color: #1982d2;
+background-color: #1670b5; */
+
+.AddDeviceBox {
+    display: flex;
+    width: 200px;
+    height: auto;
+    max-height: 740px;
+    background-color: rgb(230, 230, 230);
+    /* background-color: blue; */
     color: black;
-    margin: 5px auto 0px auto;
+    margin: 5px 10px 0px 10px;
     font-size: 16pt;
     text-align: center;
-}
-.DeviceNameBox {
-    height: auto;
-    background-color: rgb(240, 57, 57);
-    margin: 5px auto 0px auto;
-}
-.SelectedDeviceNameBox {
-    height: auto;
-    background-color: rgb(116, 24, 24);
-    margin: 5px auto 0px auto;
+    border-radius: 2px;
 }

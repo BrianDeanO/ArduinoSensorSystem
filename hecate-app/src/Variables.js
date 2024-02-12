@@ -1,15 +1,35 @@
 export const version = "1.0";
 export const proxyURL_HTTPS = "https://localhost:7239";
 export const proxyURL = "http://localhost:5270";
+export const ADMIN = 'ADMIN';
+export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const localStorageTitles = {
     currentUser: "currentUser",
     selectedDevice: "selectedDevice",
     selectedSensor: "selectedSensor",
-    selectedSensorData: "selectedSensorData"
+    selectedSensorData: "selectedSensorData",
+    selectedTimeFrame: "selectedTimeFrame"
+}
+
+export const timeFrameConstants = {
+    pastDay: 86400,
+    pastWeek: 604800,
+    pastMonth: 604800*4,
+    pastSixMonths: (604800*4) * 6,
+    pastYear: (604800*4) * 12
 }
 
 export const apiInfo = {
+    USERS: `${proxyURL}/api/Users`,
+    DEVICES: `${proxyURL}/api/Devices`,
+    USER_DEVICES: `${proxyURL}/api/UserDevices`,
+    SENSORS: `${proxyURL}/api/Sensors`,
+    DEVICE_SENSORS: `${proxyURL}/api/DeviceSensors`,
+    SENSOR_DATA: `${proxyURL}/api/SensorDatas`,
+}
+
+export const apiInfo2 = {
     USERS: {
         URL: `${proxyURL}/api/Users`,
         INDEX: 1

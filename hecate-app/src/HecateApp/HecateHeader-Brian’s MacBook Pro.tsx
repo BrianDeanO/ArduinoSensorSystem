@@ -183,7 +183,7 @@ const HecateHeader: React.FC<HeaderProps> = (
                 </div>
             </div>
             <button 
-                className="mainLoginButton"
+                className="mainButton"
                 onClick={(e) => {
                     if(loggedIn) {
                         logOutUser();

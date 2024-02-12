@@ -7,6 +7,7 @@ namespace backEndApp.Interfaces {
         ICollection<User> GetUsers();
         User GetUser(int userId);
         User GetUserWithLogin(string userFirstName, string userPassword);
+        // ICollection<User> GetUsersWithType(string userType);
         ICollection<UserDevice> GetUserDevices(int userId);
         ICollection<Device> GetDevicesFromUser(int userId);
         /*

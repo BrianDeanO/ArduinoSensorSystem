@@ -60,6 +60,19 @@ namespace backEndApp.Controllers {
             }
         }
 
+        // [HttpGet("{userType}")]
+        // [ProducesResponseType(200, Type = typeof(User))]
+        // [ProducesResponseType(400)]
+        // public IActionResult GetUsersByType(string userType) {
+        //     var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsersWithType(userType));
+
+        //     if(!ModelState.IsValid) {
+        //         return BadRequest(ModelState);
+        //     } else {
+        //         return Ok(users);
+        //     }
+        // }
+
         [HttpGet("{userFirstName}:{userPassword}")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]

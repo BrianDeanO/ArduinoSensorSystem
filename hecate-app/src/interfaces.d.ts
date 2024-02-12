@@ -2,7 +2,13 @@ export interface DeviceType {
     deviceID: number;
     deviceName: string;
     deviceType: string;
-    zipCode: number;
+    zipCode: string;
+}
+
+export interface DeviceDTOType {
+    deviceName: string;
+    deviceType: string;
+    zipCode: string;
 }
 
 export interface SelectedDevice {
@@ -21,18 +27,29 @@ export interface CurrentUserType {
 
 export interface UserType {
     userID: number;
+    // userUserName: string;
     userFirstName: string;
     userLastName: string;
     userType: string;  
+    userPassword: string;
     userEmail: string;
     userPhone: string;
-    userNotification: string;
+    userNotification: boolean;
 }
 
 export interface SensorType {
     sensorID: number;
     sensorName: string;
-    // sensorType: string;
+    sensorType: string;
+    channelCount: number;
+    deviceID: number;
+}
+
+export interface SensorDTOType {
+    sensorName: string;
+    sensorType: string;
+    channelCount: number;
+    deviceID: number;
 }
 
 export interface SensorDataType {
@@ -47,6 +64,10 @@ export interface SensorDataType {
 export interface SelectedSensorData {
     selectedSensorID: number;
     // sensorData: SensorDataType[]
+}
+
+export interface SelectedTimeFrame {
+    selectedTimeFrame: string;
 }
 
 export interface UserDeviceType {

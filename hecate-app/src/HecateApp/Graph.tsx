@@ -1,43 +1,56 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { SensorDataType, SelectedSensorData } from "../interfaces";
-import { localStorageTitles } from "../Variables";
+import { localStorageTitles, proxyURL } from "../Variables";
+import axios from "axios";
 
 interface GraphProps {
     selectedSensorID: number;
+    selectedTimeFrame: string;
 }
 
 const Graph: React.FC<GraphProps> = ({
-    selectedSensorID
+    selectedSensorID,
+    selectedTimeFrame
 }: GraphProps) => {
+    const [sensorData, setSensorData] = useState([] as SensorDataType[])
 
-    // const sensorDataJSON = localStorage.getItem(localStorageTitles.selectedSensorData);
-    // const selectedSensorData: SelectedSensorData = (sensorDataJSON !== null) ? JSON.parse(sensorDataJSON) : {};
 
-    // useEffect(() => {
-    //     /**********
-    //       USE AXIOS TO GET SENSOR DATA TO DISPLAY
+    const getSensorData = useCallback(async(selectedSensorID: number) => {
+        let tempSensorData: SensorDataType[] = [];
 
-    //     *************/
-    //     localStorage.setItem(localStorageTitles.selectedSensorData, JSON.stringify({
-    //         selectedSensorID: selectedSensorID,
-    //         // selectedSensorData: selectedSensorData
-    //     }));
-    // }, [selectedSensorID, selectedSensorData])
+        await axios({
+            method: 'get',
+            url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorDatas`,
+        })
+            .then(function (response) {
+                console.log('response', response);
+                // setSensorData(response.data);
+                tempSensorData = response.data;
+                console.log('SENSORS FROM AXIOS', tempSensorData)
+            }).catch(error => {
+                console.log(error);
+            })
 
+        /*
+            NEED TO PERFORM TIME FRAME SELECTION HERE
+        */
+
+        console.log('SET DATA', tempSensorData)
+        setSensorData(tempSensorData);
+
+    }, [])
 
     useEffect(() => {
-        /**********
-          USE AXIOS TO GET SENSOR DATA TO DISPLAY
+        getSensorData(selectedSensorID);
+    }, [selectedSensorID, getSensorData])
 
-        *************/
-        
-    }, [selectedSensorID])
-
+    console.log('GRAPH - SELECTED SENSOR ID - ', selectedSensorID)
 
     return (
         <div className="MainVisualizationBox">
             GRAPH
             {`\nSensor ID - ${selectedSensorID || 0}`}
+            {`\nSelected Time Frame: ${selectedTimeFrame}`}
             {
                 ((selectedSensorID === 0) || selectedSensorID === undefined) ? null :
                 <div>
@@ -48,18 +61,21 @@ const Graph: React.FC<GraphProps> = ({
                                 <th>Data Value</th>
                                 <th>Data Unit</th>
                                 <th>Time Recorded</th>
+                                <th>Sensor ID</th>
                             </tr>
                         </thead>
                         
                         <tbody>
                             {
-                                Object.keys(sensorDataTable).map((sensorData, i) => {
+                                // Object.keys(sensorDataTable).map((sensorData, i) => {
+                                    sensorData.map((sensorData, i) => {
                                     return (
                                         <tr key={i}>
-                                            <td>{i}</td>
-                                            <td>{sensorDataTable[i].dataValue}</td>
-                                            <td>{sensorDataTable[i].dataUnit}</td>
-                                            <td>{sensorDataTable[i].timeRecorded}</td>
+                                            <td>{i+1}</td>
+                                            <td>{sensorData.dataValue}</td>
+                                            <td>{sensorData.dataUnit}</td>
+                                            <td>{sensorData.timeRecorded}</td>
+                                            <td>{sensorData.sensorID}</td>
                                         </tr>
                                     )    
                                 })
