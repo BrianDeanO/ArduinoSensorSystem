@@ -21,6 +21,11 @@ Sensor* sensors[] = { &sen1 };
 Device device(sensors, 1, &client);
 
 void setup() {
+#ifndef SIMULATOR
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+#endif
+
     Serial.begin(9600);
     DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
     DEBUG("Program Start\n");
@@ -42,7 +47,14 @@ void setup() {
     g_lte.autoTimeZone(true);
 #endif
 
-    device.register_device();
+    while(!device.register_device()) { 
+        DEBUG("Failed to register device, retrying in 3 seconds\n");
+        delay(3000); 
+    }
+
+#ifndef SIMULATOR
+    digitalWrite(LED_BUILTIN, HIGH);
+#endif
 }
 
 void loop() {

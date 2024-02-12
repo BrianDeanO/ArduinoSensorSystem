@@ -11,8 +11,10 @@ int handle_httpclient_response(HttpClient& http, const char* url, char* response
 		return -statusCode;
 	}
 
-	if(!response)
+	if(!response) {
+		// DEBUG("No response for %s\n", url);
 		return 0;
+	}
 
 	String resp = http.responseBody();
 	resp.toCharArray(response, response_size);
@@ -21,37 +23,52 @@ int handle_httpclient_response(HttpClient& http, const char* url, char* response
 
 int SerialDataClient::get(const char* url, char* response, unsigned response_size)
 {
+	http.stop(); // Reset the connection, failing to do this results in empty requests being sent
+	serial_client.flush_input();
+	serial_client.print("\nREQUEST\n");
 	http.get(url);
+	serial_client.print("\nREQUEST END\n");
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 int SerialDataClient::post(const char* url, const char* body, char* response, unsigned response_size)
 {
+	http.stop();
+	serial_client.flush_input();
+	serial_client.print("\nREQUEST\n");
 	http.post(url, CONTENT_TYPE, body);
+	serial_client.print("\nREQUEST END\n");
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 int SerialDataClient::put(const char* url, const char* body, char* response, unsigned response_size)
 {
+	http.stop();
+	serial_client.flush_input();
+	serial_client.print("\nREQUEST\n");
 	http.put(url, CONTENT_TYPE, body);
+	serial_client.print("\nREQUEST END\n");
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 
 int LTEDataClient::get(const char* url, char* response, unsigned response_size)
 {
+	http.stop();
 	http.get(url);
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 int LTEDataClient::post(const char* url, const char* body, char* response, unsigned response_size)
 {
+	http.stop();
 	http.post(url, CONTENT_TYPE, body);
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 int LTEDataClient::put(const char* url, const char* body, char* response, unsigned response_size)
 {
+	http.stop();
 	http.put(url, CONTENT_TYPE, body);
 	return handle_httpclient_response(this->http, url, response, response_size);
 }

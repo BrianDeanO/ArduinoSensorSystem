@@ -12,7 +12,7 @@ using backEndApp.Models;
 namespace backEndApp.Migrations
 {
     [DbContext(typeof(SensorSystemContext))]
-    [Migration("20240205044009_NullFields")]
+    [Migration("20240205195726_NullFields")]
     partial class NullFields
     {
         /// <inheritdoc />

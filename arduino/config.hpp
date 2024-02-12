@@ -29,8 +29,9 @@
 
 #if DEBUG_MODE == 1 && !defined(SIMULATOR)
 	extern char _dbg_msg[256];
-	#define DEBUG(...) sprintf(_dbg_msg, __VA_ARGS__); Serial.write(_dbg_msg, 256)
+	#define DEBUG(...) sprintf(_dbg_msg, __VA_ARGS__); Serial.print(_dbg_msg)
 	#define DEBUG_EXPR(expr) expr
+	#define LOGGING // For HttpClient
 #elif defined(SIMULATOR)
 	#define DEBUG(...) printf(__VA_ARGS__)
 	#define DEBUG_EXPR(expr)

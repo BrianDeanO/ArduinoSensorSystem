@@ -9,10 +9,11 @@ bool Device::register_device() {
 
 	int result = client->get("/api/Devices/ident/" DEVICE_IDENT, buf, RESPONSE_BUFFER_SIZE);
 	if(result > 0) {
+		DEBUG("BODY: %s\n", buf);
 		JsonDocument j;
 		deserializeJson(j, buf);
 		if(!j.containsKey("deviceID")) {
-			DEBUG("Registration response contained no id!\n");
+			DEBUG("ERR: Registration response contained no id!\n");
 			return false;
 		}
 
@@ -29,7 +30,7 @@ bool Device::register_device() {
 			JsonDocument j;
 			deserializeJson(j, buf);
 			if(!j.containsKey("deviceID")) {
-				DEBUG("New Registration response contained no id!\n");
+				DEBUG("ERR: New Registration response contained no id!\n");
 				return false;
 			}
 
@@ -38,12 +39,12 @@ bool Device::register_device() {
 			// TODO: Set poll time
 		}
 		else {
-			DEBUG("Error sending device register command: %d\n", result);
+			DEBUG("ERR: sending device register command: %d\n", result);
 			return false;
 		}
 	}
 	else {
-		DEBUG("Error sending device get command: %d\n", result);
+		DEBUG("ERR: sending device GET command: %d\n", result);
 		return false;
 	}
 
@@ -68,7 +69,7 @@ void Device::update() {
 	uint64_t current_time = client->get_time();
 
 	if(current_time >= next_update()) {
-		DEBUG("Starting update\n");
+		DEBUG("Starting update -----\n");
 		acquire_data(); // Read data from sensors into cache
 
 		JsonDocument j;

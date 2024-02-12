@@ -22,7 +22,7 @@ public:
 class SerialDataClient : public DataClient {
 public:
     SerialDataClient(HardwareSerial* serial, const char* addr, uint16_t port) 
-        : serial_client(serial), http(serial_client, addr, port) {}
+        : addr(addr), port(port), serial_client(serial), http(serial_client, addr, port) {}
 
     int get(const char* url, char* response, unsigned response_size) override;
     int post(const char* url, const char* body, char* response, unsigned response_size) override;
@@ -32,6 +32,8 @@ public:
     uint64_t fake_last_time = 0;
     SerialClient serial_client;
     HttpClient http;
+    const char* addr;
+    uint16_t port;
 };
 
 class LTEDataClient : public DataClient {
