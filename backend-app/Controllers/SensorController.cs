@@ -75,7 +75,6 @@ namespace backEndApp.Controllers {
 
             var dto = new SensorDTO {
                 SensorID = sensor.SensorID
-                // Poll time
             };
             return new JsonResult(dto, new JsonSerializerOptions() {
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -120,13 +119,13 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateSensor([FromQuery] int deviceId, [FromBody] SensorDTO newSensor) {
+        public IActionResult CreateSensor([FromBody] SensorDTO newSensor) {
             if(newSensor == null) {
                 return BadRequest(ModelState);
             }
 
             var sensor = _sensorRepository.GetSensors()
-                .Where(d => d.SensorName.Trim().ToUpper() == newSensor.SensorName.Trim().ToUpper())
+                .Where(d => d.SensorIdent == newSensor.SensorIdent)
                 .FirstOrDefault();
 
             if(sensor != null) {
@@ -139,6 +138,7 @@ namespace backEndApp.Controllers {
             } else {
                 var sensorMap = _mapper.Map<Sensor>(newSensor);
 
+                int deviceId = newSensor.DeviceID;
                 sensorMap.DeviceID = deviceId;
                 sensorMap.Device = _deviceRepository.GetDevice(deviceId);
 
@@ -147,7 +147,13 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
-                return Ok("Successfully Created.");
+                var dto = new SensorDTO {
+                    SensorID = sensorMap.SensorID
+                };
+                return new JsonResult(dto, new JsonSerializerOptions() {
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
             }
         }
 

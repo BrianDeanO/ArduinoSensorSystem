@@ -65,6 +65,7 @@ namespace backEndApp.Controllers {
         // already exists, so only return fields relevant to the device.
         [HttpGet("ident/{deviceIdent}")]
         public IActionResult GetDevice(String deviceIdent) {
+            Console.WriteLine("DeviceIdent: " + deviceIdent);
             var device = _deviceRepository.GetDevices() 
                 .Where(e => e.DeviceIdent == deviceIdent)
                 .FirstOrDefault();
@@ -143,7 +144,7 @@ namespace backEndApp.Controllers {
             }
 
             var device = _deviceRepository.GetDevices()
-                .Where(d => d.DeviceName.Trim().ToUpper() == newDevice.DeviceName.Trim().ToUpper())
+                .Where(d => d.DeviceIdent == newDevice.DeviceIdent)
                 .FirstOrDefault();
 
             if(device != null) {
@@ -162,7 +163,14 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
-                return Ok("Successfully Created.");
+                var dto = new DeviceDTO {
+                    DeviceID = deviceMap.DeviceID
+                    // Poll time
+                };
+                return new JsonResult(dto, new JsonSerializerOptions() {
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
             }
         }
 
