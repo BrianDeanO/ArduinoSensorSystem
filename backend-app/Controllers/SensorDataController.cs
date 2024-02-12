@@ -75,7 +75,6 @@ namespace backEndApp.Controllers {
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateSensorData(
-            [FromQuery] int sensorId, 
             [FromBody] SensorDataDTO newSensorData
         ) {
             if(newSensorData == null) {
@@ -83,10 +82,15 @@ namespace backEndApp.Controllers {
             }
 
             var sensorData = _sensorDataRepository.GetSensorDatas()
-                .Where(d => d.TimeRecorded == newSensorData.TimeRecorded)
+                .Where(d =>
+                    d.TimeRecorded == newSensorData.TimeRecorded
+                    && d.SensorID == newSensorData.SensorID
+                    && d.ChannelID == newSensorData.ChannelID
+                )
                 .FirstOrDefault();
 
             if(sensorData != null) {
+                Console.WriteLine(newSensorData.TimeRecorded);
                 ModelState.AddModelError("", "SensorData Already Exists.");
                 return StatusCode(422, ModelState);
             }
@@ -96,6 +100,7 @@ namespace backEndApp.Controllers {
             } else {
                 var sensorDataMap = _mapper.Map<SensorData>(newSensorData);
 
+                int sensorId = newSensorData.SensorID;
                 sensorDataMap.SensorID = sensorId;
                 sensorDataMap.Sensor = _sensorRepository.GetSensor(sensorId);
 

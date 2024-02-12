@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { deviceInfoType, sensorDataType, sensorInfoType} from "./VisualizationBox.tsx";
-import VisualizationBox from "./VisualizationBox.tsx";
+import { deviceInfoType, sensorDataType, sensorInfoType} from "./visualizationBox.tsx";
+import VisualizationBox from "./visualizationBox.tsx";
 
 interface DataSelectorsProps {
     selectedDevice: deviceInfoType;

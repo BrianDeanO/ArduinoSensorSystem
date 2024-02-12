@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "./images/Hecate_Logo.png";
 import HecateHeader from "./HecateApp/hecateHeader.tsx";
-import HecateBody  from "./HecateApp/HecateBody.tsx";
+import HecateBody  from "./HecateApp/hecateBody.tsx";
 // import TemperatureVisualizationBox from "./Visualizations/visualizationBox";
 import TemperatureVisualizationBox from "./HecateApp/Visualizations/TemperatureVisualizationBox.tsx";
-import VisualizationBox from "./HecateApp/Visualizations/VisualizationBox.tsx";
+import VisualizationBox from "./HecateApp/Visualizations/visualizationBox.tsx";
 import DataSelectors from "./HecateApp/Visualizations/DataSelectors.tsx"
 import {BrowserRouter, Route, Routes, NavLink } from 'react-router-dom';
 import GraphContainer from "./HecateApp/Visualizations/graphContainer";

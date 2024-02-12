@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using backEndApp.DTO;
 using backEndApp.Interfaces;
 using backEndApp.Models;
+using System.Text.Json;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -60,6 +61,27 @@ namespace backEndApp.Controllers {
             }
         }
 
+        // This endpoint is only used by the device to check if a device by `deviceIdent`
+        // already exists, so only return fields relevant to the device.
+        [HttpGet("ident/{sensorIdent}")]
+        public IActionResult GetSensorIdent(String sensorIdent) {
+            var sensor = _sensorRepository.GetSensors()
+                .Where(e => e.SensorIdent == sensorIdent)
+                .FirstOrDefault();
+
+            if (sensor == null) {
+                return NotFound();
+            }
+
+            var dto = new SensorDTO {
+                SensorID = sensor.SensorID
+            };
+            return new JsonResult(dto, new JsonSerializerOptions() {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
+        }
+
         [HttpGet("{sensorId}/SensorDatas")]
         [ProducesResponseType(200, Type = typeof(ICollection<SensorData>))]
         [ProducesResponseType(400)]
@@ -97,13 +119,13 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateSensor([FromQuery] int deviceId, [FromBody] SensorDTO newSensor) {
+        public IActionResult CreateSensor([FromBody] SensorDTO newSensor) {
             if(newSensor == null) {
                 return BadRequest(ModelState);
             }
 
             var sensor = _sensorRepository.GetSensors()
-                .Where(d => d.SensorName.Trim().ToUpper() == newSensor.SensorName.Trim().ToUpper())
+                .Where(d => d.SensorIdent == newSensor.SensorIdent)
                 .FirstOrDefault();
 
             if(sensor != null) {
@@ -116,6 +138,7 @@ namespace backEndApp.Controllers {
             } else {
                 var sensorMap = _mapper.Map<Sensor>(newSensor);
 
+                int deviceId = newSensor.DeviceID;
                 sensorMap.DeviceID = deviceId;
                 sensorMap.Device = _deviceRepository.GetDevice(deviceId);
 
@@ -124,7 +147,13 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
-                return Ok("Successfully Created.");
+                var dto = new SensorDTO {
+                    SensorID = sensorMap.SensorID
+                };
+                return new JsonResult(dto, new JsonSerializerOptions() {
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
             }
         }
 

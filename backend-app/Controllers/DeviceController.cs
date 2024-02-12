@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using backEndApp.DTO;
 using backEndApp.Interfaces;
 using backEndApp.Models;
+using System.Text.Json;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -58,6 +59,29 @@ namespace backEndApp.Controllers {
             } else {
                 return Ok(device);
             }
+        }
+
+        // This endpoint is only used by the device to check if a device by `deviceIdent`
+        // already exists, so only return fields relevant to the device.
+        [HttpGet("ident/{deviceIdent}")]
+        public IActionResult GetDevice(String deviceIdent) {
+            Console.WriteLine("DeviceIdent: " + deviceIdent);
+            var device = _deviceRepository.GetDevices() 
+                .Where(e => e.DeviceIdent == deviceIdent)
+                .FirstOrDefault();
+
+            if (device == null) {
+                return NotFound();
+            }
+
+            var dto = new DeviceDTO {
+                DeviceID = device.DeviceID
+                // Poll time
+            };
+            return new JsonResult(dto, new JsonSerializerOptions() {
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            });
         }
 
         [HttpGet("{deviceId}/Sensors")]
@@ -120,7 +144,7 @@ namespace backEndApp.Controllers {
             }
 
             var device = _deviceRepository.GetDevices()
-                .Where(d => d.DeviceName.Trim().ToUpper() == newDevice.DeviceName.Trim().ToUpper())
+                .Where(d => d.DeviceIdent == newDevice.DeviceIdent)
                 .FirstOrDefault();
 
             if(device != null) {
@@ -139,7 +163,14 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
-                return Ok("Successfully Created.");
+                var dto = new DeviceDTO {
+                    DeviceID = deviceMap.DeviceID
+                    // Poll time
+                };
+                return new JsonResult(dto, new JsonSerializerOptions() {
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
             }
         }
 
