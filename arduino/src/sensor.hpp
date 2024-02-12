@@ -33,7 +33,7 @@ public:
 	void pop_last_point();
 	void reset();
 
-	bool register_sensor(DataClient* client, char* buf, uint16_t buf_size);
+	bool register_sensor(DataClient* client, char* buf, uint16_t buf_size, uint32_t deviceID);
 
 private:
 	const char* _ident;

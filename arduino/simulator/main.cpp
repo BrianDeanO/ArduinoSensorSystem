@@ -9,7 +9,9 @@
 #include <vector>
 
 // Used by DEBUG macros defined in config.hpp
+#if DEBUG_MODE == 1
 char _dbg_msg[256];
+#endif
 
 void print_menu() {
 	std::cout << "1) Start simulated device\n"

@@ -7,9 +7,8 @@ bool Device::register_device() {
 	DEBUG("Sending register command\n");
 	char buf[RESPONSE_BUFFER_SIZE];
 
-	int result = client->get("/api/Devices/ident/" DEVICE_IDENT, buf, RESPONSE_BUFFER_SIZE);
+	int result = client->get("/api/Device/ident/" DEVICE_IDENT, buf, RESPONSE_BUFFER_SIZE);
 	if(result > 0) {
-		DEBUG("BODY: %s\n", buf);
 		JsonDocument j;
 		deserializeJson(j, buf);
 		if(!j.containsKey("deviceID")) {
@@ -25,7 +24,7 @@ bool Device::register_device() {
 	// yet exist
 	else if(result / -100 == 4) {
 		// Register a new device with our defaults
-		result = client->post("/api/Devices", DEFAULT_DEVICE_JSON, buf, RESPONSE_BUFFER_SIZE);
+		result = client->post("/api/Device", DEFAULT_DEVICE_JSON, buf, RESPONSE_BUFFER_SIZE);
 		if(result > 0) {
 			JsonDocument j;
 			deserializeJson(j, buf);
@@ -49,16 +48,7 @@ bool Device::register_device() {
 	}
 
 	for(unsigned i = 0; i < num_sensors; i++) {
-		if(!sensors[i]->register_sensor(this->client, buf, RESPONSE_BUFFER_SIZE))
-			return false;
-
-		JsonDocument j;
-		j["deviceID"] = this->_id;
-		j["sensorID"] = sensors[i]->id();
-		serializeJson(j, buf, RESPONSE_BUFFER_SIZE);
-
-		result = client->post("/api/DeviceSensors", buf, nullptr, 0);
-		if(result < 0)
+		if(!sensors[i]->register_sensor(this->client, buf, RESPONSE_BUFFER_SIZE, _id))
 			return false;
 	}
 
@@ -80,24 +70,32 @@ void Device::update() {
 			Datapoint point;
 			while(sensor->get_last_point(point)) {
 				j.clear();
-				j["sensorID"] = sensor->id();
-				j["channelID"] = point.channel;
-				j["dataValue"] = point.value;
-				j["timeRecorded"] = point.time;
-				j["dataUnit"] = sensor->channel_units(point.channel);
+				j[F("sensorID")] = sensor->id();
+				j[F("channelID")] = point.channel;
+				j[F("dataValue")] = point.value;
+				j[F("timeRecorded")] = point.time;
+				j[F("dataUnit")] = sensor->channel_units(point.channel);
 				serializeJson(j, buf);
 
 				int retries = 0;
-				while(retries < 2) {
-					int result = client->post("/api/SensorDatas", buf, nullptr, 0);
-					if(result < 0) {
+				int result = 0;
+				const int max_retries = 3;
+				while(retries < max_retries) {
+					result = client->post("/api/SensorData", buf, nullptr, 0);
+					// If an error occurs, retry. If the error is -422, the data point already exists so throw it away
+					if(result < 0 && result != -422) {
 						retries++;
+						delay(5000);
 					}
 					else {
+						sensor->pop_last_point(); // Point sucessfully sent, remove it from the cache
 						break;
 					}
 				}
-				sensor->pop_last_point(); // Point sucessfully sent, remove it from the cache
+				if (retries == max_retries) {
+					DEBUG("Failed to send data point after %d retries: got code %d\n", retries, result);
+					break;
+				}
 			}
 		}
 

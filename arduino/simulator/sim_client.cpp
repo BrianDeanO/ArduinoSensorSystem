@@ -13,6 +13,7 @@ int SimClient::handle_result(httplib::Result res, char* response, unsigned respo
 			return 0;
 
 		strncpy(response, res->body.c_str(), response_size);
+		DEBUG("Response: %s\n", response);
 		return res->body.size();
 	}
 	return -1;

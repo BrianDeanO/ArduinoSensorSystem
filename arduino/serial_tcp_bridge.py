@@ -78,7 +78,8 @@ def send_request(request_bytes: bytes):
 
 ser = serial.Serial('/dev/ttyACM0', 9600)
 # ser = serial.Serial('/tmp/ttyV1', 9600)
-ser.flush()
+ser.reset_input_buffer()
+ser.reset_output_buffer()
 state = State.READY
 
 process_lines(ser, state)

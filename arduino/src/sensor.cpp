@@ -6,7 +6,8 @@ void Sensor::cache_data_point(uint64_t time) {
 	for(unsigned ch = 0; ch < channel_count(); ch++) {
 		double val;
 		if(acquire_channel_value(ch, val)) {
-			Datapoint& p = _cache[_cache_index++];
+			Datapoint& p = _cache[_cache_index];
+			_cache_index = (_cache_index + 1) % DATAPOINT_CACHE_SIZE;
 			p.value = val;
 			p.time = time;
 			p.channel = ch;
@@ -32,10 +33,10 @@ void Sensor::reset() {
 	_cache_index = 0;
 }
 
-bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size) 
+bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size, uint32_t deviceID) 
 {
 	char url_buf[100];
-	sprintf(url_buf, "/api/Sensors/ident/%s", this->ident());
+	sprintf(url_buf, "/api/Sensor/ident/%s", this->ident());
 
 	int result = client->get(url_buf, buf, RESPONSE_BUFFER_SIZE);
 	if(result > 0) {
@@ -58,9 +59,10 @@ bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size)
 		j["sensorName"] = this->ident();
 		j["sensorType"] = this->sensor_type();
 		j["channelCount"] = this->channel_count();
+		j["deviceID"] = deviceID;
 		serializeJson(j, buf, buf_size);
 
-		result = client->post("/api/Sensors", buf, buf, RESPONSE_BUFFER_SIZE);
+		result = client->post("/api/Sensor", buf, buf, RESPONSE_BUFFER_SIZE);
 		if(result > 0) {
 			j.clear();
 			deserializeJson(j, buf);
