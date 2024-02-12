@@ -3,7 +3,10 @@
 #include "config.hpp"
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
+
+#if DEBUG_MODE == 1
 char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
+#endif
 
 ExampleSensor sen1("demo_sensor1");
 Sensor* sensors[] = { &sen1 };
@@ -35,11 +38,11 @@ void setup() {
 
     while(true) {
         if(g_lte.begin(Serial1)) {
-            Serial.println("Initialized LTE Shield on HW Serial1");
+            Serial.println(F("Initialized LTE Shield on HW Serial1"));
             break;
         }
         else {
-            Serial.println("Failed to start LTE Shield on HW Serial1, retrying in 10 seconds.");
+            Serial.println(F("Failed to start LTE Shield on HW Serial1, retrying in 10 seconds."));
             delay(10000);
         }
     }
