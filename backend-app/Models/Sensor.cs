@@ -13,4 +13,9 @@ public class Sensor {
     public string? SensorName { get; set; }
     public string? SensorType { get; set; }
     public int ChannelCount { get; set; }
+
+    public int DeviceID { get; set; }
+    public Device Device { get; set; }
+
+    public ICollection<SensorData> SensorDatas { get; set; }
 }

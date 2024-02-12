@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backEndApp.Data;
 
@@ -11,9 +12,11 @@ using backEndApp.Data;
 namespace backEndApp.Migrations
 {
     [DbContext(typeof(SensorSystemContext))]
-    partial class SensorSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20240204165303_SensorSystemUpdate-ModularApproach-Feb4")]
+    partial class SensorSystemUpdateModularApproachFeb4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,23 +33,19 @@ namespace backEndApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceID"));
 
-                    b.Property<string>("DeviceIdent")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("DeviceName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ZipCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceID");
-
-                    b.HasIndex("DeviceIdent")
-                        .IsUnique();
 
                     b.ToTable("Devices");
                 });
@@ -70,9 +69,12 @@ namespace backEndApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SensorType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SensorID");
+
+                    b.HasIndex("DeviceID");
 
                     b.ToTable("Sensors");
                 });

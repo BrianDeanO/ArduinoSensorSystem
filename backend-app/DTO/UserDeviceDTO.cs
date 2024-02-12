@@ -2,11 +2,11 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-namespace backEndApp.Models;
+namespace backEndApp.DTO;
 
 // Making the composite key
-[PrimaryKey(nameof(DeviceID), nameof(SensorID))]
-public class DeviceSensor {
+[PrimaryKey(nameof(UserID), nameof(DeviceID))]
+public class UserDeviceDTO {
+    public int UserID { get; set; }
     public int DeviceID { get; set; }
-    public int SensorID { get; set; }
 }

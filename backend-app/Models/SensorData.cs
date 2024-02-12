@@ -12,7 +12,7 @@ public class SensorData {
     [JsonConverter(typeof(UnixTimeJsonConverter))]
     public DateTime TimeRecorded { get; set; }
 
-    // // Sensor ID Foreign Key
+    // Sensor ID Foreign Key
     public int SensorID { get; set; }
-    // public SensorData Sensor { get; set; } // Definitely keep this in
+    public Sensor Sensor { get; set; } // Definitely keep this in
 }
