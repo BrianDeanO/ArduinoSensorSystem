@@ -18,7 +18,7 @@ CSS Styles for Hecate App Device Column
     flex-direction: column;
     width: 200px;
     height: auto;
-    max-height: 740px;
+    max-height: 730px;
     background-color: rgb(230, 230, 230);
     /* background-color: blue; */
     color: black;
@@ -26,6 +26,14 @@ CSS Styles for Hecate App Device Column
     font-size: 16pt;
     text-align: center;
     border-radius: 2px;
+    overflow-y: auto;
+}
+.DeviceSelectorSubBox {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: auto;
+    font-size: 14pt;
 }
 
 /* 
@@ -43,6 +51,7 @@ CSS Styles for Hecate App Device Column
     border-color: black;
     border-bottom-style: solid;
 }
+
 .DeviceButton {
     margin: 10px auto;
     width: 150px;
@@ -57,11 +66,6 @@ CSS Styles for Hecate App Device Column
     overflow: auto;
     overflow-wrap: break-word;
     line-height: normal;
-    
-    /* &:hover {
-      background-color: #e4e8eb;
-      cursor: pointer;
-    } */
 }
 .SelectedDeviceButton {
     margin: 10px auto;
@@ -79,11 +83,41 @@ CSS Styles for Hecate App Device Column
     line-height: normal;
 }
 
-.SelectedDeviceButton:hover, .DeviceButton:hover {
+
+
+.ConfigureDeviceButton {
+    margin: 10px auto;
+    width: 130px;
+    height: auto;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: -2px auto 10px auto;
+    font-size: 12pt;
+    text-align: center;
+}
+.SelectedConfigureDeviceButton {
+    margin: 10px auto;
+    width: 130px;
+    height: auto;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: -2px auto 10px auto;
+    font-size: 12pt;
+    text-align: center;
+}
+
+.SelectedDeviceButton:hover, .DeviceButton:hover,
+.SelectedConfigureDeviceButton:hover, .ConfigureDeviceButton:hover {
     background-color: rgb(181, 181, 181);
     cursor: pointer;
     /* box-shadow: 1px 1px 1px rgb(181, 181, 181); */
 }
+
+
 
 /* .SelectedDeviceButton:active,  .DeviceButton:active {
     background-color: rgb(162, 162, 162);

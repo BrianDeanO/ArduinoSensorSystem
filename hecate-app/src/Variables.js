@@ -9,7 +9,8 @@ export const localStorageTitles = {
     selectedDevice: "selectedDevice",
     selectedSensor: "selectedSensor",
     selectedSensorData: "selectedSensorData",
-    selectedTimeFrame: "selectedTimeFrame"
+    selectedTimeFrame: "selectedTimeFrame",
+    selectedChannel: "selectedChannel"
 }
 
 export const timeFrameConstants = {
@@ -95,25 +96,25 @@ export const userTable = [
 ]
 
 export const deviceTable = [
-    {device_ID: 1, device_name: "RICHLAND_NW_1", device_type: "ARDUINO", zip_code: 99352},
-    {device_ID: 2, device_name: "KENNEWICK_N_1", device_type: "ARDUINO", zip_code: 99336},
-    {device_ID: 3, device_name: "PASCO_E_1", device_type: "ARDUINO", zip_code: 99301}
+    {deviceID: 1, deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", zipCode: '99352'},
+    {deviceID: 2, deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", zipCode: '99336'},
+    {deviceID: 3, deviceName: "PASCO_E_1", deviceType: "ARDUINO", zipCode: '99301'}
 ]
 
 export const userDeviceEntriesTable = [
-    {user_ID: 1, device_ID: 1},
-    {user_ID: 1, device_ID: 2},
-    {user_ID: 1, device_ID: 3},
-    {user_ID: 2, device_ID: 1},
-    {user_ID: 3, device_ID: 1},
-    {user_ID: 3, device_ID: 2}
+    {user_ID: 1, deviceID: 1},
+    {user_ID: 1, deviceID: 2},
+    {user_ID: 1, deviceID: 3},
+    {user_ID: 2, deviceID: 1},
+    {user_ID: 3, deviceID: 1},
+    {user_ID: 3, deviceID: 2}
 ]
 
 export const deviceSensorEntriesTable = [
-    {device_ID: 1, sensorID: 1},
-    {device_ID: 1, sensorID: 2},
-    {device_ID: 2, sensorID: 3},
-    {device_ID: 3, sensorID: 4},
+    {deviceID: 1, sensorID: 1},
+    {deviceID: 1, sensorID: 2},
+    {deviceID: 2, sensorID: 3},
+    {deviceID: 3, sensorID: 4},
 ]
 
 export const sensorTable = [

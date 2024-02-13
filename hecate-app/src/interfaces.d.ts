@@ -23,6 +23,7 @@ export interface CurrentUserType {
     currentUserID: number;
     currentFirstName: string;
     currentLastName: string;
+    isAdmin: boolean;
 }
 
 export interface UserType {
@@ -68,6 +69,10 @@ export interface SelectedSensorData {
 
 export interface SelectedTimeFrame {
     selectedTimeFrame: string;
+}
+
+export interface SelectedChannel {
+    selectedChannelID: number;
 }
 
 export interface UserDeviceType {

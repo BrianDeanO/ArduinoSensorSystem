@@ -5,11 +5,13 @@ import axios from "axios";
 
 interface GraphProps {
     selectedSensorID: number;
+    selectedChannelID: number;
     selectedTimeFrame: string;
 }
 
 const Graph: React.FC<GraphProps> = ({
     selectedSensorID,
+    selectedChannelID,
     selectedTimeFrame
 }: GraphProps) => {
     const [sensorData, setSensorData] = useState([] as SensorDataType[])
@@ -17,6 +19,16 @@ const Graph: React.FC<GraphProps> = ({
 
     const getSensorData = useCallback(async(selectedSensorID: number) => {
         let tempSensorData: SensorDataType[] = [];
+
+/*
+
+*******************
+        UPDATE GET METHOD TO USE selectedChannelID
+
+
+*******************
+        */
+
 
         await axios({
             method: 'get',
@@ -44,16 +56,18 @@ const Graph: React.FC<GraphProps> = ({
         getSensorData(selectedSensorID);
     }, [selectedSensorID, getSensorData])
 
-    console.log('GRAPH - SELECTED SENSOR ID - ', selectedSensorID)
+    console.log('GRAPH - SELECTED SENSOR ID - ', selectedSensorID, 'chanlle id - ', selectedChannelID)
 
     return (
         <div className="MainVisualizationBox">
-            GRAPH
-            {`\nSensor ID - ${selectedSensorID || 0}`}
+            {/* {`\nSensor ID - ${selectedSensorID || 0}`}
             {`\nSelected Time Frame: ${selectedTimeFrame}`}
+            {`\nChannel: ${selectedChannelID}`} */}
             {
-                ((selectedSensorID === 0) || selectedSensorID === undefined) ? null :
-                <div>
+                (((selectedSensorID === 0) || selectedSensorID === undefined) ||
+                    ((selectedChannelID === 0) || selectedChannelID === undefined)) ? 
+                    null :
+                <div className="mainGraphBox">
                     <table>
                         <thead>
                             <tr>
@@ -62,6 +76,7 @@ const Graph: React.FC<GraphProps> = ({
                                 <th>Data Unit</th>
                                 <th>Time Recorded</th>
                                 <th>Sensor ID</th>
+                                <th>Channel ID</th>
                             </tr>
                         </thead>
                         
@@ -69,15 +84,20 @@ const Graph: React.FC<GraphProps> = ({
                             {
                                 // Object.keys(sensorDataTable).map((sensorData, i) => {
                                     sensorData.map((sensorData, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            <td>{i+1}</td>
-                                            <td>{sensorData.dataValue}</td>
-                                            <td>{sensorData.dataUnit}</td>
-                                            <td>{sensorData.timeRecorded}</td>
-                                            <td>{sensorData.sensorID}</td>
-                                        </tr>
-                                    )    
+                                    if(sensorData.channelID === selectedChannelID) {
+                                        return (
+                                            <tr key={i}>
+                                                <td>{i+1}</td>
+                                                <td>{sensorData.dataValue}</td>
+                                                <td>{sensorData.dataUnit}</td>
+                                                <td>{sensorData.timeRecorded}</td>
+                                                <td>{sensorData.sensorID}</td>
+                                                <td>{sensorData.channelID}</td>
+                                            </tr>
+                                        )    
+                                    } else {
+                                        return null;
+                                    }
                                 })
                             }
                         </tbody>

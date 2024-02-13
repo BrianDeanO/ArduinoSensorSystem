@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HecateLogo  from "../images/Hecate_Logo.png";
-import { version, proxyURL } from "../Variables.js";
+import { version, proxyURL, ADMIN } from "../Variables.js";
 import { CurrentUserType, UserType } from "../interfaces.js";
 import { localStorageTitles } from "../Variables.js";
 import axios from "axios";
@@ -8,6 +8,7 @@ import axios from "axios";
 interface HeaderProps {
     logIn: (user: UserType) => void;
     loggedInUser: CurrentUserType;
+    isAdmin: boolean;
 }
 
 const client = axios.create({
@@ -20,7 +21,8 @@ const client = axios.create({
 
 const HecateHeader: React.FC<HeaderProps> = ({
     logIn,
-    loggedInUser
+    loggedInUser,
+    isAdmin
 }: HeaderProps) => {
 
     const [loggedIn, setLoggedIn] = useState(((Object.keys(loggedInUser).length !== 0) && (loggedInUser.currentUserID !== 0)) ? true : false);
@@ -82,6 +84,11 @@ const HecateHeader: React.FC<HeaderProps> = ({
                 Version {version}
             </div>
         </div>
+
+        {/*
+                ADD A BIG ADMIN RED SYMBOL WHEN ADMIN IS LOGGED IN
+                SO make a isAdmin? 
+        */}
         <div className="MainHeaderLogin">
             <div className="mainLoginInputBox">
                 <div className="userNameLoginBox">
@@ -90,7 +97,7 @@ const HecateHeader: React.FC<HeaderProps> = ({
                     </div>
                     {
                         loggedIn ? 
-                            <div className="loggedInText"> {`${userFirstName}`} </div> :
+                            <div className="loggedInText"> {isAdmin ? `Admin` : ''} {`${userFirstName}`} </div> :
                             <textarea
                                     className="loginInputTextArea"
                                     value={userFirstName}

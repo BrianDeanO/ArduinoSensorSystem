@@ -4,7 +4,7 @@ import { proxyURL, ADMIN } from "../Variables";
 import axios from "axios";
 
 interface NewDeviceProps {
-    addDevice: (addingDevice: boolean) => void;
+    addDevice: (addingDevice: boolean, reset: boolean) => void;
 }
 
 const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {  
@@ -144,7 +144,7 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                             {userDevicesAddedCorrectly ? 
                                 <div className="NewDeviceErrorSubText">   
                                     <span>
-                                        {`Device: ${newDeviceName} Added`}
+                                        {`Device Added`}
                                     </span>
                                 </div> : 
                                 <div className="NewDeviceErrorSubText">
@@ -156,7 +156,7 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                         <span 
                             className="NewDeviceExitButton"
                             onClick={(e) => {
-                                addDevice(false);
+                                addDevice(false, true);
                             }}
                         >
                             X
@@ -220,7 +220,7 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                     <button 
                         className="mainButton"
                         onClick={(e) => {
-                            addDevice(false)
+                            addDevice(false, true)
                         }}>
                             Cancel
                     </button>

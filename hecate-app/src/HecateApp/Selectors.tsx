@@ -6,11 +6,12 @@ import axios from "axios";
 
 interface SelectorProps {
     selectedDeviceID: number;
-    selectSensor: (selectedSensorID: number) => void;
+    selectSensor: (selectedSensorID: number, resetChannelID: boolean, resetTimeFrame: boolean) => void;
     selectTimeFrame: (selectedTimeFrame: string) => void;
     selectedSensorID: number;
     // getSensorOverride: boolean
     addSensor: (addingSensor: boolean) => void;
+    selectChannel: (selectedChannelID: number) => void;
 }
 
 const Selectors: React.FC<SelectorProps> = ({
@@ -18,15 +19,22 @@ const Selectors: React.FC<SelectorProps> = ({
     selectSensor,
     selectedSensorID,
     selectTimeFrame,
-    // getSensorOverride
-    addSensor
-}: SelectorProps) => {    
+    selectChannel,
+    addSensor,
+}: SelectorProps) => {
     const [sensors, setSensors] = useState([] as SensorType[]);
+    const [channels, setChannels] = useState([] as number[]);
+    // const [selectedChannels, setSelectedChannels] = useState([] as number[]);
 
+    /*
+        NEED TO FIGURE OUT HOW TO GET THE CHANNEL COUNT FROM THE SELECTED CHANNEL ID
+        OBIVOUSLY JUST USE IT TO GET SENSOR. THEN USE setChannels
+    */
 
     const getSensors = useCallback(async(selectedDeviceID: number) => {
 
         let tempSensors: SensorType[] = [];
+        let tempChannels: number[] = [];
 
         await axios({
             method: 'get',
@@ -42,8 +50,19 @@ const Selectors: React.FC<SelectorProps> = ({
         })
 
         setSensors(tempSensors);
+
+        tempSensors.forEach((sensor, i) => {
+            tempChannels.push(sensor.channelCount);
+        })
+        console.log('tempChannels', tempChannels)
+
+        tempChannels.forEach((sensor, i) => {
+            console.log('CHANNEL ??????????', i)
+        })
+
+        setChannels(tempChannels);
         
-        selectSensor(selectedSensorID || 0);
+        selectSensor(selectedSensorID || 0, false, false);
 
     }, [selectSensor, selectedSensorID])
 
@@ -51,14 +70,19 @@ const Selectors: React.FC<SelectorProps> = ({
         // if(getSensorOverride) {
         // }
         getSensors(selectedDeviceID);
+        // setSelectedChannels(new Array(channels[selectedSensorID - 1]));
     }, [ selectedDeviceID, getSensors ])
 
     // console.log('CURRENTLY SELECTED SNEOSRS ID', selectedSensorID)
     console.log('SENSORS - SELECTED SENSOR ID - ', selectedSensorID)
 
+    // console.log('Array(channels[selectedSensorID - 1])', Array(channels[selectedSensorID - 1]));
+
+
+
     return (
         <div className="SubSelectorsBox">
-            <div className="AddSensorBox">
+            {/* <div className="AddSensorBox">
                 <span 
                     className="AddSensorButton"
                     onClick={(e) => {
@@ -66,7 +90,7 @@ const Selectors: React.FC<SelectorProps> = ({
                 }}>
                     Add New Sensor
                 </span>   
-            </div>
+            </div> */}
             <div className="sensorTypeSelectorBox">
                 <div className="sensorTypeSelectorText">Sensor</div>
                 <select 
@@ -76,10 +100,15 @@ const Selectors: React.FC<SelectorProps> = ({
                         const tempStringID = (e.target as HTMLSelectElement).value;
                         console.log('ON CHNACING SENSORS')
                         if(tempStringID === '---') {
-                            selectSensor(0);
+                            selectSensor(0, true, true);
                         } else {
                             const tempSensorID = parseInt((tempStringID != null) ? tempStringID : "");
-                            selectSensor(tempSensorID);
+                            selectSensor(tempSensorID, true, true);
+                            sensors.forEach((sensor, i) => {
+                                if(sensor.sensorID === tempSensorID) {
+                                    setChannels(new Array(sensor.channelCount));
+                                }
+                            })
                         }
                     }}>
                         <option value={'---'} selected={selectedSensorID === 0}>---</option>
@@ -94,29 +123,78 @@ const Selectors: React.FC<SelectorProps> = ({
                         }
                 </select>
             </div>
-            {/* <div className="channelTypeSelectorBox">
+            {/* {
+                // (selectedSensorID !== 0) ? (
+                (channels.length > 0) ?
+                    <div className="channelTypeSelectorBox">
+                        <div className="channelTypeSelectorText">Sensor Channel</div>
+                        <select 
+                            className="channelTypeSelector" 
+                            id="channel"
+                            onChange={(e) => {
+                                const tempStringID = (e.target as HTMLSelectElement).value;
+                                if(tempStringID === '---') {
+                                    selectChannel(0);
+                                } else {
+                                    const tempChannelID = parseInt((tempStringID != null) ? tempStringID : "");
+                                    console.log('SELECTINC CAHNNEL', tempChannelID)
+                                    selectChannel(tempChannelID);
+                                }
+                            }}>
+                                
+                                <option value={'---'} selected={(channels.length === 0) || !(channels)}>---</option>
+                                {
+                                    (selectedSensorID !== 0) ? 
+                                        channels.map((channel, i) => {
+                                            return(
+                                                <option value={i+1} key={i} >
+                                                    {i + 1}
+                                                </option>
+                                            )
+                                        })
+                                        : null
+                                }
+                        </select>
+                    </div> : 
+                    <div className="channelTypeSelectorBox">
+                        <div className="channelTypeSelectorText">Sensor Channel</div>
+                        <div className="channelTypeSelectorText">No Channels</div>
+                    </div>
+            } */}
+
+            {
+                <div className="channelTypeSelectorBox">
                 <div className="channelTypeSelectorText">Sensor Channel</div>
                 <select 
                     className="channelTypeSelector" 
                     id="channel"
-                    onClick={(e) => {
-                        //@ts-ignore
-                        setSelectedChannel(parseInt(e.target.value));
+                    onChange={(e) => {
+                        const tempStringID = (e.target as HTMLSelectElement).value;
+                        if(tempStringID === '---') {
+                            selectChannel(0);
+                        } else {
+                            const tempChannelID = parseInt((tempStringID != null) ? tempStringID : "");
+                            console.log('SELECTINC CAHNNEL', tempChannelID)
+                            selectChannel(tempChannelID);
+                        }
                     }}>
-                        <option value={0}>All</option>
+                        
+                        <option value={'---'} selected={(channels.length === 0) || !(channels)}>---</option>
                         {
-                            channels.map((channel, index) => {
-                                return (
-                                    <option value={channel} key={channel}>
-                                        {channel}
-                                    </option>
-                                )
-                                
-                            })
+                            (selectedSensorID !== 0) ? 
+                                channels.map((channel, i) => {
+                                    return(
+                                        <option value={i+1} key={i} >
+                                            {i + 1}
+                                        </option>
+                                    )
+                                })
+                                : null
                         }
                 </select>
-            </div> */}
-            <div className="timeTypeSelectorBox">
+            </div> 
+            }
+            {/* <div className="timeTypeSelectorBox">
                 <div className="timeTypeSelectorText">Time Frame</div>
                 <select 
                     className="timeTypeSelector" 
@@ -125,15 +203,15 @@ const Selectors: React.FC<SelectorProps> = ({
                     onChange={(e) => {
                         const timeFrameString = (e.target as HTMLSelectElement).value;
                         selectTimeFrame(timeFrameString);
-                    }}>
+                    }}> */}
                         {/* timeFrameConstants can be used here to subtract times? */}
-                        <option value={'Past Day'}>Past Day</option>
+                        {/* <option value={'Past Day'}>Past Day</option>
                         <option value={'Past Week'}>Past Week</option>
                         <option value={'Past Month'}>Past Month</option>
                         <option value={'Past Six Months'}>Past Six Months</option>
                         <option value={'Lifetime'}>Lifetime</option>
                 </select>
-            </div>
+            </div> */}
         </div>
     )
 }

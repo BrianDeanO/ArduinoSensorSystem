@@ -1,31 +1,29 @@
-.NewDeviceMainBox {
+.ConfigDeviceMainBox {
     display: flex;
     flex-direction: column;
-    width: 778px;
+    width: 780px;
     height: 800px;
     /* background-color: rgb(230, 230, 230); */
-    background-color: rgb(111, 188, 211);
+    background-color: rgb(103, 176, 199);
     margin: 0px 0px 0px 0px;
-    border-right-style: solid;
 }
-.mainDeviceInfoBox {
+.mainSensorInfoBox {
     display: flex;
     flex-direction: row;
     height: 130px;
-    width: 778px;
+    width: 780px;
     margin: 0px 15px 0px 0px;
-    background-color: rgb(111, 188, 211);
-    border-right-style: solid;
+    background-color: rgb(137, 180, 178);
 }
-.newDeviceTextEntryFieldsBox {
+.newSensorTextEntryFieldsBox {
     display: flex;
     flex-direction: column;
-    height: auto;
-    width: 300px;
+    height: 200px;
+    width: 400px;
     margin: 0px 15px 0px 0px;
-    background-color: rgb(172, 172, 172);
+    background-color: rgb(118, 118, 177);
 }
-.deviceNameEntryBox, .deviceTypeEntryBox, .deviceZipCodeEntryBox {
+.sensorNameEntryBox, .sensorTypeEntryBox, .sensorZipCodeEntryBox, .sensorChannelCountEntryBox, .newSensorDeviceSelectionBox {
     display: flex;
     flex-direction: row;
     margin: 10px auto;
@@ -37,7 +35,7 @@
     color: rgb(0, 0, 0);
     font-size: 9.5pt;
 } 
-.newDeviceTitleText {
+.newSensorTitleText {
     height: 20px;
     width: 120px;
     margin: 2px 2px 0px 0px;
@@ -46,7 +44,7 @@
     font-weight: bold;
     text-align: center;
 }
-.newDeviceInputTextArea {
+.newSensorInputTextArea {
     margin: 0px 0px 0px 0px;
     height: 20px;
     max-height: 20px;
@@ -56,19 +54,19 @@
     resize: none;
 }
 
-.NewDeviceUserSelectionMainBox {
+.NewSensorUserSelectionMainBox {
     display: flex;
     flex-direction: row;
     height: auto;
     width: 300px;
     margin: 0px 15px 0px 0px;
-    background-color: rgb(207, 207, 207);
+    background-color: rgb(179, 179, 179);
     color: rgb(0, 0, 0);
     font-size: 11pt;
     font-weight: bold;
     text-align: center;
 }
-.NewDeviceErrorText {
+.NewSensorErrorText {
     display: flex;
     flex-direction: column;
     height: 130px;
@@ -78,10 +76,10 @@
     font-size: 15pt;
     font-weight: bold;
     text-align: center;
-    background-color: rgb(207, 207, 207);
+    background-color: rgb(136, 136, 136);
 }
 
-.NewDeviceErrorSubText {
+.NewSensorErrorSubText {
     display: flex;
     flex-direction: column;
     height: 65px;
@@ -91,23 +89,23 @@
     font-size: 15pt;
     font-weight: bold;
     text-align: center;
-    background-color: rgb(207, 207, 207);
+    background-color: rgb(136, 136, 136);
 }
 
-.DeviceSubmitAndCancelMainBox {
+.SensorSubmitAndCancelMainBox {
     display: flex;
     flex-direction: row;
     height: 60px;
     width: 250px;
-    margin: 0px 15px 0px 20px;    
-    background-color: rgb(111, 188, 211);
+    margin: 0px 15px 0px 20px;
+    background-color: rgb(136, 136, 136);
 
     >button {
         font-size: 12pt;
     }
 }
 
-.NewDeviceExitButton {
+.NewSensorExitButton {
     background-color:  #dfdfdf;
     color: #585858;
     font-size: 13pt;
@@ -121,7 +119,7 @@
     border-width: 2px;
 }
 
-.NewDeviceExitButton:hover {
+.NewSensorExitButton:hover {
     background-color: #c9c9c9;
     cursor: pointer;
 }

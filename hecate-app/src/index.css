@@ -5,6 +5,7 @@
 @import "./Styles/HeaderStyle.css";
 @import "./Styles/NewDeviceStyles.css";
 @import "./Styles/NewSensorStyles.css";
+@import "./Styles/ConfigDeviceStyles.css";
 
 :root {
   --sheetBackground: rgb(177, 174, 174);
