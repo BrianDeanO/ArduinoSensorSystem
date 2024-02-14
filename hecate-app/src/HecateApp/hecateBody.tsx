@@ -5,12 +5,12 @@ import Graph from "./Graph.tsx";
 // import { variables, dataObject } from "../variables.js";
 import { DeviceType, SensorType, SelectedDevice, SelectedSensor, SelectedTimeFrame, SelectedChannel } from "../interfaces";
 import { localStorageTitles } from "../Variables.js";
-import NewDevice from "./NewDevice.tsx";
+import NewDevice from "./AddNewPages/NewDevice.tsx";
 
 import Devices from "./Devices.tsx";
 import Selectors from "./Selectors.tsx";
-import NewSensor from "./NewSensor.tsx";
-import ConfigureDevice from "./ConfigureDevice.tsx";
+import NewSensor from "./AddNewPages/NewSensor.tsx";
+import ConfigureDevice from "./ConfigPages/ConfigureDevice.tsx";
 
 interface HecateBodyProps {
     loggedInUserID: number;
@@ -145,8 +145,8 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
                         <NewDevice addDevice={addDevice}/> :
                     addingNewSensor ? 
                         <NewSensor addSensor={addSensor} /> :
-                    // configuringNewDevice ?
-                    //     <ConfigureDevice selectedDeviceID ={selectedDeviceID} configureDevice={configureDevice} /> :
+                    configuringNewDevice ?
+                        <ConfigureDevice selectedDeviceID ={selectedDeviceID} configureDevice={configureDevice} /> :
                     <>
                         <Selectors 
                             selectedDeviceID={selectedDeviceID} 

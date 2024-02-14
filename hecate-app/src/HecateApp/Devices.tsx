@@ -12,13 +12,6 @@ interface DeviceProps {
     configureDevice: (configuringDevice: boolean) => void;
 }
 
-// const deviceTable = [
-//     {deviceID: 1, deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", zipCode: 99352},
-//     {deviceID: 2, deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", zipCode: 99336},
-//     {deviceID: 3, deviceName: "PASCO_E_1", deviceType: "ARDUINO", zipCode: 99301}    
-
-// ] as DeviceType[]
-
 const Devices: React.FC<DeviceProps> = ({
     loggedInUserID, 
     selectDevice,
@@ -89,7 +82,7 @@ const Devices: React.FC<DeviceProps> = ({
                                     {device.deviceName}
                                 </span>   
 
-                                {/* {
+                                {
                                     (selectedDeviceID === device.deviceID ? 
                                         <span 
                                             className={"ConfigureDeviceButton"}
@@ -109,13 +102,13 @@ const Devices: React.FC<DeviceProps> = ({
                                         
                                         : null
                                     )
-                                } */}
+                                }
                             </div>
                         )
                     })
                 }
             </div>
-            <div className="AddDeviceBox">
+            {/* <div className="AddDeviceBox">
                 <span 
                     className={"DeviceButton"}
                     onClick={(e) => {
@@ -123,7 +116,7 @@ const Devices: React.FC<DeviceProps> = ({
                 }}>
                     Add New Device
                 </span>   
-            </div>
+            </div> */}
         </div>  
     )
 }

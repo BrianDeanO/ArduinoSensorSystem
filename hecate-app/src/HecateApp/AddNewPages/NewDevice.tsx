@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { DeviceType, DeviceDTOType, UserType, UserDeviceType } from "../interfaces";
-import { proxyURL, ADMIN } from "../Variables";
+import { DeviceType, DeviceDTOType, UserType, UserDeviceType } from "../../interfaces";
+import { proxyURL, ADMIN, userTable } from "../../Variables";
 import axios from "axios";
 
 interface NewDeviceProps {
@@ -15,10 +15,33 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
     const [newDeviceZipCode, setNewDeviceZipCode] = useState('');
     const [devicePostAttempt, setDevicePostAttempt] = useState(false);
     // const [postedCorrectly, setPostedCorrectly] = useState(false);
-    const [postError, setPostError] = useState('false');
+    const [postError, setPostError] = useState(false);
     const [userDevicesAddedCorrectly, setUserDevicesAddedCorrectly] = useState(false);
+    const [users, setUsers] = useState([] as UserType[]);
+    const [userSelectionArray, setUserSelectionArray] = useState([] as number[]);
 
     console.log('TOP OF NEW DEIVEC');
+
+    async function getUsers() {
+        let tempUsers: UserType[] = [];
+        let tempUserSelections: number[] = [];
+
+        await axios({
+            method: 'get',
+            url: `${proxyURL}/api/User`,
+        })
+            .then(function (response) {
+                console.log('response', response);
+                setUsers(response.data);
+                tempUsers = response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+
+        if(tempUsers.length > 0) {
+            setUserSelectionArray(new Array(tempUsers.length).fill(0));
+        }
+    }
 
     async function postUserDevice(userID: number, deviceID: number) {
         console.log('POSTING USER DEVICE')
@@ -72,15 +95,10 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
             console.log('POSTED CORRECTLY');
             // setPostedCorrectly(false);
 
-            // NOW GET THE DEVICE, USING NAME API
-
-            // NOW GET ALL USERS THAT WERE SELECTED IN THE FORM
-
-            // THEN FOR EACH USER AND DEVICE ID ADD A USERDEVICE ENTRY  
-
             let tempUsers: UserType[] = [];
             let newlyAddedDevice: DeviceType;
 
+            // NOW GET THE DEVICE, USING NAME API
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/User`,
@@ -93,6 +111,8 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                     console.log(error);
                 });
 
+
+            // NOW GET ALL USERS THAT WERE SELECTED IN THE FORM
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/Device/DeviceName?deviceName=${newDeviceName}`,
@@ -106,7 +126,7 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                     console.log(error);
                 });
 
-
+            // THEN FOR EACH USER AND DEVICE ID ADD A USERDEVICE ENTRY  
             /*
                 CURRENTLY JUST ASSIGNING DEVICES TO ADMINS
             */
@@ -135,11 +155,15 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
         console.log('AFTER POST DEVICE');
     }
 
+    // useEffect(() => {
+    //     getUsers();
+    // })
+
     return (
         <div className="NewDeviceMainBox">
                 {
                     devicePostAttempt ? 
-                    <div className="NewDeviceUserSelectionMainBox">
+                    <div className="mainDeviceInfoBox"> 
                         <div className="NewDeviceErrorText">
                             {userDevicesAddedCorrectly ? 
                                 <div className="NewDeviceErrorSubText">   
@@ -202,6 +226,47 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
                                         rows={1}></textarea>
                                 </div>
                             </div>
+
+                            {/* <div className="NewDeviceUserSelectionMainBox">
+                                            
+                                <legend>Users</legend>
+                                {
+                                    userTable.map((user, i) => {
+                                        return(
+                                            // <div className="UserSelectionSubBox">
+                                            //     <span 
+                                            //         className={(false) ? "UserSelectionCircle" : "UserSelectionCircleActive"}
+                                            //         onClick={(e) => {
+                                                        
+                                            //         }}
+                                            //     ></span>
+                                            //     <div className="UserSelectionText">
+                                            //         User ID - {user.user_ID}
+                                            //     </div>
+                                            // </div>
+                                            <fieldset>
+                                                <input type="checkbox" id="chbx" name="agree" value={user.user_ID} />
+                                                <label for="chbx">User - {user.user_ID}</label>
+                                            </fieldset>
+                                        )
+                                    })
+                                }
+                            </div> */}
+                            {/* 
+                            
+                                ADD A USER SELECTION BOX TO MAKE USERDEVICE ENTRIES.
+                                CIRCLE METHOD MIFHT BE HARD.
+                                TRY SELECTS WITH OPTIONS
+                                AND FOR EACH NEW ONE CHOSEN, HAVE A BUTTON FOR, ANTOEHR USER??
+                            */}
+                            {/* 
+                            
+                                Add a sensor creator option? To make new sensors
+                                to attach to the device, right then and there. 
+                                    OR
+                                Just leave it as is, where we make them separately. <----this one is MUCH easier
+                            
+                            */}
                         </div>
             }
             {

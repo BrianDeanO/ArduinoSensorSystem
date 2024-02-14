@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SensorType, SensorDTOType, DeviceType } from "../interfaces";
-import { channelCountArray, proxyURL } from "../Variables";
+import { SensorType, SensorDTOType, DeviceType } from "../../interfaces";
+import { channelCountArray, proxyURL } from "../../Variables";
 import axios from "axios";
 
 interface NewSensorProps {

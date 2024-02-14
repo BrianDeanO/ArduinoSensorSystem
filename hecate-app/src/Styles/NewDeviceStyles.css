@@ -1,3 +1,8 @@
+/* 
+*****************************************
+CSS Styles for New Devices Page
+*****************************************
+*/
 .NewDeviceMainBox {
     display: flex;
     flex-direction: column;
@@ -17,6 +22,10 @@
     background-color: rgb(111, 188, 211);
     border-right-style: solid;
 }
+
+/* 
+  Device Text Entry Styles
+*/
 .newDeviceTextEntryFieldsBox {
     display: flex;
     flex-direction: column;
@@ -56,23 +65,74 @@
     resize: none;
 }
 
+
+/* 
+  User Selection Styles
+*/
 .NewDeviceUserSelectionMainBox {
     display: flex;
     flex-direction: row;
-    height: auto;
-    width: 300px;
+    height: 600px;
+    width: 400px;
     margin: 0px 15px 0px 0px;
-    background-color: rgb(207, 207, 207);
+    background-color: rgb(111, 188, 211);
     color: rgb(0, 0, 0);
     font-size: 11pt;
     font-weight: bold;
     text-align: center;
 }
+.UserSelectionSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    width: 300px;
+    margin: 10px 15px 0px 0px;
+    background-color: rgb(213, 151, 239);
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+
+}
+.UserSelectionCircle {
+    height: 15px;
+    width: 15px;
+    background-color: transparent;
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1.5px;
+    margin: 6px 5px 0px 5px;
+}
+.UserSelectionCircleActive {
+    height: 15px;
+    width: 15px;
+    background-color: rgb(131, 131, 131);
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1.5px;
+    margin: 6px 5px 0px 5px;
+}
+.UserSelectionCircle:hover, 
+.UserSelectionCircleActive:hover {
+    cursor: pointer;
+}
+.UserSelectionText {
+    display: flex;
+    height: 30px;
+    width: 90px;
+    margin: 6.5px 0px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+}
+
+/* 
+  Error Pop-Up Styles
+*/
 .NewDeviceErrorText {
     display: flex;
     flex-direction: column;
     height: 130px;
-    width: 200px;
+    width: 270px;
     margin: 2px 2px 0px 0px;
     color: rgb(0, 0, 0);
     font-size: 15pt;
@@ -94,6 +154,9 @@
     background-color: rgb(207, 207, 207);
 }
 
+/* 
+  New Button Submit, Cancel , and Exit Button Styles
+*/
 .DeviceSubmitAndCancelMainBox {
     display: flex;
     flex-direction: row;
@@ -112,15 +175,14 @@
     color: #585858;
     font-size: 13pt;
     font-weight: bolder;
-    height: 25px;
-    margin: 5px 5px 0 65px;
+    margin: 7px 5px 0 -38px;
     text-align: center;
     width: 25px;
+    height: 23px;
     border-radius: 5px;
     border-style: solid;
     border-width: 2px;
 }
-
 .NewDeviceExitButton:hover {
     background-color: #c9c9c9;
     cursor: pointer;

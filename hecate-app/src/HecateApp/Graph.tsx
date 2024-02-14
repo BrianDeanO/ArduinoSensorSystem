@@ -16,38 +16,23 @@ const Graph: React.FC<GraphProps> = ({
 }: GraphProps) => {
     const [sensorData, setSensorData] = useState([] as SensorDataType[])
 
-
     const getSensorData = useCallback(async(selectedSensorID: number) => {
         let tempSensorData: SensorDataType[] = [];
-
-/*
-
-*******************
-        UPDATE GET METHOD TO USE selectedChannelID
-
-
-*******************
-        */
-
 
         await axios({
             method: 'get',
             url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorDatas`,
         })
             .then(function (response) {
-                console.log('response', response);
+                // console.log('response', response);
                 // setSensorData(response.data);
                 tempSensorData = response.data;
-                console.log('SENSORS FROM AXIOS', tempSensorData)
+                // console.log('SENSORS FROM AXIOS', tempSensorData)
             }).catch(error => {
                 console.log(error);
             })
 
-        /*
-            NEED TO PERFORM TIME FRAME SELECTION HERE
-        */
-
-        console.log('SET DATA', tempSensorData)
+        // console.log('SET DATA', tempSensorData)
         setSensorData(tempSensorData);
 
     }, [])
@@ -56,13 +41,8 @@ const Graph: React.FC<GraphProps> = ({
         getSensorData(selectedSensorID);
     }, [selectedSensorID, getSensorData])
 
-    console.log('GRAPH - SELECTED SENSOR ID - ', selectedSensorID, 'chanlle id - ', selectedChannelID)
-
     return (
         <div className="MainVisualizationBox">
-            {/* {`\nSensor ID - ${selectedSensorID || 0}`}
-            {`\nSelected Time Frame: ${selectedTimeFrame}`}
-            {`\nChannel: ${selectedChannelID}`} */}
             {
                 (((selectedSensorID === 0) || selectedSensorID === undefined) ||
                     ((selectedChannelID === 0) || selectedChannelID === undefined)) ? 
