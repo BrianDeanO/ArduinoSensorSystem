@@ -109,6 +109,7 @@ namespace backEndApp.Controllers {
                 .FirstOrDefault();
 
             if(sensorData != null) {
+                Console.WriteLine(newSensorData.TimeRecorded);
                 ModelState.AddModelError("", "SensorData Already Exists.");
                 return StatusCode(422, ModelState);
             }

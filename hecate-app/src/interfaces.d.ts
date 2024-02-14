@@ -1,5 +1,6 @@
 export interface DeviceType {
     deviceID: number;
+    deviceIdent: string;
     deviceName: string;
     deviceType: string;
     zipCode: string;

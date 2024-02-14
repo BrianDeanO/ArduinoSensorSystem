@@ -1,6 +1,6 @@
 export const version = "1.0";
-export const proxyURL_HTTPS = "https://localhost:7239";
-export const proxyURL = "http://localhost:5270";
+export const proxyURL_HTTPS = "https://localhost:8443"; //7239
+export const proxyURL = "http://localhost:8080"; // 5270 before
 export const ADMIN = 'ADMIN';
 export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 

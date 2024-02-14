@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import HecateHeader from "./HecateHeader.tsx";
-import HecateBody from "./HecateBody.tsx";
+import HecateHeader from "./hecateHeader.tsx";
+import HecateBody from "./hecateBody.tsx";
 import { ADMIN, localStorageTitles } from "../Variables.js";
 
 const HecateApp = () => {

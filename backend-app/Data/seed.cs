@@ -43,11 +43,13 @@ namespace backEndApp
                 };
                 var Devices = new List<Device>() {
                     new Device() {
+                        DeviceIdent = "ARD-123",
                         DeviceName = "RICHLAND_NW_1",
                         DeviceType = "ARDUINO",
                         ZipCode = "99352",
                         Sensors = new List<Sensor>() {
                             new Sensor() {
+                                SensorIdent = "SEN-123",
                                 SensorName = "TEMP_1", 
                                 SensorType = "Temperature", 
                                 ChannelCount = 2,
@@ -92,6 +94,7 @@ namespace backEndApp
                                 }
                             },
                             new Sensor() {
+                                SensorIdent = "SEN-456",
                                 SensorName = "IRRAD_1", 
                                 SensorType = "Irradiance", 
                                 ChannelCount = 1,
@@ -114,12 +117,14 @@ namespace backEndApp
                         }
                     },
                     new Device() {
+                        DeviceIdent = "ARD-456",
                         DeviceName = "KENNEWICK_N_1",
                         DeviceType = "ARDUINO",
                         ZipCode = "99336",
                         
                         Sensors = new List<Sensor>() {
                             new Sensor() {
+                                SensorIdent = "SEN-789",
                                 SensorName = "PRESSURE_1", 
                                 SensorType = "Pressure", 
                                 ChannelCount = 2,
@@ -158,6 +163,7 @@ namespace backEndApp
                                 }
                             },
                             new Sensor() {
+                                SensorIdent = "SEN-223",
                                 SensorName = "PRESSURE_1", 
                                 SensorType = "Pressure", 
                                 ChannelCount = 2,
@@ -198,11 +204,13 @@ namespace backEndApp
                         }
                     },
                     new Device() {
+                        DeviceIdent = "ARD-789",
                         DeviceName = "PASCO_E_1",
                         DeviceType = "ARDUINO",
                         ZipCode = "99301",
                         Sensors = new List<Sensor>() {
                             new Sensor() {
+                                SensorIdent = "SEN-323",
                                 SensorName = "TEMP_2", 
                                 SensorType = "Temperature", 
                                 ChannelCount = 2,
