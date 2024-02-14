@@ -3,3 +3,5 @@ hecate-app/node_modules
 .vscode
 backend-app/bin
 backend-app/obj
+arduino/.cache
+arduino/build

@@ -101,7 +101,11 @@ namespace backEndApp.Controllers {
             }
 
             var sensorData = _sensorDataRepository.GetSensorDatas()
-                .Where(d => ((d.TimeRecorded == newSensorData.TimeRecorded) && (d.ChannelID == newSensorData.ChannelID)))
+                .Where(d =>
+                    d.TimeRecorded == newSensorData.TimeRecorded
+                    && d.SensorID == newSensorData.SensorID
+                    && d.ChannelID == newSensorData.ChannelID
+                )
                 .FirstOrDefault();
 
             if(sensorData != null) {

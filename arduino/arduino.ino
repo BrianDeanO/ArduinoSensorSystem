@@ -1,60 +1,72 @@
+#include <Arduino.h>
+
+#include "config.hpp"
+#include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
 
-#define CACHE_SIZE 100
-#define DEVICE_COUNT 2
+#if DEBUG_MODE == 1
+char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
+#endif
 
-unsigned record_interval = 3600; // 1 hour
-unsigned retry_interval = 300; // 5 minutes
-DeviceDriver* devices[DEVICE_COUNT];
+ExampleSensor sen1("demo_sensor1");
+Sensor* sensors[] = { &sen1 };
 
-unsigned cache_index = 0;
-double cache[DEVICE_COUNT][CACHE_SIZE];
-long long unsigned cache_times[CACHE_SIZE];
+#ifndef NO_LTE
+    #include "src/lib/SparkFun_LTE_Shield.h"
+    #define LTE_POWER_PIN 5
+    #define LTE_RESET_PIN 6
+    LTE_Shield g_lte(LTE_POWER_PIN, LTE_RESET_PIN);
+    LTEDataClient client(&g_lte, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
+#else
+    SerialDataClient client(&Serial, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
+#endif
 
-bool send_cached_data() {
-    // TODO
-}
+Device device(sensors, 1, &client);
 
-bool reconnect() {
-    // TODO
-}
-
-void record_data() {
-    for(unsigned i = 0; i < DEVICE_COUNT; i++) {
-        DeviceDriver* device = devices[i];
-        double value = device->acquire_data_point();
-        if(isnan(value)) {
-            Serial.print("Error: device ");
-            Serial.print(device->id());
-            Serial.println(" returned NaN.");
-        }
-
-        cache[i][cache_index] = value;
-    }
-
-    cache_index++;
-}
-
-// the setup function runs once when you press reset or power the board
 void setup() {
-    devices[0] = new ExampleDevice("tc1"); // Thermocouple 1
-    devices[1] = new ExampleDevice("lum1"); // Luminosity 1
-}
+#ifndef SIMULATOR
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+#endif
 
-// the loop function runs over and over again forever
-void loop() {
-    record_data();
+    Serial.begin(9600);
+    DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
+    DEBUG("Program Start\n");
 
-    unsigned elapsed_retry_time = 0;
-    while(!send_cached_data()) {
-        delay(retry_interval); // Wait before trying to reconnect
-        elapsed_retry_time += retry_interval;
-        if(elapsed_retry_time > record_interval) {
-            // Keep recording event if we can't connect
-            record_data();
-            elapsed_retry_time = 0;
+#ifndef NO_LTE
+    // Use hardware serial port 1 to communicate with the lte shield
+
+    while(true) {
+        if(g_lte.begin(Serial1)) {
+            Serial.println(F("Initialized LTE Shield on HW Serial1"));
+            break;
+        }
+        else {
+            Serial.println(F("Failed to start LTE Shield on HW Serial1, retrying in 10 seconds."));
+            delay(10000);
         }
     }
 
-    delay(record_interval - elapsed_retry_time);
+    g_lte.autoTimeZone(true);
+#endif
+
+    while(!device.register_device()) { 
+        DEBUG("Failed to register device, retrying in 3 seconds\n");
+        delay(3000); 
+    }
+
+#ifndef SIMULATOR
+    digitalWrite(LED_BUILTIN, HIGH);
+#endif
+}
+
+void loop() {
+    device.update();
+
+    uint16_t ms = device.next_update() - client.get_time();
+    DEBUG("Waiting %d\n", ms);
+    delay(ms);
+#ifdef NO_LTE
+    client.fake_last_time += ms;
+#endif
 }
