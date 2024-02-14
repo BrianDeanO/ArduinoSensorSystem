@@ -1,73 +1,43 @@
 /* 
 *****************************************
-CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
+CSS Styles for Hecate App Selectors (Sensors, Times, Channels)
 *****************************************
 */
-.MainDevicesBox {
+
+
+.MainSelectorAndGraphBox {
     display: flex;
     flex-direction: column;
-    background-color: var(--sheetBackground);
-    background-color: aqua;
-    margin: 5px auto 0px auto;
-    height: 795px;
-    width: 200px;
-
+    /* background-color: var(--sheetBackground); */
+    background-color: red;
+    margin: 0px 0px 0px 0px;
+    height: 800px;
+    width: 778px;
+    border-bottom-style: solid;
+    border-right-style: solid;
 }
-.MainSensorBox {
+.MainSelectorBox {
     display: flex;
-    flex-direction: row;
-    background-color: var(--sheetBackground);
-    margin: 5px auto 0px auto;
-    height: 115px;
-    width: 800px;
+    flex-direction: column;
+    /* background-color: var(--sheetBackground); */
+    background-color: red;
+    margin: 5px 0px 0px 0px;
+    height: 785px;
+    width: 775px;
     border-bottom-style: solid;
 }
-.mainSelectorBox {
+.SubSelectorsBox {
     display: flex;
     flex-direction: row;
-    width: 1000px;
-    height: 110px;
-    background-color: rgb(230, 230, 230);
+    width: auto;
+    height: 120px;
+    /* background-color: rgb(230, 230, 230); */
+    /* background-color: #60afec; */
+    
+    background-color: rgb(111, 188, 211);
     border-bottom: 2px;
     border-color: black;
     border-bottom-style: solid;
-}
-
-/* 
-  Device Selector Styles
-*/
-.deviceSelectorTitleText {
-    width: 175px;
-    height: 40px;
-    font-weight: bold;
-    color: black;
-    margin: 5px auto 0px auto;
-    font-size: 16pt;
-    text-align: center;
-    border-bottom: 2px;
-    border-color: black;
-    border-bottom-style: solid;
-}
-.MainDeviceSelectorBox {
-    display: flex;
-    flex-direction: column;
-    width: 175px;
-    height: auto;
-    background-color: rgb(230, 230, 230);
-    color: black;
-    margin: 5px auto 0px auto;
-    font-size: 16pt;
-    text-align: center;
-}
-.DeviceNameBox {
-    height: auto;
-    background-color: rgb(240, 57, 57);
-    margin: 5px auto 0px auto;
-}
-.SelectedDeviceNameBox {
-    height: auto;
-    background-color: rgb(116, 24, 24);
-    margin: 5px auto 0px auto;
 }
 
 /* 
@@ -76,8 +46,8 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .sensorTypeSelectorBox {
     display: flex;
     flex-direction: column;
-    height: 100px;
-    width: 200px;
+    height: 75px;
+    width: 180px;
     margin: 5px 5px 5px auto;
     text-align: center;
     background-color: rgb(92, 92, 92);
@@ -86,14 +56,14 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .sensorTypeSelectorText {
     font-weight: bold;
     color:rgb(255, 255, 255);
-    margin: 10px 0px 0px 0px;
+    margin: 5px 0px 0px 0px;
     font-size: 13pt;
 }
 .sensorTypeSelector {
     width: 150px;
-    height: 35px;
+    height: 30px;
     font-size: 11pt;
-    margin: 10px auto;
+    margin: 5px auto;
 }
 
 /* 
@@ -102,8 +72,8 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .timeTypeSelectorBox {
     display: flex;
     flex-direction: column;
-    height: 100px;
-    width: 200px;
+    height: 75px;
+    width: 180px;
     margin: 5px auto 0px 10px;
     text-align: center;
     background-color: rgb(92, 92, 92);
@@ -112,14 +82,14 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .timeTypeSelectorText {
     font-weight: bold;
     color:rgb(255, 255, 255);
-    margin: 10px 0px 0px 0px;
+    margin: 5px 0px 0px 0px;
     font-size: 13pt;
 }
 .timeTypeSelector {
     width: 150px;
-    height: 35px;
+    height: 30px;
     font-size: 11pt;
-    margin: 10px auto;
+    margin: 5px auto;
 }
 
 /* 
@@ -128,9 +98,9 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .channelTypeSelectorBox {
     display: flex;
     flex-direction: column;
-    height: 100px;
-    width: 200px;
-    margin: 5px auto -20px auto;
+    height: 75px;
+    width: 180px;
+    margin: 5px auto 0px 10px;
     text-align: center;
     background-color: rgb(92, 92, 92);
     border-radius: 5px;
@@ -138,12 +108,48 @@ CSS Styles for Hecate App Selectors (Devices, Sensors, Times, Channels)
 .channelTypeSelectorText {
     font-weight: bold;
     color:rgb(255, 255, 255);
-    margin: 10px 0px 0px 0px;
+    margin: 5px 0px 0px 0px;
     font-size: 13pt;
 }
 .channelTypeSelector {
     width: 150px;
-    height: 35px;
+    height: 30px;
     font-size: 11pt;
+    margin: 5px auto;
+}
+
+/* 
+  Add Sensor Button Styles
+*/
+.AddSensorBox {
+    display: flex;
+    width: 200px;
+    height: 60px;
+    max-height: 740px;
+    background-color: rgb(167, 72, 72);
+    color: black;
+    margin: 5px 0px 0px 10px;
+    font-size: 16pt;
+    text-align: center;
+    border-radius: 2px;
+}
+.AddSensorButton {
     margin: 10px auto;
+    width: 150px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 10px auto 10px auto;
+    font-size: 14pt;
+    text-align: center;
+    overflow: auto;
+    overflow-wrap: break-word;
+    line-height: normal;
+}
+
+.AddSensorButton:hover {
+    background-color: #e4e8eb;
+    cursor: pointer;
 }

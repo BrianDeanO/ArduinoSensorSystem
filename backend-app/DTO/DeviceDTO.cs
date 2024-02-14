@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 namespace backEndApp.DTO;
 
 public class DeviceDTO {
-    // [Key]
     public int DeviceID { get; set; }    
     public string DeviceIdent { get; set; }    
     public string? DeviceName { get; set; }

@@ -1,7 +1,36 @@
 export const version = "1.0";
-export const proxyURL = "https://localhost:7239";
+export const proxyURL_HTTPS = "https://localhost:8443"; //7239
+export const proxyURL = "http://localhost:8080"; // 5270 before
+export const ADMIN = 'ADMIN';
+export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export  const apiInfo = {
+export const localStorageTitles = {
+    currentUser: "currentUser",
+    selectedDevice: "selectedDevice",
+    selectedSensor: "selectedSensor",
+    selectedSensorData: "selectedSensorData",
+    selectedTimeFrame: "selectedTimeFrame",
+    selectedChannel: "selectedChannel"
+}
+
+export const timeFrameConstants = {
+    pastDay: 86400,
+    pastWeek: 604800,
+    pastMonth: 604800*4,
+    pastSixMonths: (604800*4) * 6,
+    pastYear: (604800*4) * 12
+}
+
+export const apiInfo = {
+    USERS: `${proxyURL}/api/Users`,
+    DEVICES: `${proxyURL}/api/Devices`,
+    USER_DEVICES: `${proxyURL}/api/UserDevices`,
+    SENSORS: `${proxyURL}/api/Sensors`,
+    DEVICE_SENSORS: `${proxyURL}/api/DeviceSensors`,
+    SENSOR_DATA: `${proxyURL}/api/SensorDatas`,
+}
+
+export const apiInfo2 = {
     USERS: {
         URL: `${proxyURL}/api/Users`,
         INDEX: 1
@@ -67,25 +96,25 @@ export const userTable = [
 ]
 
 export const deviceTable = [
-    {device_ID: 1, device_name: "RICHLAND_NW_1", device_type: "ARDUINO", zip_code: 99352},
-    {device_ID: 2, device_name: "KENNEWICK_N_1", device_type: "ARDUINO", zip_code: 99336},
-    {device_ID: 3, device_name: "PASCO_E_1", device_type: "ARDUINO", zip_code: 99301}
+    {deviceID: 1, deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", zipCode: '99352'},
+    {deviceID: 2, deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", zipCode: '99336'},
+    {deviceID: 3, deviceName: "PASCO_E_1", deviceType: "ARDUINO", zipCode: '99301'}
 ]
 
 export const userDeviceEntriesTable = [
-    {user_ID: 1, device_ID: 1},
-    {user_ID: 1, device_ID: 2},
-    {user_ID: 1, device_ID: 3},
-    {user_ID: 2, device_ID: 1},
-    {user_ID: 3, device_ID: 1},
-    {user_ID: 3, device_ID: 2}
+    {user_ID: 1, deviceID: 1},
+    {user_ID: 1, deviceID: 2},
+    {user_ID: 1, deviceID: 3},
+    {user_ID: 2, deviceID: 1},
+    {user_ID: 3, deviceID: 1},
+    {user_ID: 3, deviceID: 2}
 ]
 
 export const deviceSensorEntriesTable = [
-    {device_ID: 1, sensorID: 1},
-    {device_ID: 1, sensorID: 2},
-    {device_ID: 2, sensorID: 3},
-    {device_ID: 3, sensorID: 4},
+    {deviceID: 1, sensorID: 1},
+    {deviceID: 1, sensorID: 2},
+    {deviceID: 2, sensorID: 3},
+    {deviceID: 3, sensorID: 4},
 ]
 
 export const sensorTable = [

@@ -5,12 +5,8 @@ using System.ComponentModel.DataAnnotations;
 namespace backEndApp.Models;
 
 [Index(nameof(DeviceIdent), IsUnique = true)]
+
 public class Device {
-
-    // public Device() {
-    //     this.Users = new HashSet<User>();
-    // }
-
     [Key]
     public int DeviceID { get; set; }    
 
@@ -20,8 +16,9 @@ public class Device {
     public string? DeviceType { get; set; }
     public string? ZipCode { get; set; }
 
+    // The relationship to MANY sensors
     public ICollection<Sensor> Sensors { get; set; }
 
-    // public ICollection<User> Users { get; set; }
+    // The relationship to MANY UserDevices
     public ICollection<UserDevice> UserDevices { get; set; }
 }

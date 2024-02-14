@@ -31,6 +31,15 @@ namespace backEndApp.Repository {
             return _context.UserDevices.Where(ud => ud.UserID == userId).Select(ud => ud.Device).ToList();
         }
 
+        public User GetUserWithLogin(string userFirstName, string userPassword) {
+            return _context.Users.Where(ud => 
+                ((ud.UserFirstName == userFirstName) && ud.UserPassword == userPassword)).FirstOrDefault();
+        }
+
+        // public ICollection<User> GetUsersWithType(string userType) {
+        //     return _context.Users.Where(u => u.UserType.Trim().ToUpper() == userType.Trim().ToUpper()).ToList();
+        // }
+
         public bool UserExists(int userId) {
             return _context.Users.Any(d => d.UserID == userId); 
         }

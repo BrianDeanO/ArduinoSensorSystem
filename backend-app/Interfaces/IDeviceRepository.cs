@@ -6,6 +6,7 @@ namespace backEndApp.Interfaces {
     public interface IDeviceRepository {
         ICollection<Device> GetDevices();
         Device GetDevice(int deviceId);
+        Device GetDeviceWithName(string deviceName);
         ICollection<Sensor> GetDeviceSensors(int deviceId);
         ICollection<UserDevice> GetUserDevices(int deviceId);
         ICollection<User> GetUsersFromDevice(int deviceId);

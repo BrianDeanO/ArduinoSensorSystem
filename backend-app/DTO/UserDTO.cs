@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 namespace backEndApp.DTO;
 
 public class UserDTO {
-    // [Key]
     public int UserID { get; set; }
     public string UserType { get; set; }
     public string UserFirstName { get; set; }
