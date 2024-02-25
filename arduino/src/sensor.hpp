@@ -18,6 +18,7 @@ public:
 	uint32_t id() const { return _id; }
 	const char* ident() const { return _ident; }
 
+	virtual void init() = 0;
 	virtual bool acquire_channel_value(uint8_t channel, double& value) = 0;
 	virtual bool read_config(JsonObject config) = 0;
 	virtual bool write_config(JsonObject config) = 0;

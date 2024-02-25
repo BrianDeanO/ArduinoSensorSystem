@@ -36,7 +36,7 @@ void run_sim_device(std::string addr, unsigned port) {
 	device.set_record_interval(update_interval);
 
 	std::cout << "Registering device..." << std::endl;
-	device.register_device();
+	device.init();
 
 	std::cout << "Simulating device. Ctrl+C to exit." << std::endl;
 	while(true) {

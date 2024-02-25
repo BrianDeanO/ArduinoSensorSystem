@@ -3,12 +3,19 @@
 #include "config.hpp"
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
+#include "src/drivers/bme280_driver.hpp"
 
 #if DEBUG_MODE == 1
 char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
 #endif
 
-ExampleSensor sen1("demo_sensor1");
+#ifndef SIMULATOR
+    BME280Sensor sen1("bme280_sensor1");
+    // ExampleSensor sen1("demo_sensor1");
+#else
+    ExampleSensor sen1("demo_sensor1");
+#endif
+
 Sensor* sensors[] = { &sen1 };
 
 #ifndef NO_LTE
@@ -50,10 +57,7 @@ void setup() {
     g_lte.autoTimeZone(true);
 #endif
 
-    while(!device.register_device()) { 
-        DEBUG("Failed to register device, retrying in 3 seconds\n");
-        delay(3000); 
-    }
+    device.init();
 
 #ifndef SIMULATOR
     digitalWrite(LED_BUILTIN, HIGH);

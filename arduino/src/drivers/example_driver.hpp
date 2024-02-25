@@ -12,7 +12,7 @@ public:
 		case 0: 
 			value =  fake_value;
 			break;
-		case 2: 
+		case 1: 
 			value = fake_value / 2;
 			break;
 		}

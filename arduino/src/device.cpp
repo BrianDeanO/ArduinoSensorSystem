@@ -3,6 +3,17 @@
 
 #define DEFAULT_DEVICE_JSON  R"({"deviceIdent":")" DEVICE_IDENT R"(","deviceName":")" DEFAULT_DEVICE_NAME R"(","deviceType":")" DEFAULT_DEVICE_TYPE R"("})"
 
+void Device::init() {
+	for(unsigned i = 0; i < num_sensors; i++) {
+		sensors[i]->init();
+	}
+
+    while(!register_device()) { 
+        DEBUG("Failed to register device, retrying in 3 seconds\n");
+        delay(3000); 
+	}
+}
+
 bool Device::register_device() {
 	DEBUG("Sending register command\n");
 	char buf[RESPONSE_BUFFER_SIZE];

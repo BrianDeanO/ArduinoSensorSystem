@@ -12,6 +12,8 @@ public:
 		this->client = client;
 	}
 
+	virtual void init();
+
 	// Acquire new data and send all cached data to the server. This may send multiple packets
 	// to the server if the data does not fit in a single buffer.
 	virtual void update();
