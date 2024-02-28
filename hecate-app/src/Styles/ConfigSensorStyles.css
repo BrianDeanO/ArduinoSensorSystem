@@ -1,9 +1,9 @@
 /* 
 *****************************************
-CSS Styles for Configure Device Page
+CSS Styles for Configure Sensor Page
 *****************************************
 */
-.ConfigDeviceMainBox {
+.ConfigSensorMainBox {
     display: flex;
     flex-direction: row;
     width: 778px;
@@ -13,7 +13,7 @@ CSS Styles for Configure Device Page
     margin: 0px 0px 0px 0px;
     border-right-style: solid;
 }
-.ConfigDeviceSubBox {
+.ConfigSensorSubBox {
     display: flex;
     flex-direction: column;
     width: 514px;
@@ -24,13 +24,13 @@ CSS Styles for Configure Device Page
 }
 
 /*
-    Generic Device Attribute Box Styles
+    Generic Sensor Attribute Box Styles
 */
-.DeviceAttributeMainBox {
+.SensorAttributeMainBox {
     display: flex;
     flex-direction: row;
     height: 50px;
-    width: 500px;
+    width: 520px;
     margin: 5px 0px 0px 5px;
     text-align: center;
     background-color: goldenrod;
@@ -38,9 +38,9 @@ CSS Styles for Configure Device Page
     border-width: 2px;
     border-style: solid;
 }
-.configDeviceTitleText {
+.ConfigSensorTitleText {
     display: flex;
-    width: 150px;
+    width: 160px;
     height: auto;
     color: black;
     /* background-color: aliceblue; */
@@ -50,7 +50,7 @@ CSS Styles for Configure Device Page
     text-align: center;
     align-items: center;
 }
-.configDeviceStandardTextBox {
+.ConfigSensorStandardTextBox {
     display: flex;
     width: 250px;
     height: 35px;
@@ -62,14 +62,14 @@ CSS Styles for Configure Device Page
     border-width: 2px;
     border-style: solid;
 }
-.configDeviceStandardText {
+.ConfigSensorStandardText {
     display: flex;
     color: black;
     font-size: 11pt;
     margin: 0px 0px 0px 10px;
     text-align: center;
 }
-.deviceTextArea {
+.SensorTextArea {
     font-size: 12pt;
     width: 245px;
     height: 31px;
@@ -80,7 +80,7 @@ CSS Styles for Configure Device Page
     border-color: #222;
     background-color: rgb(255, 255, 255);
 }
-.deviceInfoEditButton {
+.SensorInfoEditButton {
     width: 50px;
     height: 30px;
     background-color: rgb(213, 213, 213);
@@ -95,23 +95,35 @@ CSS Styles for Configure Device Page
     text-align: center;
     font-style: italic;
 }
-.deviceInfoEditButton:hover {
+.SensorInfoEditButton:hover {
     background-color: rgb(181, 181, 181);
     cursor: pointer;
 }
+.SensorDeviceSelector {
+    width: 255px;
+    height: 40px;
+    margin: 5px 0px 0px 0px;
+    font-size: 12pt;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 2px;
+    background-color: rgb(237, 237, 237);
+}
 
 /*
-    Device Config Button Styles
+    Sensor Config Button Styles
 */
-.DeviceConfigButtonBox {
+.SensorConfigButtonBox {
     display: flex;
     flex-direction: column;
     height: 105px;
-    width: 280px;
-    margin: 5px 0px 0px 0px;
+    width: 240px;
+    margin: 5px 0px 0px 21px;
     align-items: center;
 }
-.DeviceConfigUpdateButton {
+
+.SensorConfigUpdateButton {
     width: 235px;
     height: 45px;
     background-color: rgb(213, 213, 213);
@@ -125,7 +137,7 @@ CSS Styles for Configure Device Page
     font-weight: bold;
     text-align: center;
 }
-.DeviceConfigCancelButton {
+.SensorConfigCancelButton {
     width: 235px;
     height: 30px;
     background-color: rgb(213, 213, 213);
@@ -134,89 +146,20 @@ CSS Styles for Configure Device Page
     border-color: black;
     border-width: 2px;
     color: rgb(0, 0, 0);
-    margin: 8px 0px 0px 0px;
+    margin: 8px auto 0px auto;
     font-size: 11pt;
     font-weight: bold;
     text-align: center;
 }
-.DeviceConfigUpdateButton:hover, .DeviceConfigCancelButton:hover {
+.SensorConfigUpdateButton:hover, .SensorConfigCancelButton:hover {
     background-color: rgb(181, 181, 181);
     cursor: pointer;
 }
 
 /*
-    Device Polling Interval Selection Styles
+    Sensor Updated Result Box Styles
 */
-.PollingIntervalTitleText {
-    display: flex;
-    width: 150px;
-    height: auto;
-    color: black;
-    /* background-color: aliceblue; */
-    font-size: 12pt;
-    font-weight: bold;
-    margin: 0px 20px 0px -15px;
-    text-align: center;
-    align-items: center;
-}
-.PollingIntervalValueInput {
-    width: 59px;
-    height: 31.5px;
-    font-size: 16pt;
-    border-style: solid;
-    border-width: 2px;
-    margin: auto 15px auto 0px;
-    border-radius: 3px;
-    background-color: rgb(237, 237, 237);
-    border-color: #222;
-    text-align: center;
-}
-.PollingIntervalValueInputEditing {
-    width: 55px;
-    height: 30px;
-    font-size: 14pt;
-    border-style: solid;
-    border-width: 2px;
-    margin: auto 15px auto 0px;
-    border-radius: 3px;
-    background-color: rgb(255, 255, 255);
-    border-color: #222;
-    text-align: center;
-}
-.PollingIntervalValueInputText {
-    margin: 0px 0px 0px -3px;
-}
-.PollingIntervalLabelSelector {
-    width: 146px;
-    height: 31px;
-    margin: auto 26px auto 0px;
-    font-size: 13pt;
-    border-style: solid;
-    border-width: 2px;
-    border-color: black;
-    border-radius: 2px;
-    background-color: rgb(237, 237, 237);
-}
-.PollingIntervalLabelSelectorEditing {
-    width: 150px;
-    height: 35px;
-    margin: auto 26px auto 0px;
-    font-size: 12pt;
-    border-style: solid;
-    border-width: 2px;
-    border-color: black;
-    border-radius: 2px;
-    background-color: rgb(255, 255, 255);
-    text-align: center;
-}
-.PollingIntervalLabelSelectorText {
-    margin: 3px 0px 0px 0px;
-}
-
-/*
-    Device Updated Result Box Styles
-*/
-.DeviceUpdatedMainBox {
+.SensorUpdatedMainBox {
     display: flex;
     flex-direction: row;
     height: 400px;
@@ -229,7 +172,7 @@ CSS Styles for Configure Device Page
         font-size: 12pt;
     }
 }
-.UpdateDeviceErrorText {
+.UpdateSensorErrorText {
     display: flex;
     flex-direction: column;
     height: 130px;
@@ -245,7 +188,8 @@ CSS Styles for Configure Device Page
     border-color: black;
     border-width: 2px;
 }
-.UpdateDeviceErrorSubText {
+
+.UpdateSensorErrorSubText {
     display: flex;
     flex-direction: column;
     height: 65px;
@@ -257,7 +201,7 @@ CSS Styles for Configure Device Page
     text-align: center;
     background-color: rgb(207, 207, 207);
 }
-.UpdatedDeviceExitButton {
+.UpdatedSensorExitButton {
     background-color:  #dfdfdf;
     color: #585858;
     font-size: 13pt;
@@ -270,7 +214,7 @@ CSS Styles for Configure Device Page
     border-style: solid;
     border-width: 2px;
 }
-.UpdatedDeviceExitButton:hover {
+.UpdatedSensorExitButton:hover {
     background-color: #c9c9c9;
     cursor: pointer;
 }

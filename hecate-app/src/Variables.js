@@ -1,7 +1,8 @@
 export const version = "1.0";
-export const proxyURL_HTTPS = "https://localhost:8443"; //7239
+export const proxyURL_HTTPS = "https://localhost:8443"; // 7239 before
 export const proxyURL = "http://localhost:8080"; // 5270 before
 export const ADMIN = 'ADMIN';
+export const BASIC = 'BASIC';
 export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export const localStorageTitles = {
@@ -13,12 +14,22 @@ export const localStorageTitles = {
     selectedChannel: "selectedChannel"
 }
 
+export const pollingTimeIntervalLabels = {
+    SEC: `Second(s)`,
+    MIN: `Minute(s)`,
+    HOUR: `Hour(s)`,
+    DAY: `Day(s)`,
+    WEEK: `Week(s)`,
+    MONTH: `Month(s)`,
+}
+
 export const timeFrameConstants = {
-    pastDay: 86400,
-    pastWeek: 604800,
-    pastMonth: 604800*4,
-    pastSixMonths: (604800*4) * 6,
-    pastYear: (604800*4) * 12
+    DAY: 1000 * 60 * 60 * 24,
+    WEEK: 1000 * 60 * 60 * 24 * 7,
+    // MONTH: (1000 * 60 * 60 * 24 * 7 * 4) + (1000 * 60 * 60 * 24 * 2),
+    MONTH: (1000 * 60 * 60 * 24 * 7 * 4) + 2,
+    SIX_MONTHS: (1000 * 60 * 60 * 24 * 7 * 4 + 2) * 6,
+    YEAR: 1000 * 60 * 60 * 24 * 7 * 52,
 }
 
 export const apiInfo = {
@@ -96,9 +107,9 @@ export const userTable = [
 ]
 
 export const deviceTable = [
-    {deviceID: 1, deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", zipCode: '99352'},
-    {deviceID: 2, deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", zipCode: '99336'},
-    {deviceID: 3, deviceName: "PASCO_E_1", deviceType: "ARDUINO", zipCode: '99301'}
+    {deviceID: 1, deviceIdent: 'ARD-123', deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", deviceZipCode: '99352'},
+    {deviceID: 2, deviceIdent: 'ARD-456', deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", deviceZipCode: '99336'},
+    {deviceID: 3, deviceIdent: 'ARD-789', deviceName: "PASCO_E_1", deviceType: "ARDUINO", deviceZipCode: '99301'}
 ]
 
 export const userDeviceEntriesTable = [
@@ -118,10 +129,10 @@ export const deviceSensorEntriesTable = [
 ]
 
 export const sensorTable = [
-    {sensorID: 1, sensorName: "TEMP_1", sensorType: "Temperature", channelCount: 2},
-    {sensorID: 2, sensorName: "IRRAD_1", sensorType: "Irradiance", channelCount: 1},
-    {sensorID: 3, sensorName: "PRESSURE_1", sensorType: "Pressure", channelCount: 2},
-    {sensorID: 4, sensorName: "TEMP_2", sensorType: "Temperature", channelCount: 2},
+    {sensorID: 1, sensorIdent: 'SEN-123', sensorName: "TEMP_1", sensorType: "Temperature", channelCount: 2},
+    {sensorID: 2, sensorIdent: 'SEN-456', sensorName: "IRRAD_1", sensorType: "Irradiance", channelCount: 1},
+    {sensorID: 3, sensorIdent: 'SEN-789', sensorName: "PRESSURE_1", sensorType: "Pressure", channelCount: 2},
+    {sensorID: 4, sensorIdent: 'SEN-123-0', sensorName: "TEMP_2", sensorType: "Temperature", channelCount: 2},
 ]
 
 export const sensorDataTable = [

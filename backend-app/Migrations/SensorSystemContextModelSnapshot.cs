@@ -37,10 +37,14 @@ namespace backEndApp.Migrations
                     b.Property<string>("DeviceName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DevicePollingInterval")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DeviceType")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ZipCode")
+                    b.Property<string>("DeviceZipCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceID");
@@ -65,14 +69,22 @@ namespace backEndApp.Migrations
                     b.Property<int>("DeviceID")
                         .HasColumnType("int");
 
-                    b.Property<string>("SensorName")
+                    b.Property<string>("SensorIdent")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SensorName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SensorType")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SensorID");
+
+                    b.HasIndex("DeviceID");
+
+                    b.HasIndex("SensorIdent")
+                        .IsUnique();
 
                     b.ToTable("Sensors");
                 });

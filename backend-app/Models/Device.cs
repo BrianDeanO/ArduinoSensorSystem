@@ -12,9 +12,14 @@ public class Device {
 
     [Required]
     public string DeviceIdent { get; set; }
+
+
+    // Device Configuration Fields
+    public string DevicePollingInterval { get; set; }
+    
     public string? DeviceName { get; set; }
     public string? DeviceType { get; set; }
-    public string? ZipCode { get; set; }
+    public string? DeviceZipCode { get; set; }
 
     // The relationship to MANY sensors
     public ICollection<Sensor> Sensors { get; set; }

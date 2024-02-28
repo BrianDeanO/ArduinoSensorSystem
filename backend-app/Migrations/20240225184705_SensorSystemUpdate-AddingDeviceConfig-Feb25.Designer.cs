@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using backEndApp.Models;
 using backEndApp.Data;
 
 #nullable disable
@@ -13,8 +12,8 @@ using backEndApp.Data;
 namespace backEndApp.Migrations
 {
     [DbContext(typeof(SensorSystemContext))]
-    [Migration("20240129064651_AddIdentFields")]
-    partial class AddIdentFields
+    [Migration("20240225184705_SensorSystemUpdate-AddingDeviceConfig-Feb25")]
+    partial class SensorSystemUpdateAddingDeviceConfigFeb25
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,15 +38,16 @@ namespace backEndApp.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DevicePollingInterval")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DeviceType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
+                    b.Property<string>("DeviceZipCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceID");
@@ -56,19 +56,6 @@ namespace backEndApp.Migrations
                         .IsUnique();
 
                     b.ToTable("Devices");
-                });
-
-            modelBuilder.Entity("backEndApp.Models.DeviceSensor", b =>
-                {
-                    b.Property<int>("DeviceID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SensorID")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeviceID", "SensorID");
-
-                    b.ToTable("DeviceSensors");
                 });
 
             modelBuilder.Entity("backEndApp.Models.Sensor", b =>
@@ -82,19 +69,22 @@ namespace backEndApp.Migrations
                     b.Property<int>("ChannelCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("DeviceID")
+                        .HasColumnType("int");
+
                     b.Property<string>("SensorIdent")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SensorName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SensorType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SensorID");
+
+                    b.HasIndex("DeviceID");
 
                     b.HasIndex("SensorIdent")
                         .IsUnique();
@@ -128,6 +118,8 @@ namespace backEndApp.Migrations
 
                     b.HasKey("SensorDataID");
 
+                    b.HasIndex("SensorID");
+
                     b.ToTable("SensorDatas");
                 });
 
@@ -143,7 +135,11 @@ namespace backEndApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("UserFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserLastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -177,7 +173,67 @@ namespace backEndApp.Migrations
 
                     b.HasKey("UserID", "DeviceID");
 
+                    b.HasIndex("DeviceID");
+
                     b.ToTable("UserDevices");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.Sensor", b =>
+                {
+                    b.HasOne("backEndApp.Models.Device", "Device")
+                        .WithMany("Sensors")
+                        .HasForeignKey("DeviceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.SensorData", b =>
+                {
+                    b.HasOne("backEndApp.Models.Sensor", "Sensor")
+                        .WithMany("SensorDatas")
+                        .HasForeignKey("SensorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sensor");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.UserDevice", b =>
+                {
+                    b.HasOne("backEndApp.Models.Device", "Device")
+                        .WithMany("UserDevices")
+                        .HasForeignKey("DeviceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("backEndApp.Models.User", "User")
+                        .WithMany("UserDevices")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.Device", b =>
+                {
+                    b.Navigation("Sensors");
+
+                    b.Navigation("UserDevices");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.Sensor", b =>
+                {
+                    b.Navigation("SensorDatas");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.User", b =>
+                {
+                    b.Navigation("UserDevices");
                 });
 #pragma warning restore 612, 618
         }

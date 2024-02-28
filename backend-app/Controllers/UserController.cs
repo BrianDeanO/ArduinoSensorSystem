@@ -73,11 +73,15 @@ namespace backEndApp.Controllers {
         //     }
         // }
 
-        [HttpGet("{userFirstName}:{userPassword}")]
+        [HttpGet("{userFirstName}.{userLastName}:{userPassword}")]
         [ProducesResponseType(200, Type = typeof(User))]
         [ProducesResponseType(400)]
-        public IActionResult GetUserWithLogin(string userFirstName, string userPassword) {
-            var user = _mapper.Map<UserDTO>(_userRepository.GetUserWithLogin(userFirstName, userPassword));
+        public IActionResult GetUserWithLogin(
+            string userFirstName, 
+            string userLastName,
+            string userPassword
+        ) {
+            var user = _mapper.Map<UserDTO>(_userRepository.GetUserWithLogin(userFirstName, userLastName, userPassword));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -131,8 +135,14 @@ namespace backEndApp.Controllers {
             else if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             } 
-            
+
             else {
+                var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserFirstName, newUser.UserPassword);
+                
+                if(tempUser == null) {
+                    return BadRequest(ModelState);
+                }
+
                 var userMap = _mapper.Map<User>(newUser);
 
                 if(!_userRepository.CreateUser(userMap)) {
@@ -165,6 +175,12 @@ namespace backEndApp.Controllers {
                 return BadRequest();
             }
 
+            var tempUser = _userRepository.GetUserWithLogin(updatedUser.UserFirstName, updatedUser.UserFirstName, updatedUser.UserPassword);
+            
+            if(tempUser == null) {
+                return BadRequest(ModelState);
+            }
+            
             var userMap = _mapper.Map<User>(updatedUser);
 
             if(!_userRepository.UpdateUser(userMap)) {

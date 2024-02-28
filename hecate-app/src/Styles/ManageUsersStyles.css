@@ -1,0 +1,384 @@
+/* 
+*****************************************
+CSS Styles for the Manage Users Page
+*****************************************
+*/
+.ManageUsersMainBox {
+    display: flex;
+    flex-direction: row;
+    width: 778px;
+    height: 800px;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: rgb(103, 176, 199);
+    margin: 0px 0px 0px 0px;
+    border-right-style: solid;
+    border-color: black;
+}
+.ManageUsersInfoSubBox {
+    display: flex;
+    flex-direction: column;
+    width: 550px;
+    height: 700px;
+    /* background-color: rgb(230, 230, 230);
+    background-color: rgb(27, 132, 69); */
+    margin: 0px 0px 0px 0px;
+}
+.ManageUsersUserSelectionSubBox {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: 400px;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: rgb(135, 215, 167);
+    margin: 0px 0px 0px 0px;
+}
+
+/*
+    List of Initial User Display Styles
+*/
+.UserListMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 500px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: goldenrod;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+}
+.userTitleText {
+    display: flex;
+    width: 200px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: -3px 0px 0px 5px;
+    text-align: center;
+    align-items: center;
+}
+.userTypeText {
+    display: flex;
+    width: 175px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0px 0px 0px 25px;
+    text-align: center;
+    align-items: center;
+}
+.userInfoEditButton {
+    width: 50px;
+    height: 25px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1.5px;
+    color: rgb(0, 0, 0);
+    margin: 13px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+    font-style: italic;
+}
+.userInfoEditButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    Edit User Form Styles
+*/
+.configDeviceStandardTextBox {
+    display: flex;
+    width: 250px;
+    height: 35px;
+    color: black;
+    background-color: rgb(237, 237, 237);
+    margin: 6px 0px 0px 0px;
+    align-items: center;
+    border-radius: 2px;
+    border-width: 2px;
+    border-style: solid;
+}
+.configDeviceStandardText {
+    display: flex;
+    color: black;
+    font-size: 11pt;
+    margin: 0px 0px 0px 10px;
+    text-align: center;
+}
+.manageUserTextArea {
+    font-size: 12pt;
+    width: 245px;
+    height: 31px;
+    margin: 6px 0px 0px 0px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #222;
+    background-color: rgb(255, 255, 255);
+}
+
+/*
+    User Type Edit Buttons
+*/
+.EditUserTypeSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 252px;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+    /* background-color: antiquewhite; */
+}
+.EditUserTypeButton {
+    margin: 10px 0px 0px 0px;
+    width: 75px;
+    height: auto;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 10px auto 10px auto;
+    font-size: 14pt;
+    text-align: center;
+    line-height: normal;
+}
+.EditUserTypeButtonSelected {
+    margin: 10px 0px 0px 0px;
+    width: 75px;
+    height: auto;
+    background-color: rgb(181, 181, 181);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 10px auto 10px auto;
+    font-size: 14pt;
+    text-align: center;
+    line-height: normal;
+}
+.EditUserTypeButton:hover, .EditUserTypeButtonSelected:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    Updating Password Box Styles
+*/
+.UpdatingPasswordMainBox {
+    display: flex;
+    flex-direction: column;
+    height: 120px;
+    width: 500px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: goldenrod;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+}
+.UpdatingPasswordSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 500px;
+    margin: 5px 0px 0px 0px;
+    text-align: center;
+}
+.UpdatePasswordButton {
+    width: 175px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+/*
+    User Device Boxes Styles
+*/
+.DeviceOptionMainBox {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    width: 500px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: rgb(173, 169, 158);
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    
+    overflow-y: auto;
+    scroll-behavior: auto;  /*need hiden and auto*/
+}
+.DeviceOptionSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 450px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: rgb(112, 177, 182);
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+}
+.DeviceOptionLabel {
+    width: 150px;
+    height: auto;
+    color: rgb(0, 0, 0);
+    margin: 10px 0px 10px 0px;
+    font-size: 14pt;
+    line-height: normal;
+    background-color: rgb(213, 213, 213);
+}
+.DeviceOptionButton {
+    margin: 10px 0px 10px 0px;
+    width: 75px;
+    height: auto;
+    background-color: rgb(226, 13, 13);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    font-size: 14pt;
+    text-align: center;
+    line-height: normal;
+}
+.DeviceOptionButtonSelected {
+    margin: 10px 0px 10px 0px;
+    width: 75px;
+    height: auto;
+    background-color: rgb(32, 67, 70);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    font-size: 14pt;
+    text-align: center;
+    line-height: normal;
+}
+.DeviceOptionButton:hover, .DeviceOptionButtonSelected:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+  
+
+/*
+    Manager User Option Buttons Styles
+*/
+.ManageUsersButtonBox {
+    display: flex;
+    flex-direction: column;
+    height: 105px;
+    width: 280px;
+    margin: 5px 0px 0px 0px;
+    align-items: center;
+}
+.ManageUserPrimaryButton {
+    width: 220px;
+    height: 45px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.ManageUsersSecondaryButton {
+    width: 220px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.ManageUserPrimaryButton:hover, .ManageUsersSecondaryButton:hover, .UpdatePasswordButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    User Updated/Added Result Box Styles
+*/
+.UserActionResultMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 400px;
+    width: 514px;
+    /* background-color: rgb(27, 132, 69); */
+
+    margin: 8px 0px 0px 10px; 
+
+    >button {
+        font-size: 12pt;
+    }
+}
+.UserActionResultErrorText {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    width: 514px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
+.UserActionResultErrorSubText {
+    display: flex;
+    flex-direction: column;
+    height: 65px;
+    width: 300px;
+    margin: 10px 0px 0px 100px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+}
+.UserActionResultExitButton {
+    background-color:  #dfdfdf;
+    color: #585858;
+    font-size: 13pt;
+    font-weight: bolder;
+    margin: 10px 5px 0 -38px;
+    text-align: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
+.UserActionResultExitButton:hover {
+    background-color: #c9c9c9;
+    cursor: pointer;
+}

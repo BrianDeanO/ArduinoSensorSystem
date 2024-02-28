@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { DeviceType, DeviceDTOType, UserType, UserDeviceType } from "../../interfaces";
-import { proxyURL, ADMIN, userTable } from "../../Variables";
+import { proxyURL, ADMIN, userTable } from "../../variables";
 import axios from "axios";
 
 interface NewDeviceProps {
@@ -72,7 +72,7 @@ const NewDevice: React.FC<NewDeviceProps> = ({ addDevice }: NewDeviceProps) => {
         await axios.post(`${proxyURL}/api/Device`, {
             deviceName: newDeviceName,
             deviceType: newDeviceType,
-            zipCode: newDeviceZipCode
+            deviceZipCode: newDeviceZipCode
         }, {
             headers: {
                 'Content-Type': 'application/json'

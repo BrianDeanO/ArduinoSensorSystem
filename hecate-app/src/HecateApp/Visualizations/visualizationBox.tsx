@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import GraphContainer, { data } from "./graphContainer";
-import { sensorDataTable, sensorTable } from "../../Variables";
+import { sensorDataTable, sensorTable } from "../../variables";
 
 export type sensorDataType = {
     sensorDataID: number;
@@ -22,7 +22,7 @@ export type deviceInfoType = {
     device_ID: number;
     deviceName: string;
     deviceType: string;
-    zipCode: number;
+    deviceZipCode: number;
 }
 
 interface VisualizationBoxProps {

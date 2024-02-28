@@ -46,7 +46,9 @@ namespace backEndApp
                         DeviceIdent = "ARD-123",
                         DeviceName = "RICHLAND_NW_1",
                         DeviceType = "ARDUINO",
-                        ZipCode = "99352",
+                        DeviceZipCode = "99352",
+                        DevicePollingInterval = "86400000",
+
                         Sensors = new List<Sensor>() {
                             new Sensor() {
                                 SensorIdent = "SEN-123",
@@ -120,7 +122,8 @@ namespace backEndApp
                         DeviceIdent = "ARD-456",
                         DeviceName = "KENNEWICK_N_1",
                         DeviceType = "ARDUINO",
-                        ZipCode = "99336",
+                        DeviceZipCode = "99336",
+                        DevicePollingInterval = "86400000",
                         
                         Sensors = new List<Sensor>() {
                             new Sensor() {
@@ -164,7 +167,7 @@ namespace backEndApp
                             },
                             new Sensor() {
                                 SensorIdent = "SEN-223",
-                                SensorName = "PRESSURE_1", 
+                                SensorName = "PRESSURE_2", 
                                 SensorType = "Pressure", 
                                 ChannelCount = 2,
                                 DeviceID = 2,
@@ -207,7 +210,9 @@ namespace backEndApp
                         DeviceIdent = "ARD-789",
                         DeviceName = "PASCO_E_1",
                         DeviceType = "ARDUINO",
-                        ZipCode = "99301",
+                        DeviceZipCode = "99301",
+                        DevicePollingInterval = "86400000",
+
                         Sensors = new List<Sensor>() {
                             new Sensor() {
                                 SensorIdent = "SEN-323",
