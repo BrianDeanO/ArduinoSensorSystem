@@ -5,6 +5,28 @@ export const ADMIN = 'ADMIN';
 export const BASIC = 'BASIC';
 export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+export const repeatCountLimits = {
+    DAY: 2,
+    WEEK_MONTH: 4,
+    HALF_AND_FULL_YEAR: 5,
+    LIFETIME: 12
+}
+
+export const monthsOfTheYear = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+]
+
 export const localStorageTitles = {
     currentUser: "currentUser",
     selectedDevice: "selectedDevice",

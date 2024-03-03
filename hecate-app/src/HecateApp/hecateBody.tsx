@@ -1,18 +1,13 @@
-import React, { useEffect, useState, useCallback, Component, SyntheticEvent } from "react";
-// import Selectors from "./DataAndTimeSelectors/selectors.js";
-import TemperatureVisualizationBox from "./Visualizations/TemperatureVisualizationBox.js";
+import React, { useEffect, useState } from "react";
 import Graph from "./Graph.tsx";
-// import { variables, dataObject } from "../variables.js";
-import { DeviceType, SensorType, SelectedDevice, SelectedSensor, SelectedTimeFrame, SelectedChannel } from "../interfaces";
+import { SelectedDevice, SelectedSensor, SelectedTimeFrame, SelectedChannel } from "../interfaces";
 import { localStorageTitles } from "../variables.js";
-import NewDevice from "./AddNewPages/NewDevice.tsx";
 
 import Devices from "./Devices.tsx";
 import Selectors from "./Selectors.tsx";
-import NewSensor from "./AddNewPages/NewSensor.tsx";
 import ConfigureDevice from "./ConfigPages/ConfigureDevice.tsx";
 import ConfigureSensor from "./ConfigPages/ConfigureSensor.tsx";
-import ManageUsers from "./ManageUsers/ManageUsers.tsx";
+import ManageUsers from "./ConfigPages/ManageUsers.tsx";
 
 interface HecateBodyProps {
     loggedInUserID: number;
@@ -35,8 +30,6 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
     const timeFrameJSON = localStorage.getItem(localStorageTitles.selectedTimeFrame);
     const channelJSON = localStorage.getItem(localStorageTitles.selectedChannel);
 
-    console.log('READING IN DEVICE JSON', deviceJSON)
-
     const selectedDevice: SelectedDevice = (deviceJSON !== null) ? JSON.parse(deviceJSON) : {};
     const selectedSensor: SelectedSensor = (sensorJSON !== null) ? JSON.parse(sensorJSON) : {};
     const parsedTimeFrame: SelectedTimeFrame = (timeFrameJSON !== null) ? JSON.parse(timeFrameJSON) : {};
@@ -47,42 +40,26 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
     const [selectedTimeFrame, setSelectedTimeFrame] = useState((Object.keys(parsedTimeFrame).length !== 0) ? parsedTimeFrame.selectedTimeFrame : 0);
     const [selectedChannelID, setSelectedChannelID] = useState((Object.keys(parsedChannel).length !== 0) ? parsedChannel.selectedChannelID : -1);
 
-    // const [getSensorOverride, setGetSensorOverride] = useState(true);
-    // const [addingNewDevice, setAddingNewDevice] = useState(false);
-    // const [addingNewSensor, setAddingNewSensor] = useState(false);
     const [configuringDevice, setConfiguringDevice] = useState(false);
     const [configuringSensor, setConfiguringSensor] = useState(false);
 
     const [isAddingUser, setIsAddingUser] = useState(false);
     const [isUpdatingUser, setIsUpdatingUser] = useState(false);
 
-    console.log('loggedInUserID', loggedInUserID);
-
-    // const resetState = useCallback((isManagingUsers: boolean, isLoggingOut: boolean) => {
-    //     console.log('DOING THIS USE EFFECT')
-    //     // if((isManagingUsers && selectedDeviceID !== 0) || isLoggingOut) {
-    //     if(isManagingUsers || isLoggingOut) {
-    //         setSelectedDeviceID(0);
-    //         setSelectedTimeFrame(0);
-    //         setSelectedSensorID(0);
-    //         setSelectedChannelID(0);
-    //     }
-    // }, [])
-
-    // resetState(isManagingUsers, isLoggingOut);
-
     useEffect(() => {
-        console.log('BODY - is logging out????', isLoggingOut)
         if(isLoggingOut) {
             setSelectedDeviceID(0);
             setSelectedTimeFrame(0);
             setSelectedSensorID(0);
             setSelectedChannelID(0);
+            setConfiguringSensor(false);
+            setConfiguringDevice(false);
+            setIsAddingUser(false);
+            setIsUpdatingUser(false);
         }
     }, [isLoggingOut])
 
     useEffect(() => {
-        console.log('setting selected evice ', selectedDeviceID)
         localStorage.setItem(localStorageTitles.selectedDevice, JSON.stringify({
             selectedDeviceID: selectedDeviceID
         }));
@@ -114,20 +91,9 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
         if(resetTimeFrame) {
             setSelectedTimeFrame(0);
         }
-        console.log('SENSOR SET IN BODY', selectedSensorID);
     }
 
     const selectDevice = (selectedDeviceID: number, resetSensorID: boolean) => {
-        // if(!addingNewDevice) {
-
-            
-        //     // console.log('SENSOR RESET?', selectedSensorID);
-        // }
-
-        // setSelectedTimeFrame(0);
-
-
-        console.log('DEVICE SET IN BODY', selectedDeviceID);
         setSelectedDeviceID(selectedDeviceID);
 
         if(resetSensorID) {
@@ -135,45 +101,15 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
             setSelectedChannelID(0);
             setSelectedTimeFrame(0);
         }
-
-
-        // if(!isManagingUsers) {
-        //     console.log('DEVICE SET IN BODY', selectedDeviceID);
-        //     setSelectedDeviceID(selectedDeviceID);
-
-        //     if(resetSensorID) {
-        //         setSelectedSensorID(0);
-        //         setSelectedChannelID(0);
-        //         setSelectedTimeFrame(0);
-        //     }
-        //     // manageUsers(false);
-        // }
-        // setGetSensorOverride(true);
-
-
     }
 
     const selectChannel = (selectedChannelID: number) => {
         setSelectedChannelID(selectedChannelID);
-        console.log('SSETTING CHANNEL IN BODY', selectedDeviceID);
     }
 
     const selectTimeFrame = (selectedTimeFrame: number) => {
         setSelectedTimeFrame(selectedTimeFrame);
-        console.log('SSETTING TIME FRAME IN BODY', selectedDeviceID);
     }
-
-    // const addDevice = (addingDevice: boolean, reset: boolean) => {
-    //     setAddingNewDevice(addingDevice);
-    //     if(reset) {
-    //         resetValues();
-    //     }
-    // }
-
-    // const addSensor = (addingSensor: boolean) => {
-    //     setAddingNewSensor(addingSensor);
-    //     resetValues();
-    // }
 
     const configureDevice = (configuringDevice: boolean, resetDevices: boolean) => {
         setConfiguringDevice(configuringDevice);
@@ -194,15 +130,11 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
 
     const addUser = (addingUser: boolean) => {
         setIsAddingUser(addingUser);
-        console.log('adduser', addingUser)
     }   
 
     const updateUser = (updatingUser: boolean) => {
         setIsUpdatingUser(updatingUser);
-        console.log('udpateUser', updatingUser)
     }
-
-    // console.log('BODY - SELECTED SENSOR ID - ', selectedSensorID)
 
     return (
         <div className="HecateBody">
@@ -210,7 +142,6 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
                 selectDevice={selectDevice} 
                 loggedInUserID={loggedInUserID}
                 selectedDeviceID={selectedDeviceID}
-                // addDevice={addDevice}
                 configureDevice={configureDevice}
                 isAdmin={isAdmin}
                 configuringSensor={configuringSensor}
@@ -219,10 +150,6 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
             />
             <div className="MainSelectorAndGraphBox">
                 {
-                    // addingNewDevice ? 
-                    //     <NewDevice addDevice={addDevice}/> :
-                    // addingNewSensor ? 
-                    //     <NewSensor addSensor={addSensor} /> :
                     isManagingUsers ? 
                         <ManageUsers 
                             manageUsers={manageUsers} 
@@ -236,16 +163,15 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
                         <ConfigureDevice selectedDeviceID ={selectedDeviceID} configureDevice={configureDevice} /> :
                     configuringSensor ?
                         <ConfigureSensor selectedSensorID ={selectedSensorID} configureSensor={configureSensor} /> :
-
                     <>
                         <Selectors 
                             selectedDeviceID={selectedDeviceID} 
                             selectSensor={selectSensor}
                             selectedSensorID={selectedSensorID}
+                            selectedChannelID={selectedChannelID}
                             selectTimeFrame={selectTimeFrame}
                             selectedTimeFrame={selectedTimeFrame}
                             selectChannel={selectChannel}
-                            // addSensor={addSensor}
                             isAdmin={isAdmin}
                             configureSensor={configureSensor}
                             isLoggingOut={isLoggingOut}

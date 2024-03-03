@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import HecateLogo  from "../images/Hecate_Logo.png";
-import { version, proxyURL, ADMIN, userTable } from "../variables.js";
+import { version, proxyURL } from "../variables.js";
 import { CurrentUserType, UserType } from "../interfaces.js";
-import { localStorageTitles } from "../variables.js";
 import axios from "axios";
 
 interface HeaderProps {
@@ -11,25 +10,7 @@ interface HeaderProps {
     isAdmin: boolean;
     manageUsers: (isManagingUsers: boolean) => void;
 }
-
-const client = axios.create({
-    baseURL: "http://localhost:5270/api" 
-});
-
-const HanSolo =     {
-    userID: 1, 
-    userType: "admin", 
-    userFirstName: "Han", 
-    userLastName: "Solo", 
-    userPassword: "123", 
-    userEmail: "",
-    userPhone: "",
-    userNotification: true
-} as UserType
-
-  
-// const crypto = require('node:crypto');
-// console.log("hashes", crypto.getHashes())
+var shajs = require('sha.js');
 
 const HecateHeader: React.FC<HeaderProps> = ({
     logIn,
@@ -43,60 +24,37 @@ const HecateHeader: React.FC<HeaderProps> = ({
     const [userLastName, setUserLastName] = useState((Object.keys(loggedInUser).length > 1) ? loggedInUser.currentLastName : '');
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [userID, setUserID] = useState((Object.keys(loggedInUser).length > 1) ? loggedInUser.currentUserID : 0);
-    const [users, setUsers] = useState([] as UserType[]);
 
     async function logInUser(userName: string, userPassword: string) {
-        console.log('logging in user', userName, userPassword);
         const userNames = userName.split('.');
-        let tempUsers: UserType[] = [];
         let tempUser: UserType;
+        const hashedPassword = shajs('sha256').update(userPassword).digest('hex');
+        // const hashedPassword1 = shajs('sha256').update('123').digest('hex');
+        // const hashedPassword2 = shajs('sha256').update('456').digest('hex');
+        // const hashedPassword3 = shajs('sha256').update('789').digest('hex');
+        // console.log('hashedPassword', hashedPassword)
+        // console.log('hashedPassword1', hashedPassword1)
+        // console.log('hashedPassword2', hashedPassword2)
+        // console.log('hashedPassword3', hashedPassword3)
 
         if(userNames.length === 2) {
             await axios({
                 method: 'get',
-                url: `${proxyURL}/api/User/${userNames[0]}.${userNames[1]}:${userPassword}`,
+                url: `${proxyURL}/api/User/${userNames[0]}.${userNames[1]}:${hashedPassword}`,
             })
                 .then(function (response) {
-                    console.log('response', response);
-                    // setUsers(response.data);
-                    // tempUsers = response.data;
-                    // console.log('FOUND USER', user);
-
                     tempUser = response.data;
-                    console.log('FOUND USER', tempUser);
-                    setUserID(tempUser.userID);
-                    setUserFirstName(tempUser.userFirstName);
-                    setUserLastName(tempUser.userLastName);
-                    setLoggedIn(true);
-                    logIn(tempUser);
+                    if(tempUser.userFirstName) {
+                        setUserFirstName(tempUser.userFirstName);
+                        setUserLastName(tempUser.userLastName);
+                        setLoggedIn(true);
+                        logIn(tempUser);
+                    }
 
                 }).catch(error => {
                     console.log(error);
                 })
-    
-            // console.log('tempUsers', tempUsers)
-    
-            // if(tempUsers.length > 0) {
-            //     tempUsers.forEach((user, i) => {
-            //         if((user.userFirstName === userNames[0]) && 
-            //             (user.userLastName === userNames[1]) && 
-            //             (user.userPassword === userPassword)
-            //         ) {
-            //             console.log('FOUND USER', user);
-            //             setUserID(user.userID);
-            //             setUserFirstName(user.userFirstName);
-            //             setUserLastName(user.userLastName);
-            //             setLoggedIn(true);
-            //             logIn(user);
-            //             return;
-            //         }
-            //     })
-            // } else {
-            //     console.log('ERROR COMMUNICATING TO API');
-            // }
         }
-
     }
 
     function logOutUser() {
@@ -104,7 +62,6 @@ const HecateHeader: React.FC<HeaderProps> = ({
         setUserLastName('');
         setUserName('');
         setPassword('');
-        setUserID(0);
         setLoggedIn(false);
         logIn({} as UserType);
     }
@@ -169,20 +126,8 @@ const HecateHeader: React.FC<HeaderProps> = ({
                         onClick={(e) => {
                             if(loggedIn) {
                                 logOutUser();
-                            }
-                            else {
-                                    ///
-                                    ///
-                                    //  NEED TO PASS IN  THE CONCATENATION
-                                    //  THEN PARSE TO CHECK FRIST AND ASLT NAME
-                                    //
-
+                            } else {
                                 logInUser(userName, password);
-                                //           (document.getElementById('LOGIN_PASSWORD') as HTMLInputElement).value);
-                                // logInUser((document.getElementById('NAME') as HTMLInputElement).value,
-                                //           (document.getElementById('LOGIN_PASSWORD') as HTMLInputElement).value);
-                                        // setLoggedIn(true);
-                                        // logIn(HanSolo);
                             }
                         }}>
                             {loggedIn ? 'Log Out' : 'Log In'}

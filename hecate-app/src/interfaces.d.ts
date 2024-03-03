@@ -83,12 +83,17 @@ export interface SensorDTOType {
 }
 
 export interface SensorDataType {
-    // sensorDataID: number;
+    sensorDataID: number;
     channelID: number;
     dataValue: number;
     dataUnit: string;
     timeRecorded: string;
     sensorID: number;
+}
+
+export interface SensorChannels {
+    sensorID: number;
+    channels: number[]
 }
 
 export interface SelectedSensorData {

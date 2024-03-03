@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SensorType, SensorDTOType, DeviceType } from "../../interfaces";
-import { channelCountArray, proxyURL } from "../../variables.js";
+import { SensorType, DeviceType } from "../../interfaces";
+import { proxyURL } from "../../variables.js";
 import axios from "axios";
 
 interface ConfigureSensorProps {
@@ -30,28 +30,21 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     const [isSensorChannelCountEdit, setIsSensorChannelCountEdit] = useState(false);
 
     const [newSensorDeviceID, setNewSensorDeviceID] = useState(0);
-    // const [isSensorDeviceEdit, setIsNewSensorDeviceEdit] = useState(false);
 
     const [sensorUpdateAttempt, setSensorUpdateAttempt] = useState(false);
     const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
     const [postError, setPostError] = useState(false);
 
-    const [userSensorsAddedCorrectly, setUserSensorsAddedCorrectly] = useState(false);
-    const [userSelectionArray, setUserSelectionArray] = useState([] as number[]);
-
     const getDevices = useCallback(async() => {
-
         let tempDevices: DeviceType[] = [];
+
         if(selectedSensorID !== 0) {
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/Device`,
             })
                 .then(function (response) {
-                    // console.log('response', response);
-                    // setDevices(response.data);
                     tempDevices = response.data;
-                    // console.log('DEVICES FROM AXIOS', tempDevices)
                 }).catch(error => {
                     console.log(error);
                 })
@@ -63,15 +56,13 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
 
     const getSensor = useCallback(async(sensorID: number) => {
         let tempSensor: SensorType;
+
         if(sensorID !== 0) {
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/Sensor/${sensorID}`,
             })
                 .then(function (response) {
-                    // console.log('response', response);
-                    // setDevices(response.data);
-
                     tempSensor = response.data;
 
                     setNewSensorName(tempSensor.sensorName);
@@ -79,26 +70,19 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                     setNewSensorType(tempSensor.sensorType);
                     setNewSensorChannelCount(tempSensor.channelCount);
                     setNewSensorDeviceID(tempSensor.deviceID);
-
-                    // console.log('DEVICES FROM AXIOS', tempDevices)
                 }).catch(error => {
                     console.log(error);
                 })
         }
-
     }, [])
 
     useEffect(() => {
         getDevices();
         getSensor(selectedSensorID);
-        // setDevices(deviceTable);
     }, [getDevices, getSensor, selectedSensorID])
 
 
     async function updateSensor() {
-        // let updatedCorrectly = false;
-        console.log('DEVICE IN POST DEVICE');
-
         await axios.put(`${proxyURL}/api/Sensor/${selectedSensorID}`, {
             sensorID: selectedSensorID,
             sensorIdent: newSensorIdent,
@@ -112,9 +96,7 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                 }
         })
         .then(function (response) {
-            console.log('response', response);
             setUpdatedCorrectly(true);
-            // updatedCorrectly = true;
         }).catch(function (error) {
             console.log(error);
             setPostError(error.code)
@@ -125,8 +107,6 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
         setNewSensorName("");
         setNewSensorChannelCount(0);
         setNewSensorDeviceID(0);
-
-        console.log('AFTER POST SENSOR');
     }
 
     return (
@@ -134,61 +114,39 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
             {  
                 sensorUpdateAttempt ? 
                 <div className="SensorUpdatedMainBox"> 
-                        <div className="UpdateSensorErrorText">
-                            {updatedCorrectly ?  
-                                <div className="UpdateSensorErrorSubText">   
-                                    <span >
-                                        {`Successfully Updated Sensor`}
-                                    </span>
-                                </div> : 
-                                <div className="UpdateSensorErrorSubText">
-                                    <span> { `${postError}`} </span>
-                                    <span> Unable to Updated Sensor </span>
-                                </div>
-                            }
-                        </div>
-                        <span 
-                            className="UpdatedSensorExitButton"
-                            onClick={(e) => {
-                                configureSensor(false);
-                            }}
-                        >
-                            X
-                        </span>
+                    <div className="UpdateSensorErrorText">
+                        {updatedCorrectly ?  
+                            <div className="UpdateSensorErrorSubText">   
+                                <span >
+                                    {`Successfully Updated Sensor`}
+                                </span>
+                            </div> : 
+                            <div className="UpdateSensorErrorSubText">
+                                <span> { `${postError}`} </span>
+                                <span> Unable to Updated Sensor </span>
+                            </div>
+                        }
                     </div>
-                
-                
+                    <span 
+                        className="UpdatedSensorExitButton"
+                        onClick={(e) => {
+                            configureSensor(false);
+                        }}
+                    >
+                        X
+                    </span>
+                </div>
                 :  
                 <div className="ConfigSensorSubBox">
                     <div className="SensorAttributeMainBox">
                         <div className="ConfigSensorTitleText">
                             Sensor Identifier
                         </div>
-                        {isSensorIdentEdit ? 
-                            <textarea
-                                className="deviceTextArea"
-                                value={newSensorIdent}
-                                id={'IDENT'}
-                                onChange={(e) => {setNewSensorIdent(e.target.value.toString());}}
-                                spellCheck={false}
-                                cols={1}
-                                rows={1}>{newSensorIdent}</textarea>  : 
-                            <div className="ConfigSensorStandardTextBox">
-                                <div className="ConfigSensorStandardText">
-                                    {newSensorIdent}
-                                </div>
+                        <div className="ConfigSensorStandardTextBox">
+                            <div className="ConfigSensorStandardText">
+                                {newSensorIdent}
                             </div>
-                        }
-                        <button 
-                            className="deviceInfoEditButton"
-                            onClick={(e) => {
-                                    setIsSensorIdentEdit(!isSensorIdentEdit);
-                                    if(isSensorIdentEdit) {
-                                        console.log('DEVICE IDENT',(document.getElementById('IDENT') as HTMLInputElement).value )
-                                    }
-                                }}
-                                >{isSensorIdentEdit ? 'save' : 'edit'}
-                        </button>
+                        </div>
                     </div>
 
                     <div className="SensorAttributeMainBox">
@@ -242,45 +200,20 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                             className="SensorInfoEditButton"
                             onClick={(e) => {
                                     setIsNewSensorTypeEdit(!isSensorTypeEdit);
-                                    // if(isSensorIdentEdit)
                                 }}
                                 >{isSensorTypeEdit ? 'save' : 'edit'}
                         </button>
                     </div>
-
-
-                    {/* TURN THIS INTO A NUMBER INPUT????   */}
+                    
                     <div className="SensorAttributeMainBox">
                         <div className="ConfigSensorTitleText">
                             Channel Count
                         </div>
-                        {isSensorChannelCountEdit ? 
-                            <textarea
-                                className="SensorTextArea"
-                                value={newSensorChannelCount}
-                                id={'CHANNEL'}
-                                onChange={(e) => {
-                                    const tempStringCount = e.target.value.toString();
-                                    const tempChannelCount = parseInt((tempStringCount != null) ? tempStringCount : "");
-
-                                    setNewSensorChannelCount(tempChannelCount);
-                                }}
-                                spellCheck={false}
-                                cols={1}
-                                rows={1}></textarea> : 
-                            <div className="ConfigSensorStandardTextBox">
-                                <div className="ConfigSensorStandardText">
-                                    {newSensorChannelCount}
-                                </div>
+                        <div className="ConfigSensorStandardTextBox">
+                            <div className="ConfigSensorStandardText">
+                                {newSensorChannelCount}
                             </div>
-                        }
-                        <button 
-                            className="SensorInfoEditButton"
-                            onClick={(e) => {
-                                    setIsSensorChannelCountEdit(!isSensorChannelCountEdit);
-                                }}
-                                >{isSensorChannelCountEdit ? 'save' : 'edit'}
-                        </button>
+                        </div>
                     </div>
 
                     <div className="SensorAttributeMainBox">
@@ -293,7 +226,6 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                                 const tempSensorDeviceID = parseInt((tempStringID != null) ? tempStringID : "");
                                 setNewSensorDeviceID(tempSensorDeviceID);
                             }}>
-                                <option value={0} selected={newSensorDeviceID === 0}>---</option>
                                 {
                                     devices.map((device, index) => {
                                         console.log('device', device)

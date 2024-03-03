@@ -141,6 +141,7 @@ CSS Styles for Hecate App Header
   resize: none;
   background-color: rgb(244, 243, 243);
   border-style: solid;
+  resize: none;
 }
 .LoginPasswordTextArea {
   margin: 0px 0px 0px -1px;
@@ -152,6 +153,7 @@ CSS Styles for Hecate App Header
   resize: none;
   background-color: rgb(244, 243, 243);
   border-style: solid;
+  resize: none;
 }
 .UserLoginButtonSubBox {
   display: flex;

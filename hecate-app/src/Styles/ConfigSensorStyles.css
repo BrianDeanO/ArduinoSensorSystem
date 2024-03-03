@@ -79,6 +79,7 @@ CSS Styles for Configure Sensor Page
     border-radius: 2px;
     border-color: #222;
     background-color: rgb(255, 255, 255);
+    resize: none;
 }
 .SensorInfoEditButton {
     width: 50px;

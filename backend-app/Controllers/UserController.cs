@@ -137,11 +137,11 @@ namespace backEndApp.Controllers {
             } 
 
             else {
-                var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserFirstName, newUser.UserPassword);
+                // var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
                 
-                if(tempUser == null) {
-                    return BadRequest(ModelState);
-                }
+                // if(tempUser != null) {
+                //     return BadRequest(ModelState);
+                // }
 
                 var userMap = _mapper.Map<User>(newUser);
 
@@ -175,12 +175,16 @@ namespace backEndApp.Controllers {
                 return BadRequest();
             }
 
-            var tempUser = _userRepository.GetUserWithLogin(updatedUser.UserFirstName, updatedUser.UserFirstName, updatedUser.UserPassword);
+            // var tempUser = _userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
             
-            if(tempUser == null) {
-                return BadRequest(ModelState);
-            }
-            
+            // if((tempUser != null) && (tempUser.UserID != updatedUser.UserID)) {
+            //     return BadRequest(ModelState);
+            // }
+
+            // if(_userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword)) {
+            //     return BadRequest(ModelState);
+            // }
+
             var userMap = _mapper.Map<User>(updatedUser);
 
             if(!_userRepository.UpdateUser(userMap)) {

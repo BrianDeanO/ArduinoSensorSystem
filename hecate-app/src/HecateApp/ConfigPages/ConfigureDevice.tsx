@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SensorType, SensorDTOType, DeviceType, PollingTimeIntervals } from "../../interfaces";
-import { channelCountArray, proxyURL, deviceTable, timeFrameConstants, pollingTimeIntervalLabels } from "../../variables.js";
+import { DeviceType } from "../../interfaces";
+import { proxyURL, timeFrameConstants } from "../../variables.js";
 import axios from "axios";
 
 interface ConfigureDeviceProps {
@@ -15,8 +15,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
 }: ConfigureDeviceProps
 ) => {  
 
-    // console.log('deviceTable 1', deviceTable[1]);
-
     const [newDeviceName, setNewDeviceName] = useState('');
     const [isDeviceNameEdit, setIsDeviceNameEdit ] = useState(false);
 
@@ -30,33 +28,22 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
     const [isDeviceZipCodeEdit, setIsDeviceZipCodeEdit] = useState(false);
 
     const [newDevicePollingIntervalValue, setNewDevicePollingIntervalValue] = useState(1);
-    // const [newDevicePollingIntervalValue, setNewDevicePollingIntervalValue] = useState('');    
-
     const [newDevicePollingIntervalLabel, setNewDevicePollingIntervalLabel] = useState('');
-    // const [newDevicePollingIntervalValue, setNewDevicePollingIntervalValue] = useState('');    
-
     const [newDevicePollingInterval, setNewDevicePollingInterval] = useState('');
-
     const [isPollingIntervalEdit, setIsPollingIntervalEdit] = useState(false);
-
 
     const [deviceUpdateAttempt, setDeviceUpdateAttempt] = useState(false);
 
     const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
     const [postError, setPostError] = useState(false);
-    const [userDevicesAddedCorrectly, setUserDevicesAddedCorrectly] = useState(false);
-    const [userSelectionArray, setUserSelectionArray] = useState([] as number[]);
-    // const [tempDevice, setTempDevice] = useState({} as DeviceType);
 
     const getDevice = useCallback(async(deviceID: number) => {
-        console.log('GET DEVICE', deviceID);
         let tempDevice: DeviceType;
         await axios({
             method: 'get',
             url: `${proxyURL}/api/Device/${deviceID}`,
         })
             .then(function (response) {
-                console.log('RESPONSE', response);
                 tempDevice = response.data;
                 setNewDeviceName(tempDevice.deviceName);
                 setNewDeviceIdent(tempDevice.deviceIdent);
@@ -64,20 +51,14 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                 setNewDeviceZipCode(tempDevice.deviceZipCode);
 
                 parsePollingInterval(parseInt(tempDevice.devicePollingInterval));
-
-                console.log('AFTER AXIOSXIOS')
             }).catch(error => {
                 console.log(error);
             })
-
     }, []);
 
     async function parsePollingInterval(devicePollingInterval: number) {
-        console.log('devicePollingInterval', devicePollingInterval);
         let pollingValue: number = 1;
         let pollingLabel: string = 'DAY';
-
-        // devicePollingInterval = (1000 * 40);
 
         if((devicePollingInterval % timeFrameConstants.MONTH) === 0) {
             pollingValue = devicePollingInterval / timeFrameConstants.MONTH;
@@ -111,15 +92,9 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
 
         setNewDevicePollingIntervalValue(pollingValue);
         setNewDevicePollingIntervalLabel(pollingLabel);
-
-        // setNewDevicePollingIntervalValue(11);
-        // setNewDevicePollingIntervalLabel('DAY');
     }
 
     async function convertPollingTime(intervalValue: number, intervalLabel: string) {
-        console.log('inter VALUE', intervalValue)
-        console.log('inter LAEBL', intervalLabel)
-
         switch(intervalLabel) {
             case 'MONTH': 
                 setNewDevicePollingInterval((intervalValue * timeFrameConstants.MONTH).toString());
@@ -156,16 +131,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
 
 
     async function updateDevice() {
-
-        // // let updatedCorrectly = false;
-        // console.log('DEVICE IN POST DEVICE');
-        // console.log('NAME', newDeviceName);
-        // console.log('IDENT', newDeviceIdent);
-        // console.log('TYPE', newDeviceType);
-        // console.log('ZIP CODE', newDeviceZipCode);
-        // const convertedPollingInterval = convertPollingTime(newDevicePollingIntervalValue, newDevicePollingIntervalLabel);
-        console.log('newDevicePollingInterval', newDevicePollingInterval);
-
         setDeviceUpdateAttempt(true);
         
         await axios.put(`${proxyURL}/api/Device/${selectedDeviceID}`, {
@@ -181,9 +146,7 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                 }
         })
         .then(function (response) {
-            console.log('response', response);
             setUpdatedCorrectly(true);
-            // updatedCorrectly = true;
         }).catch(function (error) {
             console.log(error);
             setPostError(error.code)
@@ -195,8 +158,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
         setNewDeviceZipCode("");
         setNewDevicePollingIntervalValue(1);
         setNewDevicePollingIntervalLabel('');
-
-        console.log('AFTER POST DEVICE');
     }
 
 
@@ -311,7 +272,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                             className="deviceInfoEditButton"
                             onClick={(e) => {
                                     setIsNewDeviceTypeEdit(!isDeviceTypeEdit);
-                                    // if(isDeviceIdentEdit)
                                 }}
                                 >{isDeviceTypeEdit ? 'save' : 'edit'}
                         </button>
@@ -349,14 +309,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                         <div className="PollingIntervalTitleText">
                             Device Polling Interval
                         </div>
-                        {/* {abilityBoxEdit ? 
-                            <input  className="AbilityScoreInput" 
-                                    id="STR" 
-                                    type='number' 
-                                    min={3} max={20}
-                                    defaultValue={strengthScore}></input> :
-                            <div className="AbilityScore"> {strengthScore} </div>
-                        } */}
                         {
                             isPollingIntervalEdit ?
                             

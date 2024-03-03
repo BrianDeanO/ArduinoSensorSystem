@@ -39,6 +39,26 @@ namespace backEndApp.Repository {
             )).FirstOrDefault();
         }
 
+        public bool UserExistsWithLogin(int userID, string userFirstName, string userLastName, string userPassword) {
+            var tempUser = _context.Users.Where(ud => (
+                ud.UserFirstName == userFirstName && 
+                ud.UserLastName == userLastName &&
+                ud.UserPassword == userPassword
+            )).FirstOrDefault();
+
+            if((tempUser != null) && (tempUser.UserID != userID)) {
+                return true;
+            } else {
+                return false;
+            }
+
+            // return _context.Users.Where(ud => (
+            //     ud.UserFirstName == userFirstName && 
+            //     ud.UserLastName == userLastName &&
+            //     ud.UserPassword == userPassword
+            // )).FirstOrDefault();
+        }
+
         // public ICollection<User> GetUsersWithType(string userType) {
         //     return _context.Users.Where(u => u.UserType.Trim().ToUpper() == userType.Trim().ToUpper()).ToList();
         // }

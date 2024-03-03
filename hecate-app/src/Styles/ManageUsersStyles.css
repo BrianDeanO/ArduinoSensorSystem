@@ -92,6 +92,21 @@ CSS Styles for the Manage Users Page
     background-color: rgb(181, 181, 181);
     cursor: pointer;
 }
+.UserIDTitleBox {
+    display: flex;
+    height: 40px;
+    width: 100px;
+    margin: 5px 0px 0px 5px;
+    font-size: 15pt;
+    text-align: center;
+    /* text-decoration: underline; */
+    background-color: goldenrod;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+
+}
 
 /*
     Edit User Form Styles
@@ -125,6 +140,7 @@ CSS Styles for the Manage Users Page
     border-radius: 2px;
     border-color: #222;
     background-color: rgb(255, 255, 255);
+    resize: none;
 }
 
 /*
@@ -175,7 +191,7 @@ CSS Styles for the Manage Users Page
 */
 .UpdatingPasswordMainBox {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 120px;
     width: 500px;
     margin: 5px 0px 0px 5px;
@@ -184,6 +200,14 @@ CSS Styles for the Manage Users Page
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
+}
+.UpdatePasswordFieldsBox {
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+    width: 465px;
+    margin: 5px 0px 0px 0px;
+    text-align: center;
 }
 .UpdatingPasswordSubBox {
     display: flex;
@@ -200,11 +224,52 @@ CSS Styles for the Manage Users Page
     border-radius: 5px;
     border-style: solid;
     border-color: black;
-    border-width: 1px;
+    border-width: 1.5px;
     color: rgb(0, 0, 0);
     margin: 8px auto 0px auto;
     font-size: 11pt;
     font-weight: bold;
+}
+.UpdatePasswordExitButton {
+    background-color:  #dfdfdf;
+    color: #585858;
+    font-size: 13pt;
+    font-weight: bolder;
+    margin: 5px 0px 0px 0px;
+    text-align: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
+.UpdatePasswordExitButton:hover {
+    background-color: #c9c9c9;
+    cursor: pointer;
+}
+.UpdatePasswordTextArea {
+    font-size: 12pt;
+    width: 245px;
+    height: 31px;
+    margin: 6px 0px 0px 0px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #222;
+    background-color: rgb(255, 255, 255);
+    resize: none;
+}
+.UpdatePasswordText {
+    display: flex;
+    width: 175px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: -3px 0px 0px 5px;
+    text-align: center;
+    align-items: center;
 }
 
 /*
@@ -217,7 +282,8 @@ CSS Styles for the Manage Users Page
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: rgb(173, 169, 158);
+    background-color: rgb(216, 216, 216);
+    background-color: goldenrod;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -228,52 +294,111 @@ CSS Styles for the Manage Users Page
 .DeviceOptionSubBox {
     display: flex;
     flex-direction: row;
-    height: 50px;
+    height: 52px;
     width: 450px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: rgb(112, 177, 182);
+    background-color: rgb(164, 227, 231);
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
     border-color: black;
 }
-.DeviceOptionLabel {
-    width: 150px;
-    height: auto;
+.DeviceOptionTitleText {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 450px;
+    margin: 3px 0px 0px 10px;
+    font-size: 16pt;
+    font-weight: bold;
     color: rgb(0, 0, 0);
-    margin: 10px 0px 10px 0px;
+}
+.DeviceOptionTitleSubText {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 200px;
+    margin: 2px 0px 0px 0px;
     font-size: 14pt;
+    color: rgb(0, 0, 0);
+}
+.DeviceOptionLabel {
+    width: auto;
+    max-width: 300px;
+    height: 30px;
+    color: rgb(0, 0, 0);
+    margin: 13px 0px 0px 0px;
+    font-size: 15pt;
     line-height: normal;
-    background-color: rgb(213, 213, 213);
+    font-weight: bold;
+    text-align: left;
+    overflow: auto;
+    overflow-wrap: break-word;
+    line-height: normal;
+    /* background-color: #c9c9c9; */
 }
 .DeviceOptionButton {
-    margin: 10px 0px 10px 0px;
-    width: 75px;
-    height: auto;
-    background-color: rgb(226, 13, 13);
-    border-radius: 5px;
+    margin: 10px 10px 10px 10px;
+    width: 30px;
+    height: 29px;
+    background-color: transparent;
+    border-radius: 30px;
     border-style: solid;
     color: rgb(0, 0, 0);
     font-size: 14pt;
-    text-align: center;
-    line-height: normal;
 }
 .DeviceOptionButtonSelected {
-    margin: 10px 0px 10px 0px;
-    width: 75px;
-    height: auto;
-    background-color: rgb(32, 67, 70);
-    border-radius: 5px;
+    margin: 10px 10px 10px 10px;
+    width: 30px;
+    height: 29px;
+    background-color: rgb(116, 116, 116);
+    border-radius: 30px;
     border-style: solid;
     color: rgb(0, 0, 0);
     font-size: 14pt;
-    text-align: center;
-    line-height: normal;
 }
 .DeviceOptionButton:hover, .DeviceOptionButtonSelected:hover {
     background-color: rgb(181, 181, 181);
     cursor: pointer;
+}
+.DeviceOptionButtonADMIN {
+    margin: 10px 10px 10px 10px;
+    width: 30px;
+    height: 29px;
+    background-color: rgb(116, 116, 116);
+    border-radius: 30px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    font-size: 14pt;
+}
+.DeviceOptionButtonLegend {
+    margin: 5px 3px 0px 25px;
+    width: 18px;
+    height: 19px;
+    background-color: rgb(116, 116, 116);
+    border-radius: 30px;
+    border-width: 1.5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+}
+.DeviceOptionLegendEqualsText {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    width: 15px;
+    margin: 1px 0px 0px 0px;
+    font-size: 14pt;
+    color: rgb(0, 0, 0);
+}
+.DeviceOptionLegendSelectedText {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    width: 90px;
+    margin: 2px 0px 0px 1px;
+    font-size: 14pt;
+    color: rgb(0, 0, 0);
 }
   
 
