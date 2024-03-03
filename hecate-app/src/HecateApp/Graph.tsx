@@ -1,185 +1,221 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { SensorDataType, SelectedSensorData } from "../interfaces";
-import { localStorageTitles, proxyURL } from "../Variables";
+import { SensorDataType } from "../interfaces";
+import { proxyURL, timeFrameConstants, monthsOfTheYear, repeatCountLimits } from "../variables.js";
 import axios from "axios";
+import {Chart} from 'chart.js/auto'
+import { Line } from 'react-chartjs-2';
 
 interface GraphProps {
     selectedSensorID: number;
     selectedChannelID: number;
-    selectedTimeFrame: string;
+    selectedTimeFrame: number;
+    isLoggingOut: boolean;
 }
+
+Chart.defaults.maintainAspectRatio = false;
+Chart.defaults.responsive = true;
 
 const Graph: React.FC<GraphProps> = ({
     selectedSensorID,
     selectedChannelID,
-    selectedTimeFrame
+    selectedTimeFrame,
+    isLoggingOut
 }: GraphProps) => {
-    const [sensorData, setSensorData] = useState([] as SensorDataType[])
+    const [sensorData, setSensorData] = useState([] as SensorDataType[]);
+    const [timeLabels, setTimeLabels] = useState([] as string[])
 
     const getSensorData = useCallback(async(selectedSensorID: number) => {
+        let tempAllSensorData: SensorDataType[] = [];
         let tempSensorData: SensorDataType[] = [];
+        let tempTimeLabels: string[] = [];
+        let repeatCount = 0;
+        const currentTime = Date.now();
 
-        await axios({
-            method: 'get',
-            url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorDatas`,
-        })
+        if(selectedSensorID !== 0 && !isLoggingOut) {
+            await axios({
+                method: 'get',
+                url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorDatas`,
+            })
             .then(function (response) {
-                // console.log('response', response);
-                // setSensorData(response.data);
-                tempSensorData = response.data;
-                // console.log('SENSORS FROM AXIOS', tempSensorData)
+                tempAllSensorData = response.data;
             }).catch(error => {
                 console.log(error);
             })
 
-        // console.log('SET DATA', tempSensorData)
-        setSensorData(tempSensorData);
+            if((((selectedSensorID !== 0) && selectedSensorID !== undefined) ||
+                ((selectedChannelID !== 0) && selectedChannelID !== undefined))) {
+                    tempAllSensorData.forEach((data) => {
+                        if((data.channelID === selectedChannelID) && 
+                            ((Date.parse(data.timeRecorded) > (currentTime - selectedTimeFrame) ||
+                                (selectedTimeFrame === 0)))
+                        ) {
+                            tempSensorData.push(data);
+                        }
+                    })
+                    setSensorData(tempSensorData);
 
-    }, [])
+                    tempSensorData.forEach((data) => {
+                        let timeLabel: string;
+                        let repeatCountLimit: number;
+
+                        if(data.channelID === selectedChannelID) {
+                            const tempFullDate = new Date(data.timeRecorded);
+                            let labelRecorded = false;
+
+                            let tempSeconds: string = tempFullDate.getSeconds().toString();
+                            let tempMinutes: string = tempFullDate.getMinutes().toString();
+                            let tempHours: string = tempFullDate.getHours().toString();
+                            let tempDate: string = tempFullDate.getDate().toString();
+                            let tempMonth: string = (tempFullDate.getMonth() + 1).toString();
+                            
+                            if(tempSeconds.length === 1) {
+                                tempSeconds = `0${tempSeconds}`
+                            }
+                            if(tempMinutes.length === 1) {
+                                tempMinutes = `0${tempMinutes}`
+                            }
+                            if(tempHours.length === 1) {
+                                tempHours = `0${tempHours}`
+                            }
+                            if(tempDate.length === 1) {
+                                tempDate = `0${tempDate}`
+                            }
+                            if(tempMonth.length === 1) {
+                                tempMonth = `0${tempMonth}`
+                            }
+
+                            switch(selectedTimeFrame) {
+                                case timeFrameConstants.DAY: {
+                                    timeLabel = `${tempHours}:${tempMinutes}:${tempSeconds}`;
+                                    repeatCountLimit = repeatCountLimits.DAY;
+                                    break;
+                                }
+                                case timeFrameConstants.WEEK: 
+                                case timeFrameConstants.MONTH: {
+                                    timeLabel = `${tempMonth}/${tempDate}`;
+                                    repeatCountLimit = repeatCountLimits.WEEK_MONTH;
+                                    break;
+                                }
+                                case timeFrameConstants.SIX_MONTHS:
+                                case timeFrameConstants.YEAR: {
+                                    timeLabel = `${monthsOfTheYear[tempFullDate.getMonth()]}`;
+                                    repeatCountLimit = repeatCountLimits.HALF_AND_FULL_YEAR;
+                                    break;
+                                }
+                                default:
+                                    timeLabel = `${monthsOfTheYear[tempFullDate.getMonth()]}. ${tempFullDate.getFullYear()}`;
+                                    repeatCountLimit = repeatCountLimits.LIFETIME;
+                                    break;
+                            }
+
+                            if(tempTimeLabels.length === 0) {
+                                tempTimeLabels.push(timeLabel);
+                            } else {
+                                tempTimeLabels.forEach((label) => {
+                                    if(label === timeLabel) {
+                                        labelRecorded = true;
+                                        return;
+                                    }
+                                })
+
+                                if(!labelRecorded) {
+                                    repeatCount = 0;
+                                    tempTimeLabels.push(timeLabel);
+                                } else {
+                                    repeatCount++;
+                                    if(repeatCount > repeatCountLimit) {
+                                        tempTimeLabels.push(timeLabel);
+                                        repeatCount = 0;
+                                    } else {
+                                        tempTimeLabels.push('');
+                                    }
+                                }
+                            }
+                        }
+                    })
+
+                    setTimeLabels(tempTimeLabels);
+            }
+        }
+    }, [isLoggingOut, selectedChannelID, selectedTimeFrame])
 
     useEffect(() => {
         getSensorData(selectedSensorID);
-    }, [selectedSensorID, getSensorData])
+    }, [selectedSensorID, getSensorData, selectedChannelID, selectedTimeFrame]);
 
     return (
         <div className="MainVisualizationBox">
             {
-                (((selectedSensorID === 0) || selectedSensorID === undefined) ||
-                    ((selectedChannelID === 0) || selectedChannelID === undefined)) ? 
-                    null :
-                <div className="mainGraphBox">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Sensord Data ID</th>
-                                <th>Data Value</th>
-                                <th>Data Unit</th>
-                                <th>Time Recorded</th>
-                                <th>Sensor ID</th>
-                                <th>Channel ID</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            {
-                                // Object.keys(sensorDataTable).map((sensorData, i) => {
-                                    sensorData.map((sensorData, i) => {
-                                    if(sensorData.channelID === selectedChannelID) {
-                                        return (
-                                            <tr key={i}>
-                                                <td>{i+1}</td>
-                                                <td>{sensorData.dataValue}</td>
-                                                <td>{sensorData.dataUnit}</td>
-                                                <td>{sensorData.timeRecorded}</td>
-                                                <td>{sensorData.sensorID}</td>
-                                                <td>{sensorData.channelID}</td>
-                                            </tr>
-                                        )    
-                                    } else {
-                                        return null;
+                (sensorData.length === 0) ? null :
+                    <Line
+                        data={{
+                                labels: timeLabels,
+                                datasets: [
+                                {
+                                    label: sensorData[0].dataUnit,
+                                    data: sensorData.map((data) => {
+                                        return ((data.channelID === selectedChannelID) ? 
+                                            data.dataValue : null
+                                        ) 
+                                    }),
+                                    // Could do  different colors based on sensor type
+                                    borderColor: 'rgb(0, 128, 0)',
+                                    backgroundColor: 'rgba(0, 128, 0, 0.856)',
+                                }
+                                ],
+                        }}
+                        options = {{
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    text: `Sensor ${selectedSensorID} Data`
+                                },
+                                legend: {
+                                    position: 'top',
+                                  },
+                            },
+                            
+                            scales: {
+                                x: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Time Recorded',
+                                        color: '#000000',
+                                        font: {
+                                          size: 20,
+                                          weight: 'bold',
+                                          lineHeight: 1.2,
+                                        },
+                                    },
+                                    // ticks: {
+                                    //     autoSkip: true,
+                                    //     maxTicksLimit: 
+                                    //         (selectedTimeFrame === timeFrameConstants.DAY) ? 24 :
+                                    //         (selectedTimeFrame === timeFrameConstants.WEEK) ? 7 :
+                                    //         (selectedTimeFrame === timeFrameConstants.MONTH) ? 30 :
+                                    //         (selectedTimeFrame === timeFrameConstants.SIX_MONTHS) ? 6 : 12 
+                                    // }
+                                },
+                                y: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Data Value',
+                                        color: '#000000',
+                                        font: {
+                                          size: 20,
+                                          weight: 'bold',
+                                          lineHeight: 1.2,
+                                        },
                                     }
-                                })
+                                }
                             }
-                        </tbody>
-                    </table>
-                </div>
+                        }}
+                    />
             }
         </div>  
     )
 }
 
 export default Graph;
-
-export const sensorDataTable = [
-    {
-        channelID: 1, 
-        dataValue: 13, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-01T18:42:27.069Z",
-        sensorID: 1
-    },
-    {
-        channelID: 1, 
-        dataValue: 14, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-02T18:42:27.069Z",
-        sensorID: 1
-    },
-    { 
-        channelID: 2, 
-        dataValue: 15, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-03T18:42:27.069Z",
-        sensorID: 1
-    },
-    {
-        channelID: 2, 
-        dataValue: 12, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-04T18:42:27.069Z",
-        sensorID: 1
-    },
-    { 
-        channelID: 2, 
-        dataValue: 16, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-05T18:42:27.069Z",
-        sensorID: 1
-    },
-    {
-        channelID: 1, 
-        dataValue: 19, 
-        dataUnit: "F", 
-        timeRecorded: "2024-01-06T18:42:27.069Z",
-        sensorID: 1
-    },
-    { 
-        channelID: 1, 
-        dataValue: 1361, 
-        dataUnit: "W/m^2", 
-        timeRecorded: "2024-01-07T18:42:27.069Z",
-        sensorID: 2
-    },
-    { 
-        channelID: 1, 
-        dataValue: 1459,
-        dataUnit: "W/m^2",
-        timeRecorded: "2024-01-08T18:42:27.069Z",
-        sensorID: 2
-    },
-    { 
-        channelID: 1, 
-        dataValue: 30,
-        dataUnit: "atm",
-        timeRecorded: "2024-01-09T18:42:27.069Z",
-        sensorID: 3
-    },
-    { 
-        channelID: 2, 
-        dataValue: 31,
-        dataUnit: "atm", 
-        timeRecorded: "2024-01-10T18:42:27.069Z",
-        sensorID: 3
-    },
-    { 
-        channelID: 1, 
-        dataValue: 33,
-        dataUnit: "atm",
-        timeRecorded: "2024-01-11T18:42:27.069Z",
-        sensorID: 3
-    },
-    { 
-        channelID: 2, 
-        dataValue: 29,
-        dataUnit: "atm", 
-        timeRecorded: "2024-01-12T18:42:27.069Z",
-        sensorID: 3
-    },
-    { 
-        channelID: 1, 
-        dataValue: 31, 
-        dataUnit: "atm", 
-        timeRecorded: "2024-01-13T18:42:27.069Z",
-        sensorID: 3
-    }
-] as SensorDataType[]

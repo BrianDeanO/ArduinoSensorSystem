@@ -1,169 +1,183 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Graph from "./Graph.tsx";
-import { DeviceType, SensorType } from "../interfaces";
-import { timeFrameConstants, proxyURL } from "../Variables.js";
+import { SensorDataType, SensorType, SensorChannels } from "../interfaces";
+import { timeFrameConstants, proxyURL } from "../variables.js";
 import axios from "axios";
 
 interface SelectorProps {
     selectedDeviceID: number;
     selectSensor: (selectedSensorID: number, resetChannelID: boolean, resetTimeFrame: boolean) => void;
-    selectTimeFrame: (selectedTimeFrame: string) => void;
+    selectTimeFrame: (selectedTimeFrame: number) => void;
+    selectedTimeFrame: number;
     selectedSensorID: number;
-    // getSensorOverride: boolean
-    addSensor: (addingSensor: boolean) => void;
+    selectedChannelID: number;
     selectChannel: (selectedChannelID: number) => void;
+    isAdmin: boolean;
+    configureSensor: (configuringSensor: boolean) => void;
+    isLoggingOut: boolean;
 }
 
 const Selectors: React.FC<SelectorProps> = ({
     selectedDeviceID, 
     selectSensor,
     selectedSensorID,
+    selectedChannelID,
     selectTimeFrame,
+    selectedTimeFrame,
     selectChannel,
-    addSensor,
+    isAdmin,
+    configureSensor,
+    isLoggingOut
 }: SelectorProps) => {
     const [sensors, setSensors] = useState([] as SensorType[]);
-    const [channels, setChannels] = useState([] as number[]);
-    // const [selectedChannels, setSelectedChannels] = useState([] as number[]);
+    const [channels, setChannels] = useState([] as number[][]);
+    const [sensorChannels, setSensorChannels] = useState([] as SensorChannels[]);
+    const [tempSensorData, setTempSensorData] = useState([] as SensorDataType[]);
+    const [tempAllSensorData, setAllSensorData] = useState([] as SensorDataType[]);
 
-    /*
-        NEED TO FIGURE OUT HOW TO GET THE CHANNEL COUNT FROM THE SELECTED CHANNEL ID
-        OBIVOUSLY JUST USE IT TO GET SENSOR. THEN USE setChannels
-    */
+    // async function getSensorData(sensorID: number) {
+    //     let sensorData: SensorDataType[] = [];
+
+    //     await axios({
+    //         method: 'get',
+    //         url: `${proxyURL}/api/Sensor/${sensorID}/SensorDatas`,
+    //     })
+    //     .then(function (response) {
+    //         sensorData = response.data;
+    //         console.log('SETTING TEMP SENSOR DATA', sensorData)
+    //         setTempSensorData(sensorData);
+    //     }).catch(error => {
+    //         console.log(error);
+    //         return [];
+    //     });
+
+    //     return Promise.resolve(tempSensorData);
+    // }
+    
+    // useCallback(() => {
+    //     setChannels(new Array(sensor.channelCount).fill(1));
+    // }, [sensor])
 
     const getSensors = useCallback(async(selectedDeviceID: number) => {
 
         let tempSensors: SensorType[] = [];
-        let tempChannels: number[] = [];
+        let tempAllChannels: number[][] = [];
+        let tempSensorChannels: SensorChannels[] = [];
+        let tempSensorDatas: Promise<SensorDataType[]>;
 
-        await axios({
-            method: 'get',
-            url: `${proxyURL}/api/Device/${selectedDeviceID}/Sensors`,
-        })
-        .then(function (response) {
-            // console.log('response', response);
-            // setSensors(response.data);
-            tempSensors = response.data;
-            // console.log('SENSORS FROM AXIOS', tempSensors)
-        }).catch(error => {
-            console.log(error);
-        })
+        if(selectedDeviceID !== 0 && !isLoggingOut) {
 
-        setSensors(tempSensors);
+            // Getting Sensors
+            await axios({
+                method: 'get',
+                url: `${proxyURL}/api/Device/${selectedDeviceID}/Sensors`,
+            })
+            .then(function (response) {
+                tempSensors = response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+    
+            setSensors(tempSensors);
 
-        tempSensors.forEach((sensor, i) => {
-            tempChannels.push(sensor.channelCount);
-        })
-        console.log('tempChannels', tempChannels)
+    
+            tempSensors.forEach((sensor, i) => {
+                // tempSensorDatas = getSensorData(sensor.sensorID);
+                
+                // tempSensorDatas.
 
-        tempChannels.forEach((sensor, i) => {
-            console.log('CHANNEL ??????????', i)
-        })
+                // console.log('sensor', sensor)
+                let tempChannels = [];
+                // let tempSensorChannelsObj: SensorChannels;
 
-        setChannels(tempChannels);
-        
-        selectSensor(selectedSensorID || 0, false, false);
+                for(let j = 1; j <= sensor.channelCount; j++) {
+                    tempChannels.push(j);
+                }
 
-    }, [selectSensor, selectedSensorID])
+                tempSensorChannels.push({
+                    sensorID: sensor.sensorID,
+                    channels: tempChannels
+                } as SensorChannels);
+
+                
+                // console.log('tempChannels', tempChannels);
+                tempAllChannels.push(tempChannels);
+            });
+
+            // console.log("tempSensorChannels", tempSensorChannels);
+            setSensorChannels(tempSensorChannels);
+
+            // setChannels(tempAllChannels);
+            selectSensor(selectedSensorID || 0, false, false);
+        } else {
+            setSensors(tempSensors);
+            // setChannels(tempAllChannels);
+            setSensorChannels(tempSensorChannels);
+        }
+    }, [selectSensor, selectedSensorID, isLoggingOut])
+
+    // console.log('channel array', channels);
 
     useEffect(() => {
-        // if(getSensorOverride) {
-        // }
+        if(isLoggingOut) {
+            selectSensor(0, true, true);
+        }
         getSensors(selectedDeviceID);
-        // setSelectedChannels(new Array(channels[selectedSensorID - 1]));
-    }, [ selectedDeviceID, getSensors ])
-
-    // console.log('CURRENTLY SELECTED SNEOSRS ID', selectedSensorID)
-    console.log('SENSORS - SELECTED SENSOR ID - ', selectedSensorID)
-
-    // console.log('Array(channels[selectedSensorID - 1])', Array(channels[selectedSensorID - 1]));
-
-
+    }, [ selectedDeviceID, getSensors, isLoggingOut, selectSensor])
 
     return (
         <div className="SubSelectorsBox">
-            {/* <div className="AddSensorBox">
-                <span 
-                    className="AddSensorButton"
-                    onClick={(e) => {
-                        addSensor(true);
-                }}>
-                    Add New Sensor
-                </span>   
-            </div> */}
-            <div className="sensorTypeSelectorBox">
-                <div className="sensorTypeSelectorText">Sensor</div>
-                <select 
-                    className="sensorTypeSelector" 
-                    id="sensorType"
-                    onChange={(e) => {
-                        const tempStringID = (e.target as HTMLSelectElement).value;
-                        console.log('ON CHNACING SENSORS')
-                        if(tempStringID === '---') {
-                            selectSensor(0, true, true);
-                        } else {
-                            const tempSensorID = parseInt((tempStringID != null) ? tempStringID : "");
-                            selectSensor(tempSensorID, true, true);
-                            sensors.forEach((sensor, i) => {
-                                if(sensor.sensorID === tempSensorID) {
-                                    setChannels(new Array(sensor.channelCount));
-                                }
-                            })
-                        }
-                    }}>
-                        <option value={'---'} selected={selectedSensorID === 0}>---</option>
-                        {
-                            sensors.map((sensor, index) => {
-                                return (
-                                    <option value={sensor.sensorID} key={index} selected={sensor.sensorID === selectedSensorID}>
-                                        {sensor.sensorName}
-                                    </option>
-                                )
-                            })
-                        }
-                </select>
-            </div>
-            {/* {
-                // (selectedSensorID !== 0) ? (
-                (channels.length > 0) ?
-                    <div className="channelTypeSelectorBox">
-                        <div className="channelTypeSelectorText">Sensor Channel</div>
-                        <select 
-                            className="channelTypeSelector" 
-                            id="channel"
-                            onChange={(e) => {
-                                const tempStringID = (e.target as HTMLSelectElement).value;
-                                if(tempStringID === '---') {
-                                    selectChannel(0);
-                                } else {
-                                    const tempChannelID = parseInt((tempStringID != null) ? tempStringID : "");
-                                    console.log('SELECTINC CAHNNEL', tempChannelID)
-                                    selectChannel(tempChannelID);
-                                }
-                            }}>
-                                
-                                <option value={'---'} selected={(channels.length === 0) || !(channels)}>---</option>
-                                {
-                                    (selectedSensorID !== 0) ? 
-                                        channels.map((channel, i) => {
-                                            return(
-                                                <option value={i+1} key={i} >
-                                                    {i + 1}
-                                                </option>
-                                            )
+            <div className="sensorSelectorMainBox">
+                <div className="sensorTypeSelectorBox">
+                    <div className="sensorTypeSelectorText">Sensor</div>
+                    <select 
+                        className="sensorTypeSelector" 
+                        id="sensorType"
+                        onChange={(e) => {
+                            const tempStringID = (e.target as HTMLSelectElement).value;
+                            if(tempStringID === '---') {
+                                selectSensor(0, true, true);
+                            } else {
+                                const tempSensorID = parseInt((tempStringID != null) ? tempStringID : "");
+                                selectSensor(tempSensorID, true, true);
+                                sensors.forEach((sensor, i) => {
+                                    if(sensor.sensorID === tempSensorID) {
+                                        // console.log('channel count', sensor.channelCount)
+                                        setChannels(new Array(sensor.channelCount).fill(1));
+                                        // console.log('new channel array', channels)
+                                        channels.forEach((channel, j) => {
+                                            // console.log('channel', j);
                                         })
-                                        : null
-                                }
-                        </select>
-                    </div> : 
-                    <div className="channelTypeSelectorBox">
-                        <div className="channelTypeSelectorText">Sensor Channel</div>
-                        <div className="channelTypeSelectorText">No Channels</div>
-                    </div>
-            } */}
+                                    }
+                                })
+                            }
+                        }}>
+                            <option value={'---'} selected={selectedSensorID === 0}>---</option>
+                            {
+                                sensors.map((sensor, index) => {
+                                    return (
+                                        <option value={sensor.sensorID} key={index} selected={sensor.sensorID === selectedSensorID}>
+                                            {sensor.sensorName}
+                                        </option>
+                                    )
+                                })
+                            }
+                    </select>
 
-            {
-                <div className="channelTypeSelectorBox">
+                </div>
+                {
+                    (isAdmin && (selectedSensorID !== 0)) ? 
+                    <span 
+                        className="ConfigureSensorButton"
+                        data-value={selectedDeviceID}
+                        onClick={(e) => {
+                            configureSensor(true);
+                    }}>
+                        Configure Sensor
+                    </span> : null
+                }
+            </div>
+            
+            <div className="channelTypeSelectorBox">
                 <div className="channelTypeSelectorText">Sensor Channel</div>
                 <select 
                     className="channelTypeSelector" 
@@ -174,44 +188,67 @@ const Selectors: React.FC<SelectorProps> = ({
                             selectChannel(0);
                         } else {
                             const tempChannelID = parseInt((tempStringID != null) ? tempStringID : "");
-                            console.log('SELECTINC CAHNNEL', tempChannelID)
                             selectChannel(tempChannelID);
                         }
                     }}>
-                        
-                        <option value={'---'} selected={(channels.length === 0) || !(channels)}>---</option>
+                        <option value={'---'} selected={selectedChannelID === 0}>---</option>
                         {
                             (selectedSensorID !== 0) ? 
-                                channels.map((channel, i) => {
-                                    return(
-                                        <option value={i+1} key={i} >
-                                            {i + 1}
-                                        </option>
+                                sensorChannels.map((sensor) => {
+
+                                    return (
+                                        (sensor.sensorID === selectedSensorID) ?
+                                            sensor.channels.map((channel, i) => {
+                                                // console.log('channel', channel)
+                                                return (
+                                                    <option 
+                                                        value={channel} 
+                                                        key={channel} 
+                                                        selected={(selectedChannelID === (i + 1))}
+                                                    >
+                                                        {channel}
+                                                    </option>
+                                                )
+                                            }) : null
                                     )
                                 })
                                 : null
                         }
                 </select>
             </div> 
-            }
-            {/* <div className="timeTypeSelectorBox">
+            
+            <div className="timeTypeSelectorBox">
                 <div className="timeTypeSelectorText">Time Frame</div>
                 <select 
                     className="timeTypeSelector" 
                     id="sensorType"
-                    defaultValue={'Lifetime'}
                     onChange={(e) => {
                         const timeFrameString = (e.target as HTMLSelectElement).value;
-                        selectTimeFrame(timeFrameString);
-                    }}> */}
-                        {/* timeFrameConstants can be used here to subtract times? */}
-                        {/* <option value={'Past Day'}>Past Day</option>
-                        <option value={'Past Week'}>Past Week</option>
-                        <option value={'Past Month'}>Past Month</option>
-                        <option value={'Past Six Months'}>Past Six Months</option>
-                        <option value={'Lifetime'}>Lifetime</option>
+                        const tempTime = parseInt((timeFrameString != null) ? timeFrameString : "");
+                        selectTimeFrame(tempTime);
+                    }}>
+                        <option value={timeFrameConstants.DAY} selected={selectedTimeFrame === timeFrameConstants.DAY}>
+                            Past Day
+                        </option>
+                        <option value={timeFrameConstants.WEEK} selected={selectedTimeFrame === timeFrameConstants.WEEK}>
+                            Past Week
+                        </option>
+                        <option value={timeFrameConstants.MONTH} selected={selectedTimeFrame === timeFrameConstants.MONTH}>
+                            Past Month
+                        </option>
+                        <option value={timeFrameConstants.SIX_MONTHS} selected={selectedTimeFrame === timeFrameConstants.SIX_MONTHS}>
+                            Past Six Months
+                        </option>
+                        <option value={timeFrameConstants.YEAR} selected={selectedTimeFrame === timeFrameConstants.YEAR}>
+                            Past Year
+                        </option>
+                        <option 
+                            value={0}
+                            selected={selectedTimeFrame === 0}>
+                            Lifetime
+                        </option>
                 </select>
-            </div> */}
+            </div>
         </div>
     )
 }

@@ -2,7 +2,6 @@ using backEndApp.DTO;
 using backEndApp.Models;
 
 namespace backEndApp.Interfaces {
-
     public interface IDeviceRepository {
         ICollection<Device> GetDevices();
         Device GetDevice(int deviceId);

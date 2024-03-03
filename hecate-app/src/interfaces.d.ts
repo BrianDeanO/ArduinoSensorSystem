@@ -3,14 +3,42 @@ export interface DeviceType {
     deviceIdent: string;
     deviceName: string;
     deviceType: string;
-    zipCode: string;
+    deviceZipCode: string;
+    devicePollingInterval: string;
 }
 
 export interface DeviceDTOType {
     deviceName: string;
     deviceType: string;
-    zipCode: string;
+    deviceZipCode: string;
+    devicePollingInterval: string;
 }
+
+export interface UserDeviceSelectedType {
+    deviceID: number;
+    isSelected: boolean;
+}
+
+export interface UserDeviceType {
+    userID: number;
+    deviceID: number;
+}
+
+// export interface UserDeviceType {
+//     userID: number;
+//     deviceID: number;
+//     user: userType;
+//     device: deviceType;
+// }
+
+// export interface PollingTimeIntervals {
+//     SEC: string,
+//     // 'MIN': string,
+//     // 'HOUR': string,
+//     // 'DAY': string,
+//     // 'WEEK': string,
+//     // 'MONTH': string,
+// }
 
 export interface SelectedDevice {
     selectedDeviceID: number;
@@ -29,7 +57,6 @@ export interface CurrentUserType {
 
 export interface UserType {
     userID: number;
-    // userUserName: string;
     userFirstName: string;
     userLastName: string;
     userType: string;  
@@ -41,6 +68,7 @@ export interface UserType {
 
 export interface SensorType {
     sensorID: number;
+    sensorIdent: string;
     sensorName: string;
     sensorType: string;
     channelCount: number;
@@ -55,12 +83,17 @@ export interface SensorDTOType {
 }
 
 export interface SensorDataType {
-    // sensorDataID: number;
+    sensorDataID: number;
     channelID: number;
     dataValue: number;
     dataUnit: string;
     timeRecorded: string;
     sensorID: number;
+}
+
+export interface SensorChannels {
+    sensorID: number;
+    channels: number[]
 }
 
 export interface SelectedSensorData {
@@ -69,16 +102,10 @@ export interface SelectedSensorData {
 }
 
 export interface SelectedTimeFrame {
-    selectedTimeFrame: string;
+    selectedTimeFrame: number;
 }
 
 export interface SelectedChannel {
     selectedChannelID: number;
 }
 
-export interface UserDeviceType {
-    userID: number;
-    deviceID: number;
-    user: userType;
-    device: deviceType;
-}

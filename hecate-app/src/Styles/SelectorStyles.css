@@ -43,12 +43,20 @@ CSS Styles for Hecate App Selectors (Sensors, Times, Channels)
 /* 
   Sensor Type Selector Styles
 */
+.sensorSelectorMainBox {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    width: 180px;
+    margin: 0px 5px 5px auto;
+    text-align: center;
+}
 .sensorTypeSelectorBox {
     display: flex;
     flex-direction: column;
     height: 75px;
     width: 180px;
-    margin: 5px 5px 5px auto;
+    margin: 5px 5px 0px auto;
     text-align: center;
     background-color: rgb(92, 92, 92);
     border-radius: 5px;
@@ -100,7 +108,7 @@ CSS Styles for Hecate App Selectors (Sensors, Times, Channels)
     flex-direction: column;
     height: 75px;
     width: 180px;
-    margin: 5px auto 0px 10px;
+    margin: 5px 5px 0px 10px;
     text-align: center;
     background-color: rgb(92, 92, 92);
     border-radius: 5px;
@@ -116,6 +124,26 @@ CSS Styles for Hecate App Selectors (Sensors, Times, Channels)
     height: 30px;
     font-size: 11pt;
     margin: 5px auto;
+}
+
+/* 
+  Sensor Configure Button Styles
+*/
+.ConfigureSensorButton {
+    margin: 10px auto;
+    width: 130px;
+    height: auto;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(0, 0, 0);
+    margin: 9px auto 10px auto;
+    font-size: 12pt;
+    text-align: center;
+}
+.ConfigureSensorButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
 }
 
 /* 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { apiInfo } from "../../Variables";
+import { apiInfo } from "../../variables";
 import { DeviceType } from "../../interfaces";
 import axios from "axios";
-import { proxyURL } from "../../Variables";
+import { proxyURL } from "../../variables";
 
 
 
@@ -14,7 +14,7 @@ export async function postDeviceAPI(
     await axios.post(`${proxyURL}/api/Device`, {
         deviceName: newDeviceName,
         deviceType: newDeviceType,
-        zipCode: newDeviceZipCode                
+        deviceZipCode: newDeviceZipCode                
     }, {
         headers: {
             'Content-Type': 'application/json'
