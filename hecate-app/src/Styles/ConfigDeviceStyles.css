@@ -1,0 +1,278 @@
+/* 
+*****************************************
+CSS Styles for Configure Device Page
+*****************************************
+*/
+.ConfigDeviceMainBox {
+    display: flex;
+    flex-direction: row;
+    width: 778px;
+    height: 800px;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: rgb(103, 176, 199);
+    margin: 0px 0px 0px 0px;
+    border-right-style: solid;
+}
+.ConfigDeviceSubBox {
+    display: flex;
+    flex-direction: column;
+    width: 514px;
+    height: 400px;
+    /* background-color: rgb(230, 230, 230); */
+    /* background-color: rgb(27, 132, 69); */
+    margin: 0px 0px 0px 0px;
+}
+
+/*
+    Generic Device Attribute Box Styles
+*/
+.DeviceAttributeMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 500px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: goldenrod;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+}
+.configDeviceTitleText {
+    display: flex;
+    width: 150px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0px 0px 0px 5px;
+    text-align: center;
+    align-items: center;
+}
+.configDeviceStandardTextBox {
+    display: flex;
+    width: 250px;
+    height: 35px;
+    color: black;
+    background-color: rgb(237, 237, 237);
+    margin: 6px 0px 0px 0px;
+    align-items: center;
+    border-radius: 2px;
+    border-width: 2px;
+    border-style: solid;
+}
+.configDeviceStandardText {
+    display: flex;
+    color: black;
+    font-size: 11pt;
+    margin: 0px 0px 0px 10px;
+    text-align: center;
+}
+.deviceTextArea {
+    font-size: 12pt;
+    width: 245px;
+    height: 31px;
+    margin: 6px 0px 0px 0px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #222;
+    background-color: rgb(255, 255, 255);
+    resize: none;
+}
+.deviceInfoEditButton {
+    width: 50px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+    font-style: italic;
+}
+.deviceInfoEditButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    Device Config Button Styles
+*/
+.DeviceConfigButtonBox {
+    display: flex;
+    flex-direction: column;
+    height: 105px;
+    width: 280px;
+    margin: 5px 0px 0px 0px;
+    align-items: center;
+}
+.DeviceConfigUpdateButton {
+    width: 235px;
+    height: 45px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.DeviceConfigCancelButton {
+    width: 235px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px 0px 0px 0px;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.DeviceConfigUpdateButton:hover, .DeviceConfigCancelButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    Device Polling Interval Selection Styles
+*/
+.PollingIntervalTitleText {
+    display: flex;
+    width: 150px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0px 20px 0px -15px;
+    text-align: center;
+    align-items: center;
+}
+.PollingIntervalValueInput {
+    width: 59px;
+    height: 31.5px;
+    font-size: 16pt;
+    border-style: solid;
+    border-width: 2px;
+    margin: auto 15px auto 0px;
+    border-radius: 3px;
+    background-color: rgb(237, 237, 237);
+    border-color: #222;
+    text-align: center;
+}
+.PollingIntervalValueInputEditing {
+    width: 55px;
+    height: 30px;
+    font-size: 14pt;
+    border-style: solid;
+    border-width: 2px;
+    margin: auto 15px auto 0px;
+    border-radius: 3px;
+    background-color: rgb(255, 255, 255);
+    border-color: #222;
+    text-align: center;
+}
+.PollingIntervalValueInputText {
+    margin: 0px 0px 0px -3px;
+}
+.PollingIntervalLabelSelector {
+    width: 146px;
+    height: 31px;
+    margin: auto 26px auto 0px;
+    font-size: 13pt;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 2px;
+    background-color: rgb(237, 237, 237);
+}
+.PollingIntervalLabelSelectorEditing {
+    width: 150px;
+    height: 35px;
+    margin: auto 26px auto 0px;
+    font-size: 12pt;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 2px;
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+}
+.PollingIntervalLabelSelectorText {
+    margin: 3px 0px 0px 0px;
+}
+
+/*
+    Device Updated Result Box Styles
+*/
+.DeviceUpdatedMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 400px;
+    width: 514px;
+    /* background-color: rgb(27, 132, 69); */
+
+    margin: 8px 0px 0px 10px; 
+
+    >button {
+        font-size: 12pt;
+    }
+}
+.UpdateDeviceErrorText {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    width: 514px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
+.UpdateDeviceErrorSubText {
+    display: flex;
+    flex-direction: column;
+    height: 65px;
+    width: 300px;
+    margin: 10px 0px 0px 100px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+}
+.UpdatedDeviceExitButton {
+    background-color:  #dfdfdf;
+    color: #585858;
+    font-size: 13pt;
+    font-weight: bolder;
+    margin: 10px 5px 0 -38px;
+    text-align: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
+.UpdatedDeviceExitButton:hover {
+    background-color: #c9c9c9;
+    cursor: pointer;
+}
+

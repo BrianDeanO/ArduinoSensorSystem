@@ -11,5 +11,6 @@ public class SensorDTO {
     public string? SensorType { get; set; }
     public int ChannelCount { get; set; }
     
+    // Device ID Foreign Key
     public int DeviceID { get; set; }
 }

@@ -7,6 +7,7 @@ namespace backEndApp.Interfaces {
         ICollection<SensorData> GetSensorDatas();
         SensorData GetSensorData(int sensorDataId);
         Sensor GetSensorDataSensor(int sensorId);
+        // ICollection<SensorData> GetSensorDataInDateRange(DateTime parsedDateTime);
         bool SensorDataExists(int sensorDataId);
         bool CreateSensorData(SensorData sensorData);
         bool UpdateSensorData(SensorData sensorData);

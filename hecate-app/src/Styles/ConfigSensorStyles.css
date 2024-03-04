@@ -1,0 +1,222 @@
+/* 
+*****************************************
+CSS Styles for Configure Sensor Page
+*****************************************
+*/
+.ConfigSensorMainBox {
+    display: flex;
+    flex-direction: row;
+    width: 778px;
+    height: 800px;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: rgb(103, 176, 199);
+    margin: 0px 0px 0px 0px;
+    border-right-style: solid;
+}
+.ConfigSensorSubBox {
+    display: flex;
+    flex-direction: column;
+    width: 514px;
+    height: 400px;
+    /* background-color: rgb(230, 230, 230); */
+    /* background-color: rgb(27, 132, 69); */
+    margin: 0px 0px 0px 0px;
+}
+
+/*
+    Generic Sensor Attribute Box Styles
+*/
+.SensorAttributeMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    width: 520px;
+    margin: 5px 0px 0px 5px;
+    text-align: center;
+    background-color: goldenrod;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+}
+.ConfigSensorTitleText {
+    display: flex;
+    width: 160px;
+    height: auto;
+    color: black;
+    /* background-color: aliceblue; */
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0px 0px 0px 5px;
+    text-align: center;
+    align-items: center;
+}
+.ConfigSensorStandardTextBox {
+    display: flex;
+    width: 250px;
+    height: 35px;
+    color: black;
+    background-color: rgb(237, 237, 237);
+    margin: 6px 0px 0px 0px;
+    align-items: center;
+    border-radius: 2px;
+    border-width: 2px;
+    border-style: solid;
+}
+.ConfigSensorStandardText {
+    display: flex;
+    color: black;
+    font-size: 11pt;
+    margin: 0px 0px 0px 10px;
+    text-align: center;
+}
+.SensorTextArea {
+    font-size: 12pt;
+    width: 245px;
+    height: 31px;
+    margin: 6px 0px 0px 0px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 2px;
+    border-color: #222;
+    background-color: rgb(255, 255, 255);
+    resize: none;
+}
+.SensorInfoEditButton {
+    width: 50px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+    font-style: italic;
+}
+.SensorInfoEditButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+.SensorDeviceSelector {
+    width: 255px;
+    height: 40px;
+    margin: 5px 0px 0px 0px;
+    font-size: 12pt;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    border-radius: 2px;
+    background-color: rgb(237, 237, 237);
+}
+
+/*
+    Sensor Config Button Styles
+*/
+.SensorConfigButtonBox {
+    display: flex;
+    flex-direction: column;
+    height: 105px;
+    width: 240px;
+    margin: 5px 0px 0px 21px;
+    align-items: center;
+}
+
+.SensorConfigUpdateButton {
+    width: 235px;
+    height: 45px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.SensorConfigCancelButton {
+    width: 235px;
+    height: 30px;
+    background-color: rgb(213, 213, 213);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(0, 0, 0);
+    margin: 8px auto 0px auto;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.SensorConfigUpdateButton:hover, .SensorConfigCancelButton:hover {
+    background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+
+/*
+    Sensor Updated Result Box Styles
+*/
+.SensorUpdatedMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 400px;
+    width: 514px;
+    /* background-color: rgb(27, 132, 69); */
+
+    margin: 8px 0px 0px 10px; 
+
+    >button {
+        font-size: 12pt;
+    }
+}
+.UpdateSensorErrorText {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    width: 514px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
+
+.UpdateSensorErrorSubText {
+    display: flex;
+    flex-direction: column;
+    height: 65px;
+    width: 300px;
+    margin: 10px 0px 0px 100px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+}
+.UpdatedSensorExitButton {
+    background-color:  #dfdfdf;
+    color: #585858;
+    font-size: 13pt;
+    font-weight: bolder;
+    margin: 10px 5px 0 -38px;
+    text-align: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
+.UpdatedSensorExitButton:hover {
+    background-color: #c9c9c9;
+    cursor: pointer;
+}
+

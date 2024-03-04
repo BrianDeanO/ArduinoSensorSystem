@@ -1,0 +1,190 @@
+/* 
+*****************************************
+CSS Styles for New Devices Page
+*****************************************
+*/
+.NewDeviceMainBox {
+    display: flex;
+    flex-direction: column;
+    width: 778px;
+    height: 800px;
+    /* background-color: rgb(230, 230, 230); */
+    background-color: rgb(111, 188, 211);
+    margin: 0px 0px 0px 0px;
+    border-right-style: solid;
+}
+.mainDeviceInfoBox {
+    display: flex;
+    flex-direction: row;
+    height: 130px;
+    width: 778px;
+    margin: 0px 15px 0px 0px;
+    background-color: rgb(111, 188, 211);
+    border-right-style: solid;
+}
+
+/* 
+  Device Text Entry Styles
+*/
+.newDeviceTextEntryFieldsBox {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 300px;
+    margin: 0px 15px 0px 0px;
+    background-color: rgb(172, 172, 172);
+}
+.deviceNameEntryBox, .deviceTypeEntryBox, .deviceZipCodeEntryBox {
+    display: flex;
+    flex-direction: row;
+    margin: 10px auto;
+    height: 20px;
+    width: 300px;
+    /* background-color: #f7fcff;
+    border-radius: 13px;
+    border-style: solid; */
+    color: rgb(0, 0, 0);
+    font-size: 9.5pt;
+} 
+.newDeviceTitleText {
+    height: 20px;
+    width: 120px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.newDeviceInputTextArea {
+    margin: 0px 0px 0px 0px;
+    height: 20px;
+    max-height: 20px;
+    width: 150px;
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+    resize: none;
+}
+
+
+/* 
+  User Selection Styles
+*/
+.NewDeviceUserSelectionMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 600px;
+    width: 400px;
+    margin: 0px 15px 0px 0px;
+    background-color: rgb(111, 188, 211);
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.UserSelectionSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    width: 300px;
+    margin: 10px 15px 0px 0px;
+    background-color: rgb(213, 151, 239);
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+
+}
+.UserSelectionCircle {
+    height: 15px;
+    width: 15px;
+    background-color: transparent;
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1.5px;
+    margin: 6px 5px 0px 5px;
+}
+.UserSelectionCircleActive {
+    height: 15px;
+    width: 15px;
+    background-color: rgb(131, 131, 131);
+    border-radius: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1.5px;
+    margin: 6px 5px 0px 5px;
+}
+.UserSelectionCircle:hover, 
+.UserSelectionCircleActive:hover {
+    cursor: pointer;
+}
+.UserSelectionText {
+    display: flex;
+    height: 30px;
+    width: 90px;
+    margin: 6.5px 0px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 11pt;
+}
+
+/* 
+  Error Pop-Up Styles
+*/
+.NewDeviceErrorText {
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+    width: 270px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+}
+
+.NewDeviceErrorSubText {
+    display: flex;
+    flex-direction: column;
+    height: 65px;
+    width: 200px;
+    margin: 2px 2px 0px 0px;
+    color: rgb(0, 0, 0);
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgb(207, 207, 207);
+}
+
+/* 
+  New Button Submit, Cancel , and Exit Button Styles
+*/
+.DeviceSubmitAndCancelMainBox {
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+    width: 250px;
+    margin: 0px 15px 0px 20px;    
+    background-color: rgb(111, 188, 211);
+
+    >button {
+        font-size: 12pt;
+    }
+}
+
+.NewDeviceExitButton {
+    background-color:  #dfdfdf;
+    color: #585858;
+    font-size: 13pt;
+    font-weight: bolder;
+    margin: 7px 5px 0 -38px;
+    text-align: center;
+    width: 25px;
+    height: 23px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 2px;
+}
+.NewDeviceExitButton:hover {
+    background-color: #c9c9c9;
+    cursor: pointer;
+}
+

@@ -6,6 +6,9 @@ namespace backEndApp.Interfaces {
     public interface IUserRepository {
         ICollection<User> GetUsers();
         User GetUser(int userId);
+        User GetUserWithLogin(string userFirstName, string userLastName, string userPassword);
+        bool UserExistsWithLogin(int userID, string userFirstName, string userLastName, string userPassword);
+        // ICollection<User> GetUsersWithType(string userType);
         ICollection<UserDevice> GetUserDevices(int userId);
         ICollection<Device> GetDevicesFromUser(int userId);
         /*

@@ -60,6 +60,36 @@ namespace backEndApp.Controllers {
             }
         }
 
+        // [HttpGet("{userType}")]
+        // [ProducesResponseType(200, Type = typeof(User))]
+        // [ProducesResponseType(400)]
+        // public IActionResult GetUsersByType(string userType) {
+        //     var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsersWithType(userType));
+
+        //     if(!ModelState.IsValid) {
+        //         return BadRequest(ModelState);
+        //     } else {
+        //         return Ok(users);
+        //     }
+        // }
+
+        [HttpGet("{userFirstName}.{userLastName}:{userPassword}")]
+        [ProducesResponseType(200, Type = typeof(User))]
+        [ProducesResponseType(400)]
+        public IActionResult GetUserWithLogin(
+            string userFirstName, 
+            string userLastName,
+            string userPassword
+        ) {
+            var user = _mapper.Map<UserDTO>(_userRepository.GetUserWithLogin(userFirstName, userLastName, userPassword));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(user);
+            }
+        }
+
         [HttpGet("{userId}/UserDevices")]
         [ProducesResponseType(200, Type = typeof(ICollection<UserDevice>))]
         [ProducesResponseType(400)]
@@ -105,8 +135,14 @@ namespace backEndApp.Controllers {
             else if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             } 
-            
+
             else {
+                // var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
+                
+                // if(tempUser != null) {
+                //     return BadRequest(ModelState);
+                // }
+
                 var userMap = _mapper.Map<User>(newUser);
 
                 if(!_userRepository.CreateUser(userMap)) {
@@ -138,6 +174,16 @@ namespace backEndApp.Controllers {
             else if(!ModelState.IsValid) {
                 return BadRequest();
             }
+
+            // var tempUser = _userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
+            
+            // if((tempUser != null) && (tempUser.UserID != updatedUser.UserID)) {
+            //     return BadRequest(ModelState);
+            // }
+
+            // if(_userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword)) {
+            //     return BadRequest(ModelState);
+            // }
 
             var userMap = _mapper.Map<User>(updatedUser);
 

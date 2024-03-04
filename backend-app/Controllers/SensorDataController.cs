@@ -54,6 +54,25 @@ namespace backEndApp.Controllers {
             }
         }
 
+        // [HttpGet("{selectedTimeFrame}")]
+        // [ProducesResponseType(200, Type = typeof(SensorData))]
+        // [ProducesResponseType(400)]
+        // public IActionResult GetSensorDataInDateRange(string selectedTimeFrame) {
+        //     var parsedDateTime = DateTime.Parse(selectedTimeFrame);
+
+        //     if(parsedDateTime != null) {
+        //         var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDataInDateRange(parsedDateTime));
+
+        //         if(!ModelState.IsValid) {
+        //             return BadRequest(ModelState);
+        //         } else {
+        //             return Ok(sensorDatas);
+        //         }
+        //     } else {
+        //         return BadRequest("Issue With Parsing DateTime");
+        //     }
+        // }
+
         [HttpGet("{sensorDataId}/Sensor")]
         [ProducesResponseType(200, Type = typeof(Sensor))]
         [ProducesResponseType(400)]
@@ -100,9 +119,8 @@ namespace backEndApp.Controllers {
             } else {
                 var sensorDataMap = _mapper.Map<SensorData>(newSensorData);
 
-                int sensorId = newSensorData.SensorID;
-                sensorDataMap.SensorID = sensorId;
-                sensorDataMap.Sensor = _sensorRepository.GetSensor(sensorId);
+                sensorDataMap.SensorID = newSensorData.SensorID;
+                sensorDataMap.Sensor = _sensorRepository.GetSensor(newSensorData.SensorID);
 
                 if(!_sensorDataRepository.CreateSensorData(sensorDataMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");

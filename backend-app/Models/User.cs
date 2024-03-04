@@ -4,11 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 namespace backEndApp.Models;
 public class User {
-
-    // public User() {
-    //     this.Devices = new HashSet<Device>();
-    // }
-
     [Key]
     public int UserID { get; set; }
     public string UserType { get; set; }
@@ -19,6 +14,6 @@ public class User {
     public string UserPhone { get; set; }
     public bool UserNotifications { get; set; }
 
-    // public ICollection<Device> Devices { get; set; }
+    // The relationship for the MANY UserDevices
     public ICollection<UserDevice> UserDevices { get; set; }
 }

@@ -1,6 +1,12 @@
 @import "./Styles/HeaderStyle.css";
 @import "./Styles/SelectorStyles.css";
 @import "./Styles/VisualizationStyle.css";
+@import "./Styles/DevicesStyles.css";
+@import "./Styles/HeaderStyle.css";
+@import "./Styles/NewDeviceStyles.css";
+@import "./Styles/ConfigDeviceStyles.css";
+@import "./Styles/ConfigSensorStyles.css";
+@import "./Styles/ManageUsersStyles.css";
 
 :root {
   --sheetBackground: rgb(177, 174, 174);
@@ -39,6 +45,23 @@ html {
   width: 1000px;
   max-width: 100%;
   border-style: solid;
+}
+
+.mainButton {
+  margin: 10px auto;
+  height: 40px;
+  width: 100px;
+  background-color: #f7fcff;
+  border-radius: 13px;
+  border-style: solid;
+  color: rgb(0, 0, 0);
+  font-size: 12pt;
+  font-weight: bold;  
+} 
+
+.mainButton:hover {
+  background-color: rgb(219, 219, 219);
+  cursor: pointer;
 }
 
 table,

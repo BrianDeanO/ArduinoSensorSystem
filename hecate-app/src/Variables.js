@@ -1,7 +1,69 @@
 export const version = "1.0";
-export const proxyURL = "https://localhost:7239";
+export const proxyURL_HTTPS = "https://localhost:8443"; // 7239 before
+export const proxyURL = "http://localhost:8080"; // 5270 before
+export const ADMIN = 'ADMIN';
+export const BASIC = 'BASIC';
+export const channelCountArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export  const apiInfo = {
+export const repeatCountLimits = {
+    DAY: 2,
+    WEEK_MONTH: 4,
+    HALF_AND_FULL_YEAR: 5,
+    LIFETIME: 12
+}
+
+export const monthsOfTheYear = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+]
+
+export const localStorageTitles = {
+    currentUser: "currentUser",
+    selectedDevice: "selectedDevice",
+    selectedSensor: "selectedSensor",
+    selectedSensorData: "selectedSensorData",
+    selectedTimeFrame: "selectedTimeFrame",
+    selectedChannel: "selectedChannel"
+}
+
+export const pollingTimeIntervalLabels = {
+    SEC: `Second(s)`,
+    MIN: `Minute(s)`,
+    HOUR: `Hour(s)`,
+    DAY: `Day(s)`,
+    WEEK: `Week(s)`,
+    MONTH: `Month(s)`,
+}
+
+export const timeFrameConstants = {
+    DAY: 1000 * 60 * 60 * 24,
+    WEEK: 1000 * 60 * 60 * 24 * 7,
+    // MONTH: (1000 * 60 * 60 * 24 * 7 * 4) + (1000 * 60 * 60 * 24 * 2),
+    MONTH: (1000 * 60 * 60 * 24 * 7 * 4) + 2,
+    SIX_MONTHS: (1000 * 60 * 60 * 24 * 7 * 4 + 2) * 6,
+    YEAR: 1000 * 60 * 60 * 24 * 7 * 52,
+}
+
+export const apiInfo = {
+    USERS: `${proxyURL}/api/Users`,
+    DEVICES: `${proxyURL}/api/Devices`,
+    USER_DEVICES: `${proxyURL}/api/UserDevices`,
+    SENSORS: `${proxyURL}/api/Sensors`,
+    DEVICE_SENSORS: `${proxyURL}/api/DeviceSensors`,
+    SENSOR_DATA: `${proxyURL}/api/SensorDatas`,
+}
+
+export const apiInfo2 = {
     USERS: {
         URL: `${proxyURL}/api/Users`,
         INDEX: 1
@@ -67,32 +129,32 @@ export const userTable = [
 ]
 
 export const deviceTable = [
-    {device_ID: 1, device_name: "RICHLAND_NW_1", device_type: "ARDUINO", zip_code: 99352},
-    {device_ID: 2, device_name: "KENNEWICK_N_1", device_type: "ARDUINO", zip_code: 99336},
-    {device_ID: 3, device_name: "PASCO_E_1", device_type: "ARDUINO", zip_code: 99301}
+    {deviceID: 1, deviceIdent: 'ARD-123', deviceName: "RICHLAND_NW_1", deviceType: "ARDUINO", deviceZipCode: '99352'},
+    {deviceID: 2, deviceIdent: 'ARD-456', deviceName: "KENNEWICK_N_1", deviceType: "ARDUINO", deviceZipCode: '99336'},
+    {deviceID: 3, deviceIdent: 'ARD-789', deviceName: "PASCO_E_1", deviceType: "ARDUINO", deviceZipCode: '99301'}
 ]
 
 export const userDeviceEntriesTable = [
-    {user_ID: 1, device_ID: 1},
-    {user_ID: 1, device_ID: 2},
-    {user_ID: 1, device_ID: 3},
-    {user_ID: 2, device_ID: 1},
-    {user_ID: 3, device_ID: 1},
-    {user_ID: 3, device_ID: 2}
+    {user_ID: 1, deviceID: 1},
+    {user_ID: 1, deviceID: 2},
+    {user_ID: 1, deviceID: 3},
+    {user_ID: 2, deviceID: 1},
+    {user_ID: 3, deviceID: 1},
+    {user_ID: 3, deviceID: 2}
 ]
 
 export const deviceSensorEntriesTable = [
-    {device_ID: 1, sensorID: 1},
-    {device_ID: 1, sensorID: 2},
-    {device_ID: 2, sensorID: 3},
-    {device_ID: 3, sensorID: 4},
+    {deviceID: 1, sensorID: 1},
+    {deviceID: 1, sensorID: 2},
+    {deviceID: 2, sensorID: 3},
+    {deviceID: 3, sensorID: 4},
 ]
 
 export const sensorTable = [
-    {sensorID: 1, sensorName: "TEMP_1", sensorType: "Temperature", channelCount: 2},
-    {sensorID: 2, sensorName: "IRRAD_1", sensorType: "Irradiance", channelCount: 1},
-    {sensorID: 3, sensorName: "PRESSURE_1", sensorType: "Pressure", channelCount: 2},
-    {sensorID: 4, sensorName: "TEMP_2", sensorType: "Temperature", channelCount: 2},
+    {sensorID: 1, sensorIdent: 'SEN-123', sensorName: "TEMP_1", sensorType: "Temperature", channelCount: 2},
+    {sensorID: 2, sensorIdent: 'SEN-456', sensorName: "IRRAD_1", sensorType: "Irradiance", channelCount: 1},
+    {sensorID: 3, sensorIdent: 'SEN-789', sensorName: "PRESSURE_1", sensorType: "Pressure", channelCount: 2},
+    {sensorID: 4, sensorIdent: 'SEN-123-0', sensorName: "TEMP_2", sensorType: "Temperature", channelCount: 2},
 ]
 
 export const sensorDataTable = [

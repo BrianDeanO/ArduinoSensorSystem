@@ -76,12 +76,46 @@ namespace backEndApp.Controllers {
 
             var dto = new DeviceDTO {
                 DeviceID = device.DeviceID
-                // Poll time
             };
             return new JsonResult(dto, new JsonSerializerOptions() {
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             });
+        }
+
+        [HttpGet("DeviceName")]
+        [ProducesResponseType(200, Type = typeof(Device))]
+        [ProducesResponseType(400)]
+        public IActionResult GetDeviceWithName([FromQuery] string deviceName) {
+            var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDeviceWithName(deviceName));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(device);
+            }
+        }
+
+        
+        [HttpGet("DeviceConfigInfo")]
+        [ProducesResponseType(200, Type = typeof(DeviceConfig))]
+        [ProducesResponseType(400)]
+        public IActionResult GetDeviceConfigInfo(int deviceId) {
+            if(!_deviceRepository.DeviceExists(deviceId)) {
+                return NotFound();
+            }
+
+            var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDevice(deviceId));
+
+            var deviceConfig = new DeviceConfig {
+                DevicePollingInterval = device.DevicePollingInterval
+            };
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(deviceConfig);
+            }
         }
 
         [HttpGet("{deviceId}/Sensors")]
@@ -138,7 +172,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateDevice([FromBody] DeviceDTO newDevice) {
+        public IActionResult CreateDevice([FromBody] DeviceDTO newDevice) {            
             if(newDevice == null) {
                 return BadRequest(ModelState);
             }
@@ -163,9 +197,11 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
+                var defaultPollingInterval = 1000 * 60 * 60 * 24;
+                
                 var dto = new DeviceDTO {
-                    DeviceID = deviceMap.DeviceID
-                    // Poll time
+                    DeviceID = deviceMap.DeviceID,
+                    DevicePollingInterval = defaultPollingInterval.ToString(),
                 };
                 return new JsonResult(dto, new JsonSerializerOptions() {
                     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -184,6 +220,7 @@ namespace backEndApp.Controllers {
             }
 
             else if(deviceId != updatedDevice.DeviceID) {
+                ModelState.AddModelError("", "Include DeviceID..."); /// CUSTOM ERROR MESSAGE??????? POSSIBLY?
                 return BadRequest(ModelState);
             }
 
