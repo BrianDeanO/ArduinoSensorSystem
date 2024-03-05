@@ -97,7 +97,7 @@ namespace backEndApp.Controllers {
         }
 
         
-        [HttpGet("DeviceConfigInfo")]
+        [HttpGet("{deviceId}/DeviceConfig")]
         [ProducesResponseType(200, Type = typeof(DeviceConfig))]
         [ProducesResponseType(400)]
         public IActionResult GetDeviceConfigInfo(int deviceId) {
