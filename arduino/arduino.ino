@@ -9,12 +9,8 @@
 char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
 #endif
 
-#ifndef SIMULATOR
-    BME280Sensor sen1("bme280_sensor1");
-    // ExampleSensor sen1("demo_sensor1");
-#else
-    ExampleSensor sen1("demo_sensor1");
-#endif
+BME280Sensor sen1("bme280_sensor1");
+// ExampleSensor sen1("demo_sensor1");
 
 Sensor* sensors[] = { &sen1 };
 
@@ -31,10 +27,8 @@ Sensor* sensors[] = { &sen1 };
 Device device(sensors, 1, &client);
 
 void setup() {
-#ifndef SIMULATOR
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, LOW);
-#endif
 
     Serial.begin(9600);
     DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
@@ -59,18 +53,24 @@ void setup() {
 
     device.init();
 
-#ifndef SIMULATOR
     digitalWrite(LED_BUILTIN, HIGH);
-#endif
 }
 
 void loop() {
-    device.update();
+    device.get_config(); // Update config in case settings have changed since our last poll
+    // If the next update time is in the past, update now.
+    if(device.next_update() <= client.get_time()) {
+        device.update();
+    }
 
-    uint16_t ms = device.next_update() - client.get_time();
-    DEBUG("Waiting %d\n", ms);
-    delay(ms);
+    // Wait a maximum of CONFIG_POLL_INTERVAL ms
+    uint32_t duration = (device.next_update() - client.get_time());
+    if(duration > CONFIG_POLL_INTERVAL)
+        duration = CONFIG_POLL_INTERVAL;
+    DEBUG("Waiting %d seconds\n", duration);
+    delay(duration * 1000);
+
 #ifdef NO_LTE
-    client.fake_last_time += ms;
+    client.fake_last_time += duration;
 #endif
 }

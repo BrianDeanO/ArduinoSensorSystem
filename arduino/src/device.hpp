@@ -18,13 +18,19 @@ public:
 	// to the server if the data does not fit in a single buffer.
 	virtual void update();
 
+	virtual void get_config();
+
 	void set_record_interval(unsigned interval) {
 		record_interval = interval;
 	}
 
 	// The timestamp of the next update
 	uint64_t next_update() {
-		return last_update + record_interval;
+		return _last_update + record_interval;
+	}
+
+	uint64_t last_update() {
+		return _last_update;
 	}
 
 	// Instruct sensors to acquire and cache a new data point.
@@ -38,7 +44,7 @@ private:
 	uint8_t num_sensors = 0; // MAX: 254
 
 	uint32_t _id; // The id we get from the database (our primary key)
-	unsigned record_interval = DEFAULT_RECORD_INTERVAL;
-	uint64_t last_update = 0;
+	unsigned record_interval;
+	uint64_t _last_update = 0;
 	DataClient* client;
 };

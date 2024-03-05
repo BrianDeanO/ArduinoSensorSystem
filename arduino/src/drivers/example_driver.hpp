@@ -5,6 +5,7 @@
 class ExampleSensor : public Sensor {
 public:
 	ExampleSensor(const char* id) : Sensor(id) {}
+	virtual void init() override { fake_value = 0; }
 
 	virtual bool acquire_channel_value(uint8_t channel, double& value) override
 	{

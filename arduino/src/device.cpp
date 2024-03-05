@@ -1,7 +1,12 @@
 #include "device.hpp"
 #include "../config.hpp"
 
-#define DEFAULT_DEVICE_JSON  R"({"deviceIdent":")" DEVICE_IDENT R"(","deviceName":")" DEFAULT_DEVICE_NAME R"(","deviceType":")" DEFAULT_DEVICE_TYPE R"("})"
+#define DEFAULT_DEVICE_JSON \
+	R"({"deviceIdent":")" DEVICE_IDENT \
+	R"(","deviceName":")" DEFAULT_DEVICE_NAME \
+	R"(","deviceType":")" DEFAULT_DEVICE_TYPE \
+	R"(","devicePollingInterval":")" DEFAULT_UPDATE_INTERVAL \
+	R"("})"
 
 void Device::init() {
 	for(unsigned i = 0; i < num_sensors; i++) {
@@ -11,6 +16,25 @@ void Device::init() {
     while(!register_device()) { 
         DEBUG("Failed to register device, retrying in 3 seconds\n");
         delay(3000); 
+	}
+}
+
+void Device::get_config() {
+	DEBUG("Getting config\n");
+	char buf[RESPONSE_BUFFER_SIZE];
+	char url[100];
+	sprintf(url, "/api/Device/%d/DeviceConfig/", _id);
+
+	int result = client->get(url, buf, RESPONSE_BUFFER_SIZE);
+	if(result > 0) {
+		JsonDocument j;
+		deserializeJson(j, buf);
+		if(j.containsKey("devicePollingInterval")) {
+			this->record_interval = j["devicePollingInterval"].as<uint32_t>();
+		}
+		else {
+			DEBUG("ERR: getConfig missing devicePollingInterval\n");
+		}
 	}
 }
 
@@ -28,8 +52,8 @@ bool Device::register_device() {
 		}
 
 		this->_id = j["deviceID"].as<uint32_t>();
+		this->record_interval = j["devicePollingInterval"].as<uint32_t>();
 		DEBUG("Got device db ID: %d\n", this->_id);
-		// TODO: Set poll time
 	}
 	// Check for 400 level response codes, indicating the identifier does not 
 	// yet exist
@@ -46,7 +70,6 @@ bool Device::register_device() {
 
 			this->_id = j["deviceID"].as<uint32_t>();
 			DEBUG("Got new device db ID: %d\n", this->_id);
-			// TODO: Set poll time
 		}
 		else {
 			DEBUG("ERR: sending device register command: %d\n", result);
@@ -110,7 +133,7 @@ void Device::update() {
 			}
 		}
 
-		last_update = current_time;
+		_last_update = current_time;
 	}
 }
 
