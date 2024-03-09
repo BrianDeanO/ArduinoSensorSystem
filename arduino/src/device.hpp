@@ -16,17 +16,17 @@ public:
 
 	// Acquire new data and send all cached data to the server. This may send multiple packets
 	// to the server if the data does not fit in a single buffer.
-	virtual void update();
+	virtual void update(uint64_t current_time);
 
 	virtual void get_config();
 
-	void set_record_interval(unsigned interval) {
-		record_interval = interval;
+	void set_update_interval(unsigned interval) {
+		update_interval = interval;
 	}
 
 	// The timestamp of the next update
 	uint64_t next_update() {
-		return _last_update + record_interval;
+		return _last_update + update_interval;
 	}
 
 	uint64_t last_update() {
@@ -44,7 +44,7 @@ private:
 	uint8_t num_sensors = 0; // MAX: 254
 
 	uint32_t _id; // The id we get from the database (our primary key)
-	unsigned record_interval;
+	unsigned update_interval = 30; // Default to 30 in case the server doesn't respond with a config interval
 	uint64_t _last_update = 0;
 	DataClient* client;
 };

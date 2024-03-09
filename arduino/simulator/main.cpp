@@ -39,17 +39,14 @@ void run_sim_device(std::string addr, unsigned port) {
 		time_t current_time = client.get_time();
 
 		device.get_config(); // Update config in case settings have changed since our last poll
-		// If the next update time is in the past, update now.
-		if(device.next_update() <= current_time) {
-			device.update();
-		}
+		device.update(current_time); // Will send data to the server if current_time is past the next update time
 
 		// Wait a maximum of CONFIG_POLL_INTERVAL ms
 		time_t duration = (device.next_update() - current_time);
-		if(duration > CONFIG_POLL_INTERVAL)
+		if(duration > CONFIG_POLL_INTERVAL || duration < 0)
 			duration = CONFIG_POLL_INTERVAL;
 		std::cout << "Sleeping for " << duration << " seconds" << std::endl;
-		usleep(duration * 100000);
+		usleep(duration * 1000000);
 	}
 }
 

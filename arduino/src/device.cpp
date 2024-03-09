@@ -5,8 +5,8 @@
 	R"({"deviceIdent":")" DEVICE_IDENT \
 	R"(","deviceName":")" DEFAULT_DEVICE_NAME \
 	R"(","deviceType":")" DEFAULT_DEVICE_TYPE \
-	R"(","devicePollingInterval":")" DEFAULT_UPDATE_INTERVAL \
-	R"("})"
+	R"(","deviceUpdateInterval":)" DEFAULT_UPDATE_INTERVAL \
+	R"(})"
 
 void Device::init() {
 	for(unsigned i = 0; i < num_sensors; i++) {
@@ -29,11 +29,17 @@ void Device::get_config() {
 	if(result > 0) {
 		JsonDocument j;
 		deserializeJson(j, buf);
-		if(j.containsKey("devicePollingInterval")) {
-			this->record_interval = j["devicePollingInterval"].as<uint32_t>();
+		DEBUG("Got config: %s\n", buf);
+		if(j.containsKey("deviceUpdateInterval")) {
+			DEBUG("Got polling interval %d\n", j["deviceUpdateInterval"].as<uint32_t>());
+			this->update_interval = j["deviceUpdateInterval"].as<uint32_t>();
+			if(this->update_interval < MIN_UPDATE_INTERVAL) {
+				DEBUG("ERR: getConfig interval too short, setting to 10 seconds\n");
+				this->update_interval = MIN_UPDATE_INTERVAL;
+			}
 		}
 		else {
-			DEBUG("ERR: getConfig missing devicePollingInterval\n");
+			DEBUG("ERR: getConfig missing deviceUpdateInterval\n");
 		}
 	}
 }
@@ -52,7 +58,7 @@ bool Device::register_device() {
 		}
 
 		this->_id = j["deviceID"].as<uint32_t>();
-		this->record_interval = j["devicePollingInterval"].as<uint32_t>();
+		this->update_interval = j["deviceUpdateInterval"].as<uint32_t>();
 		DEBUG("Got device db ID: %d\n", this->_id);
 	}
 	// Check for 400 level response codes, indicating the identifier does not 
@@ -89,9 +95,7 @@ bool Device::register_device() {
 	return true;
 }
 
-void Device::update() {
-	uint64_t current_time = client->get_time();
-
+void Device::update(uint64_t current_time) {
 	if(current_time >= next_update()) {
 		DEBUG("Starting update -----\n");
 		acquire_data(); // Read data from sensors into cache

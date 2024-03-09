@@ -70,15 +70,17 @@ public:
 
 	virtual int available() override
 	{
+		const int attempts = 5;
+		const int byte_threshold = 5;
 		// DEBUG("DBG: available: %d\n", serial->available());
 
 		// The board has a small buffer for bytes written to serial,
 		// so the proxy writes in small chunks of bytes. Once we've
 		// read all the bytes in the buffer, we request more by sending
 		// a "MORE PLS" line to the proxy.
-		if (!requested_more && serial->available() < 5) {
-			int timeout = 5;
-			while(serial->available() < 5 && timeout > 0) {
+		if (!requested_more && serial->available() < byte_threshold) {
+			int timeout = attempts;
+			while(serial->available() < byte_threshold && timeout > 0) {
 				delay(100);
 				timeout -= 1;
 			}
@@ -89,7 +91,7 @@ public:
 				requested_more = true;
 			}
 		}
-		else if(serial->available() >= 5) {
+		else if(serial->available() >= byte_threshold) {
 			requested_more = false;
 		}
 
