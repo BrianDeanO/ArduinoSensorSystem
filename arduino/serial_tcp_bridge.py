@@ -52,7 +52,7 @@ def process_lines(ser, state: State):
 		if state == State.IN_RESPONSE:
 			if line == b'MORE PLS\n':
 				if len(response_bytes) > 0:
-					end = min(64, len(response_bytes))
+					end = min(50, len(response_bytes))
 					ser.write(response_bytes[:end])
 					print("Wrote " + str(end) + " bytes")
 					response_bytes = response_bytes[end:]

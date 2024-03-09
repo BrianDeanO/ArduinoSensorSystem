@@ -70,7 +70,7 @@ public:
 
 	virtual int available() override
 	{
-		const int attempts = 5;
+		const int attempts = 3;
 		const int byte_threshold = 5;
 		// DEBUG("DBG: available: %d\n", serial->available());
 

@@ -75,7 +75,8 @@ namespace backEndApp.Controllers {
             }
 
             var dto = new DeviceDTO {
-                DeviceID = device.DeviceID
+                DeviceID = device.DeviceID,
+                DeviceUpdateInterval = device.DeviceUpdateInterval
             };
             return new JsonResult(dto, new JsonSerializerOptions() {
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -240,6 +241,30 @@ namespace backEndApp.Controllers {
             }
 
             return Ok("Successfully Updated.");
+        }
+
+        [HttpPost("Poke/{deviceId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult PokeDevice(int deviceId) {            
+            if(!_deviceRepository.DeviceExists(deviceId)) {
+                return NotFound();
+            }
+
+            var device = _deviceRepository.GetDevice(deviceId);
+            if(device == null) {
+                ModelState.AddModelError("", "No such device found");
+                return StatusCode(422, ModelState);
+            }
+
+            device.DeviceLastSeen = DateTime.Now;
+
+            if(!_deviceRepository.UpdateDevice(device)) {
+                ModelState.AddModelError("", "Error while updating last seen time");
+                return BadRequest(ModelState);
+            } else {
+                return Ok("Successfully Updated.");
+            }
         }
 
         [HttpDelete("{deviceId}")]

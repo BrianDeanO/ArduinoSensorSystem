@@ -77,6 +77,7 @@ void loop() {
     time_t current_time = client.get_time();
     DEBUG("Current time: %lu\n", current_time);
 
+	device.poke_device(); // Send a "poke" to the server to let it know we're still alive
     device.get_config(); // Update config in case settings have changed since our last poll
     device.update(current_time); // Will send data to the server if current_time is past the next update time
 

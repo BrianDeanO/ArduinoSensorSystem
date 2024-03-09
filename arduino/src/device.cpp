@@ -32,16 +32,20 @@ void Device::get_config() {
 		DEBUG("Got config: %s\n", buf);
 		if(j.containsKey("deviceUpdateInterval")) {
 			DEBUG("Got polling interval %d\n", j["deviceUpdateInterval"].as<uint32_t>());
-			this->update_interval = j["deviceUpdateInterval"].as<uint32_t>();
-			if(this->update_interval < MIN_UPDATE_INTERVAL) {
-				DEBUG("ERR: getConfig interval too short, setting to 10 seconds\n");
-				this->update_interval = MIN_UPDATE_INTERVAL;
-			}
+			set_update_interval(j["deviceUpdateInterval"].as<uint32_t>());
 		}
 		else {
 			DEBUG("ERR: getConfig missing deviceUpdateInterval\n");
 		}
 	}
+}
+
+void Device::poke_device() {
+	DEBUG("Poking device\n");
+	char url[100];
+	sprintf(url, "/api/Device/Poke/%d", _id);
+
+	client->post(url, nullptr, nullptr, RESPONSE_BUFFER_SIZE);
 }
 
 bool Device::register_device() {
@@ -58,7 +62,8 @@ bool Device::register_device() {
 		}
 
 		this->_id = j["deviceID"].as<uint32_t>();
-		this->update_interval = j["deviceUpdateInterval"].as<uint32_t>();
+		if(j.containsKey("deviceUpdateInterval"))
+			set_update_interval(j["deviceUpdateInterval"].as<uint32_t>());
 		DEBUG("Got device db ID: %d\n", this->_id);
 	}
 	// Check for 400 level response codes, indicating the identifier does not 

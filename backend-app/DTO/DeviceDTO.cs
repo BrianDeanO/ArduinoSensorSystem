@@ -10,6 +10,7 @@ public class DeviceDTO {
     public string? DeviceName { get; set; }
     public string? DeviceType { get; set; }
     public string? DeviceZipCode { get; set; }
+    public DateTime? DeviceLastSeen { get; set; }
 
 
     // Device Configuration Fields
