@@ -275,7 +275,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
 
     async function addUserToDB() {
         setAddUserAttempt(true);
-        let canUpdate = true;
+        let canAdd = true;
         const hashedPassword = shajs('sha256').update(newUserPassword).digest('hex');
 
         users.forEach((user) => {
@@ -284,12 +284,12 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 user.userLastName === newUserLastName &&
                 user.userPassword === hashedPassword
             ) {
-                canUpdate = false;
+                canAdd = false;
                 return;
             }
         });
 
-        if(canUpdate) {
+        if(canAdd) {
             await axios.post(`${proxyURL}/api/User`, {
                 userType: newUserType,
                 userFirstName: newUserFirstName,
@@ -336,7 +336,10 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         
                         else {
                             userDevices.forEach((ud) => {
-                                postedCorrectly = postUserDevice(tempUser.userID, ud.deviceID);
+                                if(ud.isSelected) {
+                                    postedCorrectly = postUserDevice(tempUser.userID, ud.deviceID);
+                                }
+
                                 if(!postedCorrectly) {
                                     return;
                                 }
@@ -707,7 +710,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                         {user.userFirstName} {user.userLastName}
                                     </div>
                                     <div className="userTypeText">
-                                        {user.userType}
+                                        {user.userType.toUpperCase()}
                                     </div>
                                     <button 
                                         className="userInfoEditButton"
@@ -731,8 +734,10 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         <button 
                             className="ManageUserPrimaryButton"
                             onClick={(e) => {
+                                const oldUserPasswordHashed = shajs('sha256').update(oldUserPassword).digest('hex');
+
                                 if((updatePassword && 
-                                        (oldUserPassword === selectedUser.userPassword) && (newUserPassword !== '')) ||
+                                        (oldUserPasswordHashed === selectedUser.userPassword) && (newUserPassword !== '')) ||
                                     !updatePassword) {
                                         console.log("PASSWORD IS GOOD");
                                     updateUserInDB();
@@ -773,6 +778,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 } else {
                                     setAddUserAttempt(true);
                                     setAddedCorrectly(false);
+                                    setNewUserType('');
                                     setError('Some Fields are Empty.')
                                 }
                             }}>
@@ -794,6 +800,10 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 addUser(true);
                                 setNewUserFirstName('');
                                 setNewUserLastName('');
+                                setOldUserPassword('');
+                                setNewUserPassword('');
+                                setNewUserType('');
+                                setSelectedUserID(0);
                             }}>
                                 Add User
                         </button>
