@@ -7,18 +7,23 @@
 // Identifiers
 #define DEVICE_IDENT "devTest1"
 #define SENSOR_EXAMPLE_IDENT DEVICE_IDENT "tc1"
+
+// Configuration ///////////////////////////////
 #define DEFAULT_DEVICE_TYPE "Test Device"
 #define DEFAULT_DEVICE_NAME "Test device 1"
+#define DEFAULT_UPDATE_INTERVAL "60" // 60 seconds
 
-// Configuration
-#define DATAPOINT_CACHE_SIZE 50
-#define DEFAULT_RECORD_INTERVAL 5000
+// Interval to poll for configuration, in case the data acquisition rate has changed
+#define CONFIG_POLL_INTERVAL 30 
+// Minimum allowed update interval, to prevent accidentally flooding the database with points
+#define MIN_UPDATE_INTERVAL 10 
 #define DEFAULT_SERVER_ADDRESS "localhost"
 #define DEFAULT_SERVER_PORT 8080
+#define DATAPOINT_CACHE_SIZE 50
 
 #define RESPONSE_BUFFER_SIZE 512
 
-// More
+////////////////////////////////////////////////
 #ifndef SIMULATOR
 	#include "Arduino.h"
 	#define LTE_SHIELD_HW_SERIAL Serial1

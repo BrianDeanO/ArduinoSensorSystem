@@ -1,7 +1,52 @@
 #include "device.hpp"
 #include "../config.hpp"
 
-#define DEFAULT_DEVICE_JSON  R"({"deviceIdent":")" DEVICE_IDENT R"(","deviceName":")" DEFAULT_DEVICE_NAME R"(","deviceType":")" DEFAULT_DEVICE_TYPE R"("})"
+#define DEFAULT_DEVICE_JSON \
+	R"({"deviceIdent":")" DEVICE_IDENT \
+	R"(","deviceName":")" DEFAULT_DEVICE_NAME \
+	R"(","deviceType":")" DEFAULT_DEVICE_TYPE \
+	R"(","deviceUpdateInterval":)" DEFAULT_UPDATE_INTERVAL \
+	R"(})"
+
+void Device::init() {
+	for(unsigned i = 0; i < num_sensors; i++) {
+		sensors[i]->init();
+	}
+
+    while(!register_device()) { 
+        DEBUG("Failed to register device, retrying in 3 seconds\n");
+        delay(3000); 
+	}
+}
+
+void Device::get_config() {
+	DEBUG("Getting config\n");
+	char buf[RESPONSE_BUFFER_SIZE];
+	char url[100];
+	sprintf(url, "/api/Device/%d/DeviceConfig/", _id);
+
+	int result = client->get(url, buf, RESPONSE_BUFFER_SIZE);
+	if(result > 0) {
+		JsonDocument j;
+		deserializeJson(j, buf);
+		DEBUG("Got config: %s\n", buf);
+		if(j.containsKey("deviceUpdateInterval")) {
+			DEBUG("Got polling interval %d\n", j["deviceUpdateInterval"].as<uint32_t>());
+			set_update_interval(j["deviceUpdateInterval"].as<uint32_t>());
+		}
+		else {
+			DEBUG("ERR: getConfig missing deviceUpdateInterval\n");
+		}
+	}
+}
+
+void Device::poke_device() {
+	DEBUG("Poking device\n");
+	char url[100];
+	sprintf(url, "/api/Device/Poke/%d", _id);
+
+	client->post(url, nullptr, nullptr, RESPONSE_BUFFER_SIZE);
+}
 
 bool Device::register_device() {
 	DEBUG("Sending register command\n");
@@ -17,8 +62,9 @@ bool Device::register_device() {
 		}
 
 		this->_id = j["deviceID"].as<uint32_t>();
+		if(j.containsKey("deviceUpdateInterval"))
+			set_update_interval(j["deviceUpdateInterval"].as<uint32_t>());
 		DEBUG("Got device db ID: %d\n", this->_id);
-		// TODO: Set poll time
 	}
 	// Check for 400 level response codes, indicating the identifier does not 
 	// yet exist
@@ -35,7 +81,6 @@ bool Device::register_device() {
 
 			this->_id = j["deviceID"].as<uint32_t>();
 			DEBUG("Got new device db ID: %d\n", this->_id);
-			// TODO: Set poll time
 		}
 		else {
 			DEBUG("ERR: sending device register command: %d\n", result);
@@ -55,9 +100,7 @@ bool Device::register_device() {
 	return true;
 }
 
-void Device::update() {
-	uint64_t current_time = client->get_time();
-
+void Device::update(uint64_t current_time) {
 	if(current_time >= next_update()) {
 		DEBUG("Starting update -----\n");
 		acquire_data(); // Read data from sensors into cache
@@ -99,7 +142,7 @@ void Device::update() {
 			}
 		}
 
-		last_update = current_time;
+		_last_update = current_time;
 	}
 }
 

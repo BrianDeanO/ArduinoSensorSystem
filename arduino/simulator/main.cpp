@@ -27,24 +27,27 @@ void run_sim_device(std::string addr, unsigned port) {
 
 	std::vector<Sensor*> sensors;
 	std::string input;
-	std::cout << "Enter an update interval in seconds > ";
-	std::getline(std::cin, input);
-	time_t update_interval = std::stoi(input);
 
 	sensors.push_back(new ExampleSensor("sim_temp"));
 	Device device(sensors.data(), sensors.size(), &client);
-	device.set_record_interval(update_interval);
 
 	std::cout << "Registering device..." << std::endl;
-	device.register_device();
+	device.init();
 
 	std::cout << "Simulating device. Ctrl+C to exit." << std::endl;
 	while(true) {
-		std::cout << "Update event." << std::endl;
-		device.update();
-		time_t duration = (device.next_update() - client.get_time()) * 1000000;
-		duration = duration > 0 ? duration : 0; // Ensure we don't sleep for a negative duration
-		usleep(duration);
+		time_t current_time = client.get_time();
+
+		device.poke_device(); // Send a "poke" to the server to let it know we're still alive
+		device.get_config(); // Update config in case settings have changed since our last poll
+		device.update(current_time); // Will send data to the server if current_time is past the next update time
+
+		// Wait a maximum of CONFIG_POLL_INTERVAL ms
+		time_t duration = (device.next_update() - current_time);
+		if(duration > CONFIG_POLL_INTERVAL || duration < 0)
+			duration = CONFIG_POLL_INTERVAL;
+		std::cout << "Sleeping for " << duration << " seconds" << std::endl;
+		usleep(duration * 1000000);
 	}
 }
 

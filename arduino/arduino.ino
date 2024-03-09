@@ -3,12 +3,16 @@
 #include "config.hpp"
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
+#include "src/drivers/bme280_driver.hpp"
+#include "src/util.hpp"
 
 #if DEBUG_MODE == 1
 char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
 #endif
 
-ExampleSensor sen1("demo_sensor1");
+BME280Sensor sen1("bme280_sensor1");
+// ExampleSensor sen1("demo_sensor1");
+
 Sensor* sensors[] = { &sen1 };
 
 #ifndef NO_LTE
@@ -24,10 +28,8 @@ Sensor* sensors[] = { &sen1 };
 Device device(sensors, 1, &client);
 
 void setup() {
-#ifndef SIMULATOR
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, LOW);
-#endif
 
     Serial.begin(9600);
     DEBUG_EXPR(while(!Serial)); // Wait for Serial (USB Serial connection) to start up for logging
@@ -48,25 +50,45 @@ void setup() {
     }
 
     g_lte.autoTimeZone(true);
-#endif
+#else
+    // If we're communicating over serial, we need a timestamp to base our fake time on
+    Serial.write("REQUEST_TIME\n");
+    Serial.flush();
+    char buf[32];
+    int bytes = Serial.readBytesUntil('\n', buf, 32);
+    buf[bytes] = '\0';
+    DEBUG("Got timestamp %s\n", buf);
 
-    while(!device.register_device()) { 
-        DEBUG("Failed to register device, retrying in 3 seconds\n");
-        delay(3000); 
+    client.fake_last_time = strtoull(buf, nullptr);
+    if(client.fake_last_time == 0) {
+        DEBUG("Failed to parse time from serial, using 0\n");
     }
-
-#ifndef SIMULATOR
-    digitalWrite(LED_BUILTIN, HIGH);
+    else {
+        DEBUG("Got time from serial: %llu\n", client.fake_last_time);
+    }
 #endif
+
+    device.init();
+
+    digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() {
-    device.update();
+    time_t current_time = client.get_time();
+    DEBUG("Current time: %lu\n", current_time);
 
-    uint16_t ms = device.next_update() - client.get_time();
-    DEBUG("Waiting %d\n", ms);
-    delay(ms);
+	device.poke_device(); // Send a "poke" to the server to let it know we're still alive
+    device.get_config(); // Update config in case settings have changed since our last poll
+    device.update(current_time); // Will send data to the server if current_time is past the next update time
+
+    // Wait a maximum of CONFIG_POLL_INTERVAL ms
+    uint32_t duration = (device.next_update() - current_time);
+    if(duration > CONFIG_POLL_INTERVAL || duration < 0)
+        duration = CONFIG_POLL_INTERVAL;
+    DEBUG("Waiting %d seconds\n", duration);
+    delay(duration * 1000);
+
 #ifdef NO_LTE
-    client.fake_last_time += ms;
+    client.fake_last_time += duration;
 #endif
 }

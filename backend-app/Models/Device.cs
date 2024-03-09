@@ -15,11 +15,14 @@ public class Device {
 
 
     // Device Configuration Fields
-    public string DevicePollingInterval { get; set; }
+    
+    // Interval in seconds which the device will acquire and send new data.
+    public int DeviceUpdateInterval { get; set; }
     
     public string? DeviceName { get; set; }
     public string? DeviceType { get; set; }
     public string? DeviceZipCode { get; set; }
+    public DateTime? DeviceLastSeen { get; set; }
 
     // The relationship to MANY sensors
     public ICollection<Sensor> Sensors { get; set; }
