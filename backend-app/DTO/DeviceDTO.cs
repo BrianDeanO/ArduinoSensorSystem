@@ -13,5 +13,5 @@ public class DeviceDTO {
 
 
     // Device Configuration Fields
-    public string? DevicePollingInterval { get; set; }
+    public int? DeviceUpdateInterval { get; set; }
 }

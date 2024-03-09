@@ -108,7 +108,7 @@ namespace backEndApp.Controllers {
             var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDevice(deviceId));
 
             var deviceConfig = new DeviceConfig {
-                DevicePollingInterval = device.DevicePollingInterval
+                DeviceUpdateInterval = device.DeviceUpdateInterval
             };
 
             if(!ModelState.IsValid) {
@@ -197,11 +197,11 @@ namespace backEndApp.Controllers {
                     return StatusCode(500, ModelState);
                 }
 
-                var defaultPollingInterval = 1000 * 60 * 60 * 24;
+                var defaultPollingInterval = 60 * 60 * 24;
                 
                 var dto = new DeviceDTO {
                     DeviceID = deviceMap.DeviceID,
-                    DevicePollingInterval = defaultPollingInterval.ToString(),
+                    DeviceUpdateInterval = defaultPollingInterval,
                 };
                 return new JsonResult(dto, new JsonSerializerOptions() {
                     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,

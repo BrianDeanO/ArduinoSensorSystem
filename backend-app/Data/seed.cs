@@ -47,7 +47,7 @@ namespace backEndApp
                         DeviceName = "RICHLAND_NW_1",
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99352",
-                        DevicePollingInterval = "86400000",
+                        DeviceUpdateInterval = 86400000,
 
                         Sensors = new List<Sensor>() {
                             new Sensor() {
@@ -307,7 +307,7 @@ namespace backEndApp
                         DeviceName = "KENNEWICK_N_1",
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99336",
-                        DevicePollingInterval = "86400000",
+                        DeviceUpdateInterval = 86400000,
                         
                         Sensors = new List<Sensor>() {
                             new Sensor() {
@@ -395,7 +395,7 @@ namespace backEndApp
                         DeviceName = "PASCO_E_1",
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99301",
-                        DevicePollingInterval = "86400000",
+                        DeviceUpdateInterval = 86400000,
 
                         Sensors = new List<Sensor>() {
                             new Sensor() {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using backEndApp.Data;
 
@@ -11,9 +12,11 @@ using backEndApp.Data;
 namespace backEndApp.Migrations
 {
     [DbContext(typeof(SensorSystemContext))]
-    partial class SensorSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20240308235847_DeviceUpdateInterval_int")]
+    partial class DeviceUpdateIntervalint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
