@@ -5,6 +5,7 @@ import serial
 import sys
 import textwrap
 from enum import Enum
+from datetime import datetime
 
 if len(sys.argv) != 3:
 	print("Usage: " + sys.argv[0] + " <address> <port>")
@@ -25,6 +26,15 @@ def process_lines(ser, state: State):
 	response_bytes = b''
 	while True:
 		line = ser.readline()
+		if line == b'REQUEST_TIME\n':
+			# Sent the current time since epoch to the device so it has a timestamp it can
+			# use to send points without having duplicate keys
+			now = (datetime.now() - datetime(1970, 1, 1)).total_seconds()
+			now_bytes = (str(int(now)) + '\n').encode("utf-8")
+			ser.write(now_bytes)
+			print("Sending timestamp")
+			continue
+
 		if state == State.IN_REQUEST:
 			if line == b'REQUEST END\n':
 				state = State.IN_RESPONSE

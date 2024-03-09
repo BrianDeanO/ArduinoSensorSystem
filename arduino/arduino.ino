@@ -4,6 +4,7 @@
 #include "src/device.hpp"
 #include "src/drivers/example_driver.hpp"
 #include "src/drivers/bme280_driver.hpp"
+#include "src/util.hpp"
 
 #if DEBUG_MODE == 1
 char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
@@ -49,6 +50,22 @@ void setup() {
     }
 
     g_lte.autoTimeZone(true);
+#else
+    // If we're communicating over serial, we need a timestamp to base our fake time on
+    Serial.write("REQUEST_TIME\n");
+    Serial.flush();
+    char buf[32];
+    int bytes = Serial.readBytesUntil('\n', buf, 32);
+    buf[bytes] = '\0';
+    DEBUG("Got timestamp %s\n", buf);
+
+    client.fake_last_time = strtoull(buf, nullptr);
+    if(client.fake_last_time == 0) {
+        DEBUG("Failed to parse time from serial, using 0\n");
+    }
+    else {
+        DEBUG("Got time from serial: %llu\n", client.fake_last_time);
+    }
 #endif
 
     device.init();
@@ -57,15 +74,15 @@ void setup() {
 }
 
 void loop() {
+    time_t current_time = client.get_time();
+    DEBUG("Current time: %lu\n", current_time);
+
     device.get_config(); // Update config in case settings have changed since our last poll
-    // If the next update time is in the past, update now.
-    if(device.next_update() <= client.get_time()) {
-        device.update();
-    }
+    device.update(current_time); // Will send data to the server if current_time is past the next update time
 
     // Wait a maximum of CONFIG_POLL_INTERVAL ms
-    uint32_t duration = (device.next_update() - client.get_time());
-    if(duration > CONFIG_POLL_INTERVAL)
+    uint32_t duration = (device.next_update() - current_time);
+    if(duration > CONFIG_POLL_INTERVAL || duration < 0)
         duration = CONFIG_POLL_INTERVAL;
     DEBUG("Waiting %d seconds\n", duration);
     delay(duration * 1000);
