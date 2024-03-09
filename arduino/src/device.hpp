@@ -19,7 +19,7 @@ public:
 	virtual void update(uint64_t current_time);
 
 	virtual void get_config();
-	void Device::poke_device();
+	void poke_device();
 
 	// The timestamp of the next update
 	uint64_t next_update() {
