@@ -1,5 +1,5 @@
 ## Web App In Progress (Color Variants Not Final)
-### Front Page - Device and Sensor Selected (Data will soon be presented in graph format):
+### Front Page - Device, Sensor, and Channel Selected:
 ![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/2bf68922-7429-4a10-ae78-0dc7c648e589)
 
 ### Device Configuration Page:
