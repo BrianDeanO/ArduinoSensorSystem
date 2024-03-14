@@ -4,7 +4,7 @@ import { proxyURL } from "../../variables.js";
 import axios from "axios";
 
 interface ConfigureSensorProps {
-    configureSensor: (configuringSensor: boolean) => void;
+    configureSensor: ((configuringSensor: boolean) => void);
     selectedSensorID: number;
 }
 
@@ -14,26 +14,26 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     selectedSensorID
 }: ConfigureSensorProps
 ) => {  
-
     const [devices, setDevices] = useState([] as DeviceType[]);
 
     const [newSensorName, setNewSensorName] = useState('');
     const [isSensorNameEdit, setIsSensorNameEdit ] = useState(false);
 
     const [newSensorIdent, setNewSensorIdent] = useState('');
-    const [isSensorIdentEdit, setIsSensorIdentEdit] = useState(false);
 
     const [newSensorType, setNewSensorType] = useState('');
     const [isSensorTypeEdit, setIsNewSensorTypeEdit] = useState(false);
 
     const [newSensorChannelCount, setNewSensorChannelCount] = useState(0);
-    const [isSensorChannelCountEdit, setIsSensorChannelCountEdit] = useState(false);
 
     const [newSensorDeviceID, setNewSensorDeviceID] = useState(0);
 
+    const [isDeletingSensor, setIsDeletingSensor] = useState(false);
+
     const [sensorUpdateAttempt, setSensorUpdateAttempt] = useState(false);
     const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
-    const [postError, setPostError] = useState(false);
+    const [updateDeleteMessage, setUpdateDeleteMessage] = useState('');
+    const [postError, setPostError] = useState('');
 
     const getDevices = useCallback(async() => {
         let tempDevices: DeviceType[] = [];
@@ -82,14 +82,15 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     }, [getDevices, getSensor, selectedSensorID])
 
 
-    async function updateSensor() {
+    async function updateSensor(deletedSensor: boolean) {
         await axios.put(`${proxyURL}/api/Sensor/${selectedSensorID}`, {
             sensorID: selectedSensorID,
             sensorIdent: newSensorIdent,
             sensorName: newSensorName,
             sensorType: newSensorType,
             channelCount: newSensorChannelCount,
-            deviceID: newSensorDeviceID
+            deviceID: newSensorDeviceID,
+            sensorIsDeleted: deletedSensor
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -97,6 +98,8 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
         })
         .then(function (response) {
             setUpdatedCorrectly(true);
+            setUpdateDeleteMessage(deletedSensor 
+                    ? 'Successfully Deleted Sensor.' : 'Successfully Updated Sensor.');
         }).catch(function (error) {
             console.log(error);
             setPostError(error.code)
@@ -118,7 +121,7 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                         {updatedCorrectly ?  
                             <div className="UpdateSensorErrorSubText">   
                                 <span >
-                                    {`Successfully Updated Sensor`}
+                                    {updateDeleteMessage}
                                 </span>
                             </div> : 
                             <div className="UpdateSensorErrorSubText">
@@ -242,11 +245,32 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
             }
             {
                 sensorUpdateAttempt ? null :
+                isDeletingSensor ? 
+                    <div className="SensorConfigButtonBox">
+                        <div className="SensorConfigDeleteText">
+                            Confirm Sensor Deletion
+                        </div>
+                        <button 
+                            className="SensorConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingSensor(false);
+                                updateSensor(true);
+                            }}>
+                                Yes, Delete Sensor.
+                        </button>
+                        <button 
+                            className="SensorConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingSensor(false);
+                            }}>
+                                No, Cancel.
+                        </button>
+                    </div> :
                     <div className="SensorConfigButtonBox">
                         <button 
                             className="SensorConfigUpdateButton"
                             onClick={(e) => {
-                                updateSensor();
+                                updateSensor(false);
                             }}>
                                 Save and Update Sensor
                         </button>
@@ -257,6 +281,13 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                                 console.log('new device ID', newSensorDeviceID)
                             }}>
                                 Cancel All Changes and Exit
+                        </button>
+                        <button 
+                            className="SensorConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingSensor(true);
+                            }}>
+                                Delete Sensor
                         </button>
                     </div>
             }

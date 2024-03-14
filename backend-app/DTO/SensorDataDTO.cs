@@ -1,7 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 namespace backEndApp.DTO;
 public class SensorDataDTO {

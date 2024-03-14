@@ -11,6 +11,7 @@ public class DeviceDTO {
     public string? DeviceType { get; set; }
     public string? DeviceZipCode { get; set; }
     public DateTime? DeviceLastSeen { get; set; }
+    public bool DeviceIsDeleted { get; set; }
 
 
     // Device Configuration Fields

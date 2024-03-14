@@ -6,10 +6,9 @@ CSS Styles for the Manage Users Page
 .ManageUsersMainBox {
     display: flex;
     flex-direction: row;
-    width: 778px;
+    width: 777px;
     height: 800px;
-    /* background-color: rgb(230, 230, 230); */
-    background-color: rgb(103, 176, 199);
+    background-color: #607a8f;
     margin: 0px 0px 0px 0px;
     border-right-style: solid;
     border-color: black;
@@ -43,7 +42,7 @@ CSS Styles for the Manage Users Page
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -100,7 +99,7 @@ CSS Styles for the Manage Users Page
     font-size: 15pt;
     text-align: center;
     /* text-decoration: underline; */
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -196,10 +195,11 @@ CSS Styles for the Manage Users Page
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
+    border-color: black;
 }
 .UpdatePasswordFieldsBox {
     display: flex;
@@ -282,14 +282,27 @@ CSS Styles for the Manage Users Page
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: rgb(216, 216, 216);
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
+    border-color: black;
     
     overflow-y: auto;
     scroll-behavior: auto;  /*need hiden and auto*/
+}
+.DeviceOptionTopSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 52px;
+    width: 450px;
+    margin: 40px 0px 0px 5px;
+    text-align: center;
+    background-color: #a2b7cf;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
 }
 .DeviceOptionSubBox {
     display: flex;
@@ -298,7 +311,7 @@ CSS Styles for the Manage Users Page
     width: 450px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: rgb(164, 227, 231);
+    background-color: #a2b7cf;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -307,12 +320,19 @@ CSS Styles for the Manage Users Page
 .DeviceOptionTitleText {
     display: flex;
     flex-direction: row;
-    height: 50px;
-    width: 450px;
-    margin: 3px 0px 0px 10px;
+    position:absolute;
+    height: 35px;
+    width: 470px;
+    margin: 0px 0px 0px 0px;
+    border-radius: 5px;
     font-size: 16pt;
     font-weight: bold;
     color: rgb(0, 0, 0);
+    background-color: #DEE2E4;
+
+    >div {
+        margin: 0px 0px 0px 10px;
+    }
 }
 .DeviceOptionTitleSubText {
     display: flex;
@@ -408,7 +428,7 @@ CSS Styles for the Manage Users Page
 .ManageUsersButtonBox {
     display: flex;
     flex-direction: column;
-    height: 105px;
+    height: 305px;
     width: 280px;
     margin: 5px 0px 0px 0px;
     align-items: center;
@@ -429,7 +449,7 @@ CSS Styles for the Manage Users Page
 }
 .ManageUsersSecondaryButton {
     width: 220px;
-    height: 30px;
+    height: 40px;
     background-color: rgb(213, 213, 213);
     border-radius: 5px;
     border-style: solid;
@@ -443,6 +463,30 @@ CSS Styles for the Manage Users Page
 }
 .ManageUserPrimaryButton:hover, .ManageUsersSecondaryButton:hover, .UpdatePasswordButton:hover {
     background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+.ManageUsersDeleteText {
+    color: rgb(255, 255, 255);
+    margin: 8px auto 0px auto;
+    font-size: 14pt;
+    font-weight: 500;
+}
+.ManageUsersDeleteButton {
+    width: 160px;
+    height: 30px;
+    background-color: rgb(190, 0, 0);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(255, 255, 255);
+    margin: 20px 0px 0px 0px;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.ManageUsersDeleteButton:hover {
+    background-color: rgb(230, 0, 0);
     cursor: pointer;
 }
 

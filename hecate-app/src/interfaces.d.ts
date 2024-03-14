@@ -4,14 +4,18 @@ export interface DeviceType {
     deviceName: string;
     deviceType: string;
     deviceZipCode: string;
-    devicePollingInterval: string;
+    deviceUpdateInterval: number;
+    deviceLastSeen: string;
+    deviceIsDeleted: boolean;
 }
 
 export interface DeviceDTOType {
     deviceName: string;
     deviceType: string;
     deviceZipCode: string;
-    devicePollingInterval: string;
+    deviceUpdateInterval: number;
+    deviceLastSeen: string;
+    deviceIsDeleted: boolean;
 }
 
 export interface UserDeviceSelectedType {
@@ -23,23 +27,6 @@ export interface UserDeviceType {
     userID: number;
     deviceID: number;
 }
-
-// export interface UserDeviceType {
-//     userID: number;
-//     deviceID: number;
-//     user: userType;
-//     device: deviceType;
-// }
-
-// export interface PollingTimeIntervals {
-//     SEC: string,
-//     // 'MIN': string,
-//     // 'HOUR': string,
-//     // 'DAY': string,
-//     // 'WEEK': string,
-//     // 'MONTH': string,
-// }
-
 export interface SelectedDevice {
     selectedDeviceID: number;
 }
@@ -64,6 +51,7 @@ export interface UserType {
     userEmail: string;
     userPhone: string;
     userNotification: boolean;
+    userIsDeleted: boolean;
 }
 
 export interface SensorType {
@@ -73,6 +61,7 @@ export interface SensorType {
     sensorType: string;
     channelCount: number;
     deviceID: number;
+    sensorIsDeleted: boolean;
 }
 
 export interface SensorDTOType {
@@ -80,6 +69,7 @@ export interface SensorDTOType {
     sensorType: string;
     channelCount: number;
     deviceID: number;
+    sensorIsDeleted: boolean;
 }
 
 export interface SensorDataType {

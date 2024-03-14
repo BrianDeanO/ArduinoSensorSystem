@@ -59,6 +59,7 @@ CSS Styles for Hecate App Device Column
     background-color: rgb(213, 213, 213);
     border-radius: 5px;
     border-style: solid;
+    border-width: 2px;
     color: rgb(0, 0, 0);
     margin: 10px auto 10px auto;
     font-size: 14pt;
@@ -74,6 +75,7 @@ CSS Styles for Hecate App Device Column
     background-color: rgb(181, 181, 181);
     border-radius: 5px;
     border-style: solid;
+    border-width: 2px;
     color: rgb(0, 0, 0);
     margin: 10px auto 10px auto;
     font-size: 14pt;
@@ -93,6 +95,7 @@ CSS Styles for Hecate App Device Column
     background-color: rgb(213, 213, 213);
     border-radius: 5px;
     border-style: solid;
+    border-width: 2px;
     color: rgb(0, 0, 0);
     margin: -2px auto 10px auto;
     font-size: 12pt;

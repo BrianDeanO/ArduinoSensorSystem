@@ -13,6 +13,7 @@ public class Sensor {
     public string? SensorName { get; set; }
     public string? SensorType { get; set; }
     public int ChannelCount { get; set; }
+    public bool SensorIsDeleted { get; set; }
 
     // The DeviceID and Device object for the ONE device 
     public int DeviceID { get; set; }

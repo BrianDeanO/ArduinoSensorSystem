@@ -6,10 +6,9 @@ CSS Styles for Configure Device Page
 .ConfigDeviceMainBox {
     display: flex;
     flex-direction: row;
-    width: 778px;
+    width: 777px;
     height: 800px;
-    /* background-color: rgb(230, 230, 230); */
-    background-color: rgb(103, 176, 199);
+    background-color: #607a8f;
     margin: 0px 0px 0px 0px;
     border-right-style: solid;
 }
@@ -33,7 +32,7 @@ CSS Styles for Configure Device Page
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -107,7 +106,7 @@ CSS Styles for Configure Device Page
 .DeviceConfigButtonBox {
     display: flex;
     flex-direction: column;
-    height: 105px;
+    height: 305px;
     width: 280px;
     margin: 5px 0px 0px 0px;
     align-items: center;
@@ -128,7 +127,7 @@ CSS Styles for Configure Device Page
 }
 .DeviceConfigCancelButton {
     width: 235px;
-    height: 30px;
+    height: 40px;
     background-color: rgb(213, 213, 213);
     border-radius: 5px;
     border-style: solid;
@@ -144,11 +143,35 @@ CSS Styles for Configure Device Page
     background-color: rgb(181, 181, 181);
     cursor: pointer;
 }
+.DeviceConfigDeleteText {
+    color: rgb(255, 255, 255);
+    margin: 8px auto 0px auto;
+    font-size: 14pt;
+    font-weight: 500;
+}
+.DeviceConfigDeleteButton {
+    width: 160px;
+    height: 30px;
+    background-color: rgb(190, 0, 0);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(255, 255, 255);
+    margin: 20px 0px 0px 0px;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.DeviceConfigDeleteButton:hover {
+    background-color: rgb(230, 0, 0);
+    cursor: pointer;
+}
 
 /*
-    Device Polling Interval Selection Styles
+    Device Update Interval Selection Styles
 */
-.PollingIntervalTitleText {
+.UpdateIntervalTitleText {
     display: flex;
     width: 150px;
     height: auto;
@@ -160,7 +183,7 @@ CSS Styles for Configure Device Page
     text-align: center;
     align-items: center;
 }
-.PollingIntervalValueInput {
+.UpdateIntervalValueInput {
     width: 59px;
     height: 31.5px;
     font-size: 16pt;
@@ -172,7 +195,7 @@ CSS Styles for Configure Device Page
     border-color: #222;
     text-align: center;
 }
-.PollingIntervalValueInputEditing {
+.UpdateIntervalValueInputEditing {
     width: 55px;
     height: 30px;
     font-size: 14pt;
@@ -184,10 +207,10 @@ CSS Styles for Configure Device Page
     border-color: #222;
     text-align: center;
 }
-.PollingIntervalValueInputText {
+.UpdateIntervalValueInputText {
     margin: 0px 0px 0px -3px;
 }
-.PollingIntervalLabelSelector {
+.UpdateIntervalLabelSelector {
     width: 146px;
     height: 31px;
     margin: auto 26px auto 0px;
@@ -198,7 +221,7 @@ CSS Styles for Configure Device Page
     border-radius: 2px;
     background-color: rgb(237, 237, 237);
 }
-.PollingIntervalLabelSelectorEditing {
+.UpdateIntervalLabelSelectorEditing {
     width: 150px;
     height: 35px;
     margin: auto 26px auto 0px;
@@ -210,7 +233,7 @@ CSS Styles for Configure Device Page
     background-color: rgb(255, 255, 255);
     text-align: center;
 }
-.PollingIntervalLabelSelectorText {
+.UpdateIntervalLabelSelectorText {
     margin: 3px 0px 0px 0px;
 }
 

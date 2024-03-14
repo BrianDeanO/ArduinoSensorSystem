@@ -4,11 +4,11 @@ import axios from "axios";
 import { UserType, UserDeviceSelectedType, DeviceType, UserDeviceType } from "../../interfaces.js";
 
 interface ManageUsersProps {
-    manageUsers: (isManagingUsers: boolean) => void;
+    manageUsers: ((isManagingUsers: boolean) => void);
     isManagingUsers: boolean;
-    addUser: (addingUser: boolean) => void;
+    addUser: ((addingUser: boolean) => void);
     isAddingUser: boolean;
-    updateUser: (updatingUser: boolean) => void;
+    updateUser: ((updatingUser: boolean) => void);
     isUpdatingUser: boolean;
 }
 
@@ -35,10 +35,13 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     const [newUserPassword, setNewUserPassword] = useState('');
     const [oldUserPassword, setOldUserPassword] = useState('');
 
+    const [isDeletingUser, setIsDeletingUser] = useState(false);
+
     const [updateUserAttempt, setUpdateUserAttempt] = useState(false);
     const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
     const [addUserAttempt, setAddUserAttempt] = useState(false);
     const [addedCorrectly, setAddedCorrectly] = useState(false);
+    const [updateDeleteMessage, setUpdateDeleteMessage] = useState('');
     const [error, setError] = useState('');
 
     const [allUserDevices, setAllUserDevices] = useState([] as UserDeviceType[]);
@@ -48,21 +51,30 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     const [updatedUD, setUpdatedUD] = useState(false);
 
     const getDevices = useCallback(async() => {
-        let tempDevices: DeviceType[] = [];
+        let tempAllDevices: DeviceType[] = [];
+        let tempNonDeletedDevices: DeviceType[] = [];
 
         if((selectedUserID !== undefined && selectedUserID !== 0) || isAddingUser) {
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/Device`,
             })
-                .then(function (response) {
-                    tempDevices = response.data;
-                    console.log('DEVICES FROM AXIOS', tempDevices)
-                }).catch(error => {
-                    console.log(error);
-                })
-    
-            setDevices(tempDevices);
+            .then(function (response) {
+                tempAllDevices = response.data;
+            }).catch(error => {
+                console.log(error);
+            })
+
+            console.log('tempAllDevices', tempAllDevices)
+
+            tempAllDevices.forEach((device) => {
+                if(!device.deviceIsDeleted) {
+                    tempNonDeletedDevices.push(device);
+                }
+            }) 
+
+            console.log('tempNonDeletedDevices', tempNonDeletedDevices)
+            setDevices(tempNonDeletedDevices);
         }
     }, [selectedUserID, isAddingUser]);
 
@@ -119,6 +131,9 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     }
 
     const getUsers = useCallback(async() => {
+        let tempAllUsers: UserType[] = [];
+        let tempNonDeletedUsers: UserType[] = [];
+
         if(isManagingUsers) {
             await axios({
                 method: 'get',
@@ -126,11 +141,23 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
             })
             .then(function (response) {
                 console.log('response', response);
-                setUsers(response.data);
+                tempAllUsers = response.data;
             }).catch(error => {
                 setError(error);
                 console.log(error);
             })
+
+            console.log('tempAllUsers', tempAllUsers)
+
+            tempAllUsers.forEach((user) => {
+                if(!user.userIsDeleted) {
+                    tempNonDeletedUsers.push(user);
+                }
+            }) 
+
+            console.log('tempNonDeletedUsers', tempNonDeletedUsers)
+            setUsers(tempNonDeletedUsers);
+
         }
         
     }, [isManagingUsers]);
@@ -156,7 +183,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         return Promise.resolve(postedCorrectly);
     }
 
-    async function deleteUserDevice(userID: number, deviceID: number) {
+    async function deleteUserDevice(userID: number, deviceID: number): Promise<boolean> {
         let deletedCorrectly = false;
 
         await axios.delete(`${proxyURL}/api/UserDevice/${userID}:${deviceID}`)
@@ -169,7 +196,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         return Promise.resolve(deletedCorrectly);
     }
 
-    async function updateUserInDB() {
+    async function updateUserInDB(deletedUser: boolean) {
         let postedCorrectly: Promise<boolean>;
         let deletedCorrectly: Promise<boolean>;
         let canUpdate = true;
@@ -207,6 +234,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 userEmail: '',
                 userPhone: '',
                 userNotification: false,
+                userIsDeleted: deletedUser,
             }, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -216,52 +244,56 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 console.log('response', response);
                 setUsers(response.data);
                 setUpdatedCorrectly(true);
+                setUpdateDeleteMessage(deletedUser 
+                        ? 'Successfully Deleted User.' : 'Successfully Updated User.');
             }).catch(error => {
                 console.log(error);
                 setError(error);
             });
 
-            // Update user devices in UserDevices Table
-            if (newUserType.toUpperCase() === ADMIN) {
-                userDevices.forEach((ud, i) => {
-                    let isFound = false;
-                    allUserDevices.forEach((ud2) => {
-                        if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
-                            isFound = true;
+            if(!deletedUser) {
+                // Update user devices in UserDevices Table
+                if (newUserType.toUpperCase() === ADMIN) {
+                    userDevices.forEach((ud, i) => {
+                        let isFound = false;
+                        allUserDevices.forEach((ud2) => {
+                            if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
+                                isFound = true;
+                                return;
+                            }
+                        })
+
+                        if (!isFound) {
+                            postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
+                        }
+
+                        if(!postedCorrectly || !deletedCorrectly) {
                             return;
                         }
                     })
-
-                    if (!isFound) {
-                        postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
-                    }
-
-                    if(!postedCorrectly || !deletedCorrectly) {
-                        return;
-                    }
-                })
-            } 
+                } 
+                
+                else {
+                    userDevices.forEach((ud, i) => {
+                        let isFound = false;
+                        allUserDevices.forEach((ud2) => {
+                            if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
+                                isFound = true;
+                                return;
+                            }
+                        })
             
-            else {
-                userDevices.forEach((ud, i) => {
-                    let isFound = false;
-                    allUserDevices.forEach((ud2) => {
-                        if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
-                            isFound = true;
+                        if(ud.isSelected && !isFound) {
+                            postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
+                        }
+                        else if(!(ud.isSelected) && isFound) {
+                            deletedCorrectly = deleteUserDevice(selectedUserID, ud.deviceID);
+                        }
+                        if(!postedCorrectly || !deletedCorrectly) {
                             return;
                         }
                     })
-        
-                    if(ud.isSelected && !isFound) {
-                        postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
-                    }
-                    else if(!(ud.isSelected) && isFound) {
-                        deletedCorrectly = deleteUserDevice(selectedUserID, ud.deviceID);
-                    }
-                    if(!postedCorrectly || !deletedCorrectly) {
-                        return;
-                    }
-                })
+                }
             }
         } else {
             setUpdatedCorrectly(false);
@@ -384,7 +416,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                             {updatedCorrectly ?  
                                 <div className="UserActionResultErrorSubText">   
                                     <span >
-                                        Successfully Updated User.
+                                        {updateDeleteMessage}
                                     </span>
                                 </div> : 
                                 <div className="UserActionResultErrorSubText">
@@ -546,7 +578,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                     }
                     <div className="DeviceOptionMainBox">
                         <div className="DeviceOptionTitleText">
-                            Devices 
+                            <div>Devices</div>
                             <span className={"DeviceOptionButtonLegend"}></span>
                             <span className={"DeviceOptionLegendEqualsText"}>=</span>
                             <span className={"DeviceOptionLegendSelectedText"}>Selected</span>
@@ -561,7 +593,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 })
                                 
                                 return (
-                                    <div className="DeviceOptionSubBox" key={i}>
+                                    <div className={(i === 0) ? "DeviceOptionTopSubBox" : "DeviceOptionSubBox"} key={i}>
                                         <span 
                                             className={
                                                 (newUserType.toUpperCase() === ADMIN) ? "DeviceOptionButtonADMIN" :
@@ -661,7 +693,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                     
                     <div className="DeviceOptionMainBox">
                         <div className="DeviceOptionTitleText">
-                            Devices 
+                            <div>Devices</div>
                             <span className={"DeviceOptionButtonLegend"}></span>
                             <span className={"DeviceOptionLegendEqualsText"}>=</span>
                             <span className={"DeviceOptionLegendSelectedText"}>Selected</span>
@@ -676,7 +708,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 })
                                 
                                 return (
-                                    <div className="DeviceOptionSubBox" key={i}>
+                                    <div className={(i === 0) ? "DeviceOptionTopSubBox" : "DeviceOptionSubBox"} key={i}>
                                         <span 
                                             className={
                                                 (newUserType.toUpperCase() === ADMIN) ? "DeviceOptionButtonADMIN" :
@@ -730,6 +762,29 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 updateUserAttempt ? null :
                 addUserAttempt ? null : 
                 isUpdatingUser ? 
+                
+                    isDeletingUser ? 
+                    <div className="ManageUsersButtonBox">
+                        <div className="ManageUsersDeleteText">
+                            Confirm User Deletion
+                        </div>
+                        <button 
+                            className="ManageUsersDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingUser(false);
+                                setUpdatePassword(false);
+                                updateUserInDB(true);
+                            }}>
+                                Yes, Delete User.
+                        </button>
+                        <button 
+                            className="ManageUsersDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingUser(false);
+                            }}>
+                                No, Cancel.
+                        </button>
+                    </div>  :
                     <div className="ManageUsersButtonBox">
                         <button 
                             className="ManageUserPrimaryButton"
@@ -740,7 +795,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                         (oldUserPasswordHashed === selectedUser.userPassword) && (newUserPassword !== '')) ||
                                     !updatePassword) {
                                         console.log("PASSWORD IS GOOD");
-                                    updateUserInDB();
+                                    updateUserInDB(false);
                                 } else {
                                     setUpdateUserAttempt(true);
                                     setUpdatedCorrectly(false);
@@ -750,7 +805,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                     setError('Error Entering New Password.')
                                 }
                             }}>
-                                Save and Update
+                                Save and Update User
                         </button>
                         <button 
                             className="ManageUsersSecondaryButton"
@@ -761,6 +816,13 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 setNewUserPassword('');
                             }}>
                                 Cancel All Changes and Exit
+                        </button>
+                        <button 
+                            className="ManageUsersDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingUser(true);
+                            }}>
+                                Delete User
                         </button>
                     </div> 
                 : isAddingUser ? 
@@ -791,8 +853,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                             }}>
                                 Cancel
                         </button>
-                    </div> 
-                :
+                    </div> :
                     <div className="ManageUsersButtonBox">
                         <button 
                             className="ManageUserPrimaryButton"

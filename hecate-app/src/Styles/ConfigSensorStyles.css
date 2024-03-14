@@ -6,10 +6,9 @@ CSS Styles for Configure Sensor Page
 .ConfigSensorMainBox {
     display: flex;
     flex-direction: row;
-    width: 778px;
+    width: 777px;
     height: 800px;
-    /* background-color: rgb(230, 230, 230); */
-    background-color: rgb(103, 176, 199);
+    background-color: #607a8f;
     margin: 0px 0px 0px 0px;
     border-right-style: solid;
 }
@@ -18,8 +17,6 @@ CSS Styles for Configure Sensor Page
     flex-direction: column;
     width: 514px;
     height: 400px;
-    /* background-color: rgb(230, 230, 230); */
-    /* background-color: rgb(27, 132, 69); */
     margin: 0px 0px 0px 0px;
 }
 
@@ -33,7 +30,7 @@ CSS Styles for Configure Sensor Page
     width: 520px;
     margin: 5px 0px 0px 5px;
     text-align: center;
-    background-color: goldenrod;
+    background-color: #DEE2E4;
     border-radius: 5px;
     border-width: 2px;
     border-style: solid;
@@ -118,12 +115,11 @@ CSS Styles for Configure Sensor Page
 .SensorConfigButtonBox {
     display: flex;
     flex-direction: column;
-    height: 105px;
+    height: 305px;
     width: 240px;
     margin: 5px 0px 0px 21px;
     align-items: center;
 }
-
 .SensorConfigUpdateButton {
     width: 235px;
     height: 45px;
@@ -140,7 +136,7 @@ CSS Styles for Configure Sensor Page
 }
 .SensorConfigCancelButton {
     width: 235px;
-    height: 30px;
+    height: 40px;
     background-color: rgb(213, 213, 213);
     border-radius: 5px;
     border-style: solid;
@@ -154,6 +150,30 @@ CSS Styles for Configure Sensor Page
 }
 .SensorConfigUpdateButton:hover, .SensorConfigCancelButton:hover {
     background-color: rgb(181, 181, 181);
+    cursor: pointer;
+}
+.SensorConfigDeleteText {
+    color: rgb(255, 255, 255);
+    margin: 8px auto 0px auto;
+    font-size: 14pt;
+    font-weight: 500;
+}
+.SensorConfigDeleteButton {
+    width: 160px;
+    height: 30px;
+    background-color: rgb(190, 0, 0);
+    border-radius: 5px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+    color: rgb(255, 255, 255);
+    margin: 20px 0px 0px 0px;
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: center;
+}
+.SensorConfigDeleteButton:hover {
+    background-color: rgb(230, 0, 0);
     cursor: pointer;
 }
 

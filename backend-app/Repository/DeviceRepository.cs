@@ -21,10 +21,6 @@ namespace backEndApp.Repository {
             return _context.Devices.Where(d => d.DeviceID == deviceId).FirstOrDefault();
         }
 
-        public Device GetDeviceWithName(string deviceName) {
-            return _context.Devices.Where(d => d.DeviceName == deviceName).FirstOrDefault();
-        }
-
         public ICollection<Sensor> GetDeviceSensors(int deviceId) {
             // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
             return _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();

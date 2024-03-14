@@ -38,6 +38,7 @@ const Selectors: React.FC<SelectorProps> = ({
         let tempSensorChannels: SensorChannels[] = [];
 
         if(selectedDeviceID !== 0 && !isLoggingOut) {
+
             // Getting Sensors
             await axios({
                 method: 'get',
@@ -49,15 +50,16 @@ const Selectors: React.FC<SelectorProps> = ({
                 console.log(error);
             })
 
-            tempAllSensors.forEach((sensor) => {
-                if(!sensor.sensorIsDeleted) {
-                    tempNonDeletedSensors.push(sensor);
+            tempAllSensors.forEach((device) => {
+                if(!device.deviceIsDeleted) {
+                    tempNonDeletedDevices.push(device);
                 }
             }) 
     
-            setSensors(tempNonDeletedSensors);
+            setSensors(tempSensors);
 
-            tempNonDeletedSensors.forEach((sensor, i) => {
+    
+            tempSensors.forEach((sensor, i) => {
                 // tempSensorDatas = getSensorData(sensor.sensorID);
                 
                 // tempSensorDatas.
@@ -86,11 +88,11 @@ const Selectors: React.FC<SelectorProps> = ({
             // setChannels(tempAllChannels);
             selectSensor(selectedSensorID || 0, false, false);
         } else {
-            setSensors(tempAllSensors);
+            setSensors(tempSensors);
             // setChannels(tempAllChannels);
             setSensorChannels(tempSensorChannels);
         }
-    }, [selectSensor, selectedSensorID, isLoggingOut]);
+    }, [selectSensor, selectedSensorID, isLoggingOut])
 
     // console.log('channel array', channels);
 
@@ -116,6 +118,16 @@ const Selectors: React.FC<SelectorProps> = ({
                             } else {
                                 const tempSensorID = parseInt((tempStringID != null) ? tempStringID : "");
                                 selectSensor(tempSensorID, true, true);
+                                sensors.forEach((sensor, i) => {
+                                    if(sensor.sensorID === tempSensorID) {
+                                        // console.log('channel count', sensor.channelCount)
+                                        // setChannels(new Array(sensor.channelCount).fill(1));
+                                        // // console.log('new channel array', channels)
+                                        // channels.forEach((channel, j) => {
+                                        //     // console.log('channel', j);
+                                        // })
+                                    }
+                                })
                             }
                         }}>
                             <option value={'---'} selected={selectedSensorID === 0}>---</option>

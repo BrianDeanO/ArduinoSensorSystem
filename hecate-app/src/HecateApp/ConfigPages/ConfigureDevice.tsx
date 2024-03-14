@@ -4,7 +4,7 @@ import { proxyURL, timeFrameConstants } from "../../variables.js";
 import axios from "axios";
 
 interface ConfigureDeviceProps {
-    configureDevice: (configuringDevice: boolean, resetDevices: boolean) => void;
+    configureDevice: ((configuringDevice: boolean, resetDevices: boolean) => void);
     selectedDeviceID: number;
 }
 
@@ -19,7 +19,6 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
     const [isDeviceNameEdit, setIsDeviceNameEdit ] = useState(false);
 
     const [newDeviceIdent, setNewDeviceIdent] = useState('');
-    const [isDeviceIdentEdit, setIsDeviceIdentEdit] = useState(false);
 
     const [newDeviceType, setNewDeviceType] = useState('');
     const [isDeviceTypeEdit, setIsNewDeviceTypeEdit] = useState(false);
@@ -27,14 +26,23 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
     const [newDeviceZipCode, setNewDeviceZipCode] = useState('');
     const [isDeviceZipCodeEdit, setIsDeviceZipCodeEdit] = useState(false);
 
-    const [newDevicePollingIntervalValue, setNewDevicePollingIntervalValue] = useState(1);
-    const [newDevicePollingIntervalLabel, setNewDevicePollingIntervalLabel] = useState('');
-    const [newDevicePollingInterval, setNewDevicePollingInterval] = useState('');
-    const [isPollingIntervalEdit, setIsPollingIntervalEdit] = useState(false);
+    const [newDeviceUpdateIntervalValue, setNewDeviceUpdateIntervalValue] = useState(1);
+    const [newDeviceUpdateIntervalLabel, setNewDeviceUpdateIntervalLabel] = useState('');
+    const [newDeviceUpdateInterval, setNewDeviceUpdateInterval] = useState(1);
+    const [isUpdateIntervalEdit, setIsUpdateIntervalEdit] = useState(false);
+
+    const [isDeletingDevice, setIsDeletingDevice] = useState(false);
+
+    const [deviceLastSeen, setDeviceLastSeen] = useState('');
+    const [deviceLastSeenSeconds, setDeviceLastSeenSeconds] = useState('');
+    const [deviceLastSeenMinutes, setDeviceLastSeenMinutes] = useState('');
+    const [deviceLastSeenHours, setDeviceLastSeenHours] = useState('');
+    const [deviceLastSeenDateString, setDeviceLastSeenDateString] = useState('');
 
     const [deviceUpdateAttempt, setDeviceUpdateAttempt] = useState(false);
 
-    const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
+    const [updatedCorrectly, setUpdatedCorrectly] = useState(false);    
+    const [updateDeleteMessage, setUpdateDeleteMessage] = useState('');
     const [postError, setPostError] = useState(false);
 
     const getDevice = useCallback(async(deviceID: number) => {
@@ -49,75 +57,98 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                 setNewDeviceIdent(tempDevice.deviceIdent);
                 setNewDeviceType(tempDevice.deviceType);
                 setNewDeviceZipCode(tempDevice.deviceZipCode);
+                setDeviceLastSeen(tempDevice.deviceLastSeen);
 
-                parsePollingInterval(parseInt(tempDevice.devicePollingInterval));
+                const tempFullDate = new Date(tempDevice.deviceLastSeen);
+                let tempSeconds: string = tempFullDate.getSeconds().toString();
+                let tempMinutes: string = tempFullDate.getMinutes().toString();
+                let tempHours: string = tempFullDate.getHours().toString();
+                let tempDateString: string = tempFullDate.toDateString();
+
+                if(tempSeconds.length === 1) {
+                    tempSeconds = `0${tempSeconds}`
+                }
+                if(tempMinutes.length === 1) {
+                    tempMinutes = `0${tempMinutes}`
+                }
+                if(tempHours.length === 1) {
+                    tempHours = `0${tempHours}`
+                }
+
+                setDeviceLastSeenSeconds(tempSeconds);
+                setDeviceLastSeenMinutes(tempMinutes);
+                setDeviceLastSeenHours(tempHours);
+                setDeviceLastSeenDateString(tempDateString);
+
+                parseUpdateInterval(tempDevice.deviceUpdateInterval);
             }).catch(error => {
                 console.log(error);
             })
     }, []);
 
-    async function parsePollingInterval(devicePollingInterval: number) {
-        let pollingValue: number = 1;
-        let pollingLabel: string = 'DAY';
 
-        if((devicePollingInterval % timeFrameConstants.MONTH) === 0) {
-            pollingValue = devicePollingInterval / timeFrameConstants.MONTH;
-            pollingLabel = 'MONTH';
+    async function parseUpdateInterval(deviceUpdateInterval: number) {
+        let updateValue: number = 1;
+        let updateLabel: string = 'DAY';
+
+        if((deviceUpdateInterval % timeFrameConstants.MONTH) === 0) {
+            updateValue = deviceUpdateInterval / timeFrameConstants.MONTH;
+            updateLabel = 'MONTH';
         }
 
-        else if((devicePollingInterval % timeFrameConstants.WEEK) === 0) {
-            pollingValue = devicePollingInterval / timeFrameConstants.WEEK;
-            pollingLabel = 'WEEK';
+        else if((deviceUpdateInterval % timeFrameConstants.WEEK) === 0) {
+            updateValue = deviceUpdateInterval / timeFrameConstants.WEEK;
+            updateLabel = 'WEEK';
         }
 
-        else if((devicePollingInterval % timeFrameConstants.DAY) === 0) {
-            pollingValue = devicePollingInterval / timeFrameConstants.DAY;
-            pollingLabel = 'DAY';
+        else if((deviceUpdateInterval % timeFrameConstants.DAY) === 0) {
+            updateValue = deviceUpdateInterval / timeFrameConstants.DAY;
+            updateLabel = 'DAY';
         }
 
-        else if((devicePollingInterval % (1000 * 60 * 60)) === 0) {
-            pollingValue = devicePollingInterval / (1000 * 60 * 60);
-            pollingLabel = 'HOUR';
+        else if((deviceUpdateInterval % (1000 * 60 * 60)) === 0) {
+            updateValue = deviceUpdateInterval / (1000 * 60 * 60);
+            updateLabel = 'HOUR';
         }
 
-        else if((devicePollingInterval % (1000 * 60)) === 0) {
-            pollingValue = devicePollingInterval / (1000 * 60);
-            pollingLabel = 'MIN';
+        else if((deviceUpdateInterval % (1000 * 60)) === 0) {
+            updateValue = deviceUpdateInterval / (1000 * 60);
+            updateLabel = 'MIN';
         }
 
-        else if((devicePollingInterval % 1000) === 0) {
-            pollingValue = devicePollingInterval / 1000;
-            pollingLabel = 'SEC';
+        else if((deviceUpdateInterval % 1000) === 0) {
+            updateValue = deviceUpdateInterval / 1000;
+            updateLabel = 'SEC';
         }
 
-        setNewDevicePollingIntervalValue(pollingValue);
-        setNewDevicePollingIntervalLabel(pollingLabel);
+        setNewDeviceUpdateIntervalValue(updateValue);
+        setNewDeviceUpdateIntervalLabel(updateLabel);
     }
 
-    async function convertPollingTime(intervalValue: number, intervalLabel: string) {
+    async function convertUpdateTime(intervalValue: number, intervalLabel: string) {
         switch(intervalLabel) {
             case 'MONTH': 
-                setNewDevicePollingInterval((intervalValue * timeFrameConstants.MONTH).toString());
+                setNewDeviceUpdateInterval(intervalValue * timeFrameConstants.MONTH);
                 break;
 
             case 'WEEK': 
-                setNewDevicePollingInterval((intervalValue * timeFrameConstants.WEEK).toString());
+                setNewDeviceUpdateInterval(intervalValue * timeFrameConstants.WEEK);
                 break;
 
             case 'DAY': 
-                setNewDevicePollingInterval((intervalValue * timeFrameConstants.DAY).toString());
+                setNewDeviceUpdateInterval(intervalValue * timeFrameConstants.DAY);
                 break;
 
             case 'HOUR': 
-                setNewDevicePollingInterval((intervalValue * (1000 * 60 * 60)).toString());
+                setNewDeviceUpdateInterval(intervalValue * (1000 * 60 * 60));
                 break;
 
             case 'MIN':
-                setNewDevicePollingInterval((intervalValue * (1000 * 60)).toString());
+                setNewDeviceUpdateInterval(intervalValue * (1000 * 60));
                 break;
 
             case 'SEC': 
-                setNewDevicePollingInterval((intervalValue * 1000).toString());
+                setNewDeviceUpdateInterval(intervalValue * 1000);
                 break;
 
             default:
@@ -130,7 +161,7 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
     }, [selectedDeviceID, getDevice])
 
 
-    async function updateDevice() {
+    async function updateDevice(deletedDevice: boolean) {
         setDeviceUpdateAttempt(true);
         
         await axios.put(`${proxyURL}/api/Device/${selectedDeviceID}`, {
@@ -139,7 +170,9 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
             deviceName: newDeviceName,
             deviceType: newDeviceType,
             deviceZipCode: newDeviceZipCode,
-            devicePollingInterval: newDevicePollingInterval,
+            deviceUpdateInterval: newDeviceUpdateInterval,
+            deviceLastSeen: deviceLastSeen,
+            deviceIsDeleted: deletedDevice
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -147,6 +180,8 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
         })
         .then(function (response) {
             setUpdatedCorrectly(true);
+            setUpdateDeleteMessage(deletedDevice 
+                    ? 'Successfully Deleted Device.' : 'Successfully Updated Device.');
         }).catch(function (error) {
             console.log(error);
             setPostError(error.code)
@@ -156,8 +191,9 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
         setNewDeviceIdent("");
         setNewDeviceType("");
         setNewDeviceZipCode("");
-        setNewDevicePollingIntervalValue(1);
-        setNewDevicePollingIntervalLabel('');
+        setNewDeviceUpdateIntervalValue(1);
+        setNewDeviceUpdateIntervalLabel('');
+        setDeviceLastSeen('');
     }
 
 
@@ -170,7 +206,7 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                         {updatedCorrectly ?  
                             <div className="UpdateDeviceErrorSubText">   
                                 <span >
-                                    {`Successfully Updated Device`}
+                                    {updateDeleteMessage}
                                 </span>
                             </div> : 
                             <div className="UpdateDeviceErrorSubText">
@@ -190,35 +226,25 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                 </div>
                 :  
                 <div className="ConfigDeviceSubBox">
+                <div className="DeviceAttributeMainBox">
+                    <div className="configDeviceTitleText">
+                        Device Last Seen
+                    </div>
+                    <div className="configDeviceStandardTextBox">
+                        <div className="configDeviceStandardText">
+                            {`${deviceLastSeenDateString} @ ${deviceLastSeenHours}:${deviceLastSeenMinutes}:${deviceLastSeenSeconds}`}
+                        </div>
+                    </div>
+                </div>
                     <div className="DeviceAttributeMainBox">
                         <div className="configDeviceTitleText">
                             Device Identifier
                         </div>
-                        {isDeviceIdentEdit ? 
-                            <textarea
-                                className="deviceTextArea"
-                                value={newDeviceIdent}
-                                id={'IDENT'}
-                                onChange={(e) => {setNewDeviceIdent(e.target.value.toString());}}
-                                spellCheck={false}
-                                cols={1}
-                                rows={1}>{newDeviceIdent}</textarea> : 
-                            <div className="configDeviceStandardTextBox">
-                                <div className="configDeviceStandardText">
-                                    {newDeviceIdent}
-                                </div>
+                        <div className="configDeviceStandardTextBox">
+                            <div className="configDeviceStandardText">
+                                {newDeviceIdent}
                             </div>
-                        }
-                        <button 
-                            className="deviceInfoEditButton"
-                            onClick={(e) => {
-                                    setIsDeviceIdentEdit(!isDeviceIdentEdit);
-                                    if(isDeviceIdentEdit) {
-                                        console.log('DEVICE IDENT',(document.getElementById('IDENT') as HTMLInputElement).value )
-                                    }
-                                }}
-                                >{isDeviceIdentEdit ? 'save' : 'edit'}
-                        </button>
+                        </div>
                     </div>
 
                     <div className="DeviceAttributeMainBox">
@@ -306,64 +332,64 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                     </div>
 
                     <div className="DeviceAttributeMainBox">
-                        <div className="PollingIntervalTitleText">
-                            Device Polling Interval
+                        <div className="UpdateIntervalTitleText">
+                            Device Update Interval
                         </div>
                         {
-                            isPollingIntervalEdit ?
+                            isUpdateIntervalEdit ?
                             
                             <input  
-                                className="PollingIntervalValueInputEditing" 
+                                className="UpdateIntervalValueInputEditing" 
                                 id="POLL_VALUE" 
                                 type='number' 
                                 min={1} max={99}
-                                value={newDevicePollingIntervalValue}
-                                defaultValue={newDevicePollingIntervalValue}
-                                onChange={(e) => {setNewDevicePollingIntervalValue(parseInt(e.target.value))}}>
+                                value={newDeviceUpdateIntervalValue}
+                                defaultValue={newDeviceUpdateIntervalValue}
+                                onChange={(e) => {setNewDeviceUpdateIntervalValue(parseInt(e.target.value))}}>
                             </input> : 
-                            <div className="PollingIntervalValueInput">
-                                <div className="PollingIntervalValueInputText">
-                                    {newDevicePollingIntervalValue}
+                            <div className="UpdateIntervalValueInput">
+                                <div className="UpdateIntervalValueInputText">
+                                    {newDeviceUpdateIntervalValue}
                                 </div>
                             </div>
                         }
                         {
-                            isPollingIntervalEdit ?
+                            isUpdateIntervalEdit ?
                             <select 
-                                className="PollingIntervalLabelSelectorEditing" 
+                                className="UpdateIntervalLabelSelectorEditing" 
                                 id="POLL_LABEL"
                                 onChange={(e) => {
                                     const timeFrameLabelString = (e.target as HTMLSelectElement).value;
-                                    setNewDevicePollingIntervalLabel(timeFrameLabelString);
+                                    setNewDeviceUpdateIntervalLabel(timeFrameLabelString);
                                 }}>
-                                    <option value={'SEC'} selected={newDevicePollingIntervalLabel === 'SEC'}>
+                                    <option value={'SEC'} selected={newDeviceUpdateIntervalLabel === 'SEC'}>
                                         {`Second(s)`}
                                     </option>
-                                    <option value={'MIN'} selected={newDevicePollingIntervalLabel === 'MIN'}>
+                                    <option value={'MIN'} selected={newDeviceUpdateIntervalLabel === 'MIN'}>
                                         {`Minute(s)`}
                                     </option>
-                                    <option value={'HOUR'} selected={newDevicePollingIntervalLabel === 'HOUR'}>
+                                    <option value={'HOUR'} selected={newDeviceUpdateIntervalLabel === 'HOUR'}>
                                         {`Hour(s)`}
                                     </option>
-                                    <option value={'DAY'} selected={newDevicePollingIntervalLabel === 'DAY'}>
+                                    <option value={'DAY'} selected={newDeviceUpdateIntervalLabel === 'DAY'}>
                                         {`Day(s)`}
                                     </option>
-                                    <option value={'WEEK'} selected={newDevicePollingIntervalLabel === 'WEEK'}>
+                                    <option value={'WEEK'} selected={newDeviceUpdateIntervalLabel === 'WEEK'}>
                                         {`Week(s)`}
                                     </option>
-                                    <option value={'MONTH'} selected={newDevicePollingIntervalLabel === 'MONTH'}>
+                                    <option value={'MONTH'} selected={newDeviceUpdateIntervalLabel === 'MONTH'}>
                                         {`Month(s)`}
                                     </option>
                             </select> : 
-                            <div className="PollingIntervalLabelSelector">
-                                <div className="PollingIntervalLabelSelectorText">
+                            <div className="UpdateIntervalLabelSelector">
+                                <div className="UpdateIntervalLabelSelectorText">
                                     {
-                                        (newDevicePollingIntervalLabel === 'SEC') ? `Second(s)` :
-                                        (newDevicePollingIntervalLabel === 'MIN') ? `Minute(s)` :
-                                        (newDevicePollingIntervalLabel === 'HOUR') ? `Hour(s)` :
-                                        (newDevicePollingIntervalLabel === 'DAY') ? `Day(s)` :
-                                        (newDevicePollingIntervalLabel === 'WEEK') ? `Week(s)` :
-                                        (newDevicePollingIntervalLabel === 'MONTH') ? `Month(s)` : ''
+                                        (newDeviceUpdateIntervalLabel === 'SEC') ? `Second(s)` :
+                                        (newDeviceUpdateIntervalLabel === 'MIN') ? `Minute(s)` :
+                                        (newDeviceUpdateIntervalLabel === 'HOUR') ? `Hour(s)` :
+                                        (newDeviceUpdateIntervalLabel === 'DAY') ? `Day(s)` :
+                                        (newDeviceUpdateIntervalLabel === 'WEEK') ? `Week(s)` :
+                                        (newDeviceUpdateIntervalLabel === 'MONTH') ? `Month(s)` : ''
                                     }
                                 </div>
                             </div>
@@ -372,21 +398,42 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                         <button 
                             className="deviceInfoEditButton"
                             onClick={(e) => {
-                                    convertPollingTime(newDevicePollingIntervalValue, newDevicePollingIntervalLabel);
-                                    setIsPollingIntervalEdit(!isPollingIntervalEdit);
+                                    convertUpdateTime(newDeviceUpdateIntervalValue, newDeviceUpdateIntervalLabel);
+                                    setIsUpdateIntervalEdit(!isUpdateIntervalEdit);
                                 }}
-                                >{isPollingIntervalEdit ? 'save' : 'edit'}
+                                >{isUpdateIntervalEdit ? 'save' : 'edit'}
                         </button>
                     </div>
                 </div>
             }
             {
                 deviceUpdateAttempt ? null :
+                    isDeletingDevice ? 
+                    <div className="DeviceConfigButtonBox">
+                        <div className="DeviceConfigDeleteText">
+                            Confirm Device Deletion
+                        </div>
+                        <button 
+                            className="DeviceConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingDevice(false);
+                                updateDevice(true);
+                            }}>
+                                Yes, Delete Device.
+                        </button>
+                        <button 
+                            className="DeviceConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingDevice(false);
+                            }}>
+                                No, Cancel.
+                        </button>
+                    </div>  :
                     <div className="DeviceConfigButtonBox">
                         <button 
                             className="DeviceConfigUpdateButton"
                             onClick={(e) => {
-                                updateDevice();
+                                updateDevice(false);
                             }}>
                                 Save and Update Device
                         </button>
@@ -397,7 +444,14 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                             }}>
                                 Cancel All Changes and Exit
                         </button>
-                    </div>
+                        <button 
+                            className="DeviceConfigDeleteButton"
+                            onClick={(e) => {
+                                setIsDeletingDevice(true);
+                            }}>
+                                Delete Device
+                        </button>
+                    </div> 
             }
         </div>
     )

@@ -99,25 +99,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("{sensorId}/Device")]
-        [ProducesResponseType(200, Type = typeof(Device))]
-        [ProducesResponseType(400)]
-        public IActionResult GetSensorDevice(int sensorId) {
-            if(!_sensorRepository.SensorExists(sensorId)) {
-                return NotFound();
-            }
-
-            var sensor = _mapper.Map<SensorDTO>(_sensorRepository.GetSensor(sensorId));
-
-            var device = _mapper.Map<DeviceDTO>(_sensorRepository.GetSensorDevice(sensor.DeviceID));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(device);
-            }
-        }
-
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -143,6 +124,7 @@ namespace backEndApp.Controllers {
                 int deviceId = newSensor.DeviceID;
                 sensorMap.DeviceID = deviceId;
                 sensorMap.Device = _deviceRepository.GetDevice(deviceId);
+                sensorMap.SensorIsDeleted = false;
 
                 if(!_sensorRepository.CreateSensor(sensorMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
