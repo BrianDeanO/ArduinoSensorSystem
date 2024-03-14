@@ -1,19 +1,19 @@
-## Web App In Progress (Color Variants Not Final)
+## Web App In Progress
 ### Front Page - Device, Sensor, and Channel Selected:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/2bf68922-7429-4a10-ae78-0dc7c648e589)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/1b96d607-6e2c-4cef-81e2-6c33739b4a0f)
 
 ### Device Configuration Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/f30a577f-6580-4c7d-92ad-c7b92da0585e)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/0e9aa709-2c5f-45c9-b805-166ebaba635a)
 
 ### Sensor Configuration Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/6d785697-9e7e-4d7a-bca4-5261059a6859)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/2d356e80-b3a6-4018-bf1f-8f973a35bad1)
 
 ### Manage Users Main Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/c1d09302-31c0-47d3-b149-241d8b392183)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/f1827080-ae26-49c2-93f1-6a4c424fa975)
 
 ### Edit User Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/640143bf-087f-479e-9cba-eaa36ce4414e)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/52971dd5-ca0b-42d9-b25c-4b49f1f236df)
 
 ### Add User Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/e1884a82-7d1f-4153-a8e6-af1028d801f0)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/b736fd76-dfc0-4361-b2df-8949acebc633)
 
