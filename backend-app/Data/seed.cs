@@ -14,31 +14,34 @@ namespace backEndApp
             if (!sensorSystemContext.UserDevices.Any()) {
                 var Users = new List<User>() {
                     new User() {
-                        UserType = "admin", 
+                        UserType = "ADMIN", 
                         UserFirstName = "Han",
                         UserLastName = "Solo",
                         UserPassword = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",  // 123
                         UserEmail = "",
                         UserPhone = "",
-                        UserNotifications = true
+                        UserNotifications = true,
+                        UserIsDeleted = false
                     },
                     new User() {
-                        UserType = "basic", 
+                        UserType = "BASIC", 
                         UserFirstName = "Luke",
                         UserLastName = "Skywalker",
                         UserPassword = "b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0", // 456
                         UserEmail = "",
                         UserPhone = "",
-                        UserNotifications = false
+                        UserNotifications = false,
+                        UserIsDeleted = false
                     },
                     new User() {
-                        UserType = "basic", 
+                        UserType = "BASIC", 
                         UserFirstName = "Leia",
                         UserLastName = "Organa",
                         UserPassword = "35a9e381b1a27567549b5f8a6f783c167ebf809f1c4d6a9e367240484d8ce281", // 789
                         UserEmail = "",
                         UserPhone = "",
-                        UserNotifications = true
+                        UserNotifications = true,
+                        UserIsDeleted = false
                     },
                 };
                 var Devices = new List<Device>() {
@@ -48,12 +51,15 @@ namespace backEndApp
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99352",
                         DeviceUpdateInterval = 86400000,
+                        DeviceLastSeen = DateTime.Parse("2024-03-10T11:42:27.069Z"),
+                        DeviceIsDeleted = false,
 
                         Sensors = new List<Sensor>() {
                             new Sensor() {
                                 SensorIdent = "SEN-123",
                                 SensorName = "BME_TRI_SENS", 
                                 SensorType = "Adafruit BME280", 
+                                SensorIsDeleted = false,
                                 ChannelCount = 3,
                                 DeviceID = 1,
                                 SensorDatas = new List<SensorData>() {
@@ -285,6 +291,7 @@ namespace backEndApp
                                 SensorType = "Adafruit BME280", 
                                 ChannelCount = 1,
                                 DeviceID = 1,
+                                SensorIsDeleted = false,
                                 SensorDatas = new List<SensorData>() {
                                     new SensorData() {
                                         ChannelID = 1, 
@@ -308,6 +315,8 @@ namespace backEndApp
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99336",
                         DeviceUpdateInterval = 86400000,
+                        DeviceLastSeen = DateTime.Parse("2024-03-09T11:42:27.069Z"),
+                        DeviceIsDeleted = false,
                         
                         Sensors = new List<Sensor>() {
                             new Sensor() {
@@ -316,6 +325,7 @@ namespace backEndApp
                                 SensorType = "Adafruit BME280", 
                                 ChannelCount = 2,
                                 DeviceID = 2,
+                                SensorIsDeleted = false,
                                 SensorDatas = new List<SensorData>() {
                                     new SensorData() {
                                         ChannelID = 1, 
@@ -355,6 +365,7 @@ namespace backEndApp
                                 SensorType = "Adafruit BME280", 
                                 ChannelCount = 2,
                                 DeviceID = 2,
+                                SensorIsDeleted = false,
                                 SensorDatas = new List<SensorData>() {
                                     new SensorData() {
                                         ChannelID = 1, 
@@ -396,6 +407,8 @@ namespace backEndApp
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99301",
                         DeviceUpdateInterval = 86400000,
+                        DeviceLastSeen = DateTime.Parse("2024-03-10T10:42:27.069Z"),
+                        DeviceIsDeleted = false,
 
                         Sensors = new List<Sensor>() {
                             new Sensor() {
@@ -403,6 +416,7 @@ namespace backEndApp
                                 SensorName = "BME_4", 
                                 SensorType = "Adafruit BME280", 
                                 ChannelCount = 2,
+                                SensorIsDeleted = false,
                             }
                         }
                     }

@@ -61,40 +61,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("{userId}:{deviceId}/User")]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDeviceUser(int userId, int deviceId) {
-            if(!_userDeviceRepository.UserDeviceExists(userId, deviceId)) {
-                return NotFound();
-            }
-
-            var user = _mapper.Map<UserDTO>(_userDeviceRepository.GetUserDeviceUser(userId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(user);
-            }
-        }
-
-        [HttpGet("{userId}:{deviceId}/Device")]
-        [ProducesResponseType(200, Type = typeof(Device))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDeviceDevice(int userId, int deviceId) {
-            if(!_userDeviceRepository.UserDeviceExists(userId, deviceId)) {
-                return NotFound();
-            }
-
-            var device = _mapper.Map<DeviceDTO>(_userDeviceRepository.GetUserDeviceDevice(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(device); 
-            }
-        }
-
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -152,10 +118,5 @@ namespace backEndApp.Controllers {
 
             return Ok("Successfully Deleted.");
         }
-        /*
-            Doesn't make sense to have a update method for this. 
-                We would delete a UserDevice (i.e., take away access)
-                Then add the UserDevice back (i.e., give them access)
-        */
     }
 }

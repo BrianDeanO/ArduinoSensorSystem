@@ -7,7 +7,7 @@ CSS Styles for Hecate App Visualizations (Graph)
 .MainVisualizationBox {
     display: flex;
     flex-direction: column;
-    width: 778px;
+    width: 777px;
     height: 680px;
     background-color: rgb(247, 247, 247);
     /* margin: auto; */

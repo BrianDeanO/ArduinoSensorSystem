@@ -5,13 +5,7 @@ namespace backEndApp.Interfaces {
 
     public interface ISensorDataRepository {
         ICollection<SensorData> GetSensorDatas();
-        SensorData GetSensorData(int sensorDataId);
-        Sensor GetSensorDataSensor(int sensorId);
-        // ICollection<SensorData> GetSensorDataInDateRange(DateTime parsedDateTime);
-        bool SensorDataExists(int sensorDataId);
         bool CreateSensorData(SensorData sensorData);
-        bool UpdateSensorData(SensorData sensorData);
-        bool DeleteSensorData(SensorData sensorData);
         bool DeleteSensorDatas(List<SensorData> sensorDatas);
         bool Save();
     }

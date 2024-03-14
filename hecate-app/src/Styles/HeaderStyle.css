@@ -51,7 +51,99 @@ CSS Styles for Hecate App Header
   margin: auto 10px;
 }
 
-
+/* 
+  Login Box Styles
+*/
+.MainHeaderLogin {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  width: 280px;
+  color: white;
+  margin: 0px 0px 0px auto;
+  background-color: rgb(117, 117, 117);
+}
+.mainLoginInputBox {
+  display: flex;
+  flex-direction: column;
+  height: 130px;
+  width: 280px;
+  margin: 0px 15px 0px auto;
+}
+.userNameLoginBox {
+  display: flex;
+  flex-direction: row;
+  margin: 10px auto;
+  height: 20px;
+  width: 280px;
+  color: rgb(0, 0, 0);
+  font-size: 9.5pt;
+} 
+.passwordLoginBox {
+  display: flex;
+  flex-direction: row;
+  margin: 10px auto 15px auto;
+  height: 20px;
+  width: 280px;
+  color: rgb(0, 0, 0);
+  font-size: 9.5pt;
+} 
+.loginHeaderText {
+  height: 20px;
+  width: 85px;
+  margin: 2px 2px 0px 0px;
+  color: rgb(255, 255, 255);
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: center;
+}
+.LoginUserNameTextArea {
+  margin: 0px 0px 0px 0px;
+  height: 20px;
+  max-height: 20px;
+  width: 180px;
+  color: rgb(0, 0, 0);
+  font-size: 11pt;
+  resize: none;
+  background-color: rgb(244, 243, 243);
+  border-style: solid;
+  resize: none;
+}
+.LoginPasswordTextArea {
+  margin: 0px 0px 0px -1px;
+  height: 20px;
+  max-height: 20px;
+  width: 180px;
+  color: rgb(0, 0, 0);
+  font-size: 11pt;
+  resize: none;
+  background-color: rgb(244, 243, 243);
+  border-style: solid;
+  resize: none;
+}
+.UserLoginButtonSubBox {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  width: 280px;
+} 
+.LogInOutButton {
+  width: 120px;
+  height: 30px;
+  background-color: rgb(213, 213, 213);
+  border-radius: 5px;
+  border-style: solid;
+  border-color: black;
+  color: rgb(0, 0, 0);
+  margin: 5px auto 0px auto;
+  font-size: 11pt;
+  font-weight: bold;
+  text-align: center;
+}
+.LogInOutButton:hover {
+  background-color: rgb(181, 181, 181);
+  cursor: pointer;
+}
 
 /*
   Manage User Button Styles
@@ -59,7 +151,7 @@ CSS Styles for Hecate App Header
 .ManageUsersMainBox {
   display: flex;
   height: 40px;
-  width: 250px;
+  width: 280px;
   color: white;
   margin: 0px 0px 0px 0px;
 }
@@ -85,104 +177,11 @@ CSS Styles for Hecate App Header
   cursor: pointer;
 }
 
-/* 
-  Login Box Styles
-*/
-.MainHeaderLogin {
-  display: flex;
-  flex-direction: column;
-  height: 130px;
-  width: 300px;
-  color: white;
-  margin: 0px 15px 0px auto;
-  background-color: rgb(117, 117, 117);
-}
-.mainLoginInputBox {
-  display: flex;
-  flex-direction: column;
-  height: 130px;
-  width: 300px;
-  margin: 0px 15px 0px auto;
-}
-.userNameLoginBox {
-  display: flex;
-  flex-direction: row;
-  margin: 10px auto;
-  height: 20px;
-  width: 300px;
-  color: rgb(0, 0, 0);
-  font-size: 9.5pt;
-} 
-.passwordLoginBox {
-  display: flex;
-  flex-direction: row;
-  margin: 10px auto 15px auto;
-  height: 20px;
-  width: 300px;
-  color: rgb(0, 0, 0);
-  font-size: 9.5pt;
-} 
-.loginHeaderText {
-  height: 20px;
-  width: 85px;
-  margin: 2px 2px 0px 0px;
-  color: rgb(255, 255, 255);
-  font-size: 11pt;
-  font-weight: bold;
-  text-align: center;
-}
-.LoginUserNameTextArea {
-  margin: 0px 0px 0px 0px;
-  height: 20px;
-  max-height: 20px;
-  width: 200px;
-  color: rgb(0, 0, 0);
-  font-size: 11pt;
-  resize: none;
-  background-color: rgb(244, 243, 243);
-  border-style: solid;
-  resize: none;
-}
-.LoginPasswordTextArea {
-  margin: 0px 0px 0px -1px;
-  height: 20px;
-  max-height: 20px;
-  width: 200px;
-  color: rgb(0, 0, 0);
-  font-size: 11pt;
-  resize: none;
-  background-color: rgb(244, 243, 243);
-  border-style: solid;
-  resize: none;
-}
-.UserLoginButtonSubBox {
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  width: 300px;
-} 
-.LogInOutButton {
-  width: 120px;
-  height: 30px;
-  background-color: rgb(213, 213, 213);
-  border-radius: 5px;
-  border-style: solid;
-  border-color: black;
-  color: rgb(0, 0, 0);
-  margin: 5px auto 0px auto;
-  font-size: 11pt;
-  font-weight: bold;
-  text-align: center;
-}
-.LogInOutButton:hover {
-  background-color: rgb(181, 181, 181);
-  cursor: pointer;
-}
+
 
 /*
   LoggedIn Styles
 */
-
 .loggedInUserMainBox {
   display: flex;
   flex-direction: column;
@@ -190,9 +189,6 @@ CSS Styles for Hecate App Header
   width: 250px;
   margin: 0px 15px 0px auto;
   background-color: rgb(117, 117, 117);
-  /* border-bottom-style: solid;
-  border-bottom-color: aliceblue;
-  border-bottom-width: 1px; */
 }
 .loggedInUserNameBox {
   display: flex;

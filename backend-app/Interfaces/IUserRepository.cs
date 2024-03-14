@@ -8,12 +8,9 @@ namespace backEndApp.Interfaces {
         User GetUser(int userId);
         User GetUserWithLogin(string userFirstName, string userLastName, string userPassword);
         bool UserExistsWithLogin(int userID, string userFirstName, string userLastName, string userPassword);
-        // ICollection<User> GetUsersWithType(string userType);
         ICollection<UserDevice> GetUserDevices(int userId);
         ICollection<Device> GetDevicesFromUser(int userId);
-        /*
-                DO WE WANT A GetUserSensors? Probably not needed...
-        */
+        ICollection<User> GetAdminUsers();
         bool UserExists(int userId);
         bool CreateUser(User user);
         bool UpdateUser(User user);

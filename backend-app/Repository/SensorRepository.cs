@@ -25,10 +25,6 @@ namespace backEndApp.Repository {
             return _context.SensorDatas.Where(sd => (sd.SensorID == sensorId)).ToList();
         }
 
-        public Device GetSensorDevice(int deviceId) {
-            return _context.Devices.Where(d => d.DeviceID == deviceId).FirstOrDefault();
-        }
-
         public bool SensorExists(int sensorId) {
             return _context.Sensors.Any(s => s.SensorID == sensorId);
         }

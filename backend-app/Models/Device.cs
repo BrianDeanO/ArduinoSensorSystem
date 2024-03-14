@@ -13,7 +13,6 @@ public class Device {
     [Required]
     public string DeviceIdent { get; set; }
 
-
     // Device Configuration Fields
     
     // Interval in seconds which the device will acquire and send new data.
@@ -23,6 +22,7 @@ public class Device {
     public string? DeviceType { get; set; }
     public string? DeviceZipCode { get; set; }
     public DateTime? DeviceLastSeen { get; set; }
+    public bool DeviceIsDeleted { get; set; }
 
     // The relationship to MANY sensors
     public ICollection<Sensor> Sensors { get; set; }
