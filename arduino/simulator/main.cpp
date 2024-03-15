@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../config.hpp"
+#include "../common.hpp"
 #include "sim_client.hpp"
 #include "device.hpp"
 #include "drivers/example_driver.hpp"
@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <vector>
 
-// Used by DEBUG macros defined in config.hpp
+// Used by DEBUG macros defined in common.hpp
 #if DEBUG_MODE == 1
 char _dbg_msg[256];
 #endif

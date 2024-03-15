@@ -1,19 +1,14 @@
 #include <Arduino.h>
 
-#include "config.hpp"
+#include "common.hpp"
 #include "src/device.hpp"
-#include "src/drivers/example_driver.hpp"
-#include "src/drivers/bme280_driver.hpp"
 #include "src/util.hpp"
 
 #if DEBUG_MODE == 1
-char _dbg_msg[256]; // Used in the DEBUG macros, declared in config.hpp
+char _dbg_msg[256]; // Used in the DEBUG macros, declared in common.hpp
 #endif
 
-BME280Sensor sen1("bme280_sensor1");
-// ExampleSensor sen1("demo_sensor1");
-
-Sensor* sensors[] = { &sen1 };
+#include "sensor_definitions.hpp"
 
 #ifndef NO_LTE
     #include "src/lib/SparkFun_LTE_Shield.h"

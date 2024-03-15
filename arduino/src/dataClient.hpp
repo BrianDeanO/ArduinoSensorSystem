@@ -1,5 +1,5 @@
 #pragma once
-#include "../config.hpp"
+#include "../common.hpp"
 
 class DataClient {
 public:

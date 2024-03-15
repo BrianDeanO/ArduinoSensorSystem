@@ -1,4 +1,8 @@
-#include "../../config.hpp"
+// REQUIRED LIBRARIES:
+// https://github.com/adafruit/Adafruit_Sensor
+// https://github.com/adafruit/Adafruit_BME280_Library
+
+#include "../../common.hpp"
 #include "../sensor.hpp"
 #include "../lib/ArduinoJson.h"
 
@@ -35,7 +39,7 @@ public:
 		return true;
 	}
 
-	virtual bool read_config(JsonObject config) override { return true; }
+	virtual bool read_config(JsonObject& config) override { return true; }
 	virtual bool write_config(JsonObject config) override { return true; }
 
 	virtual uint8_t channel_count() const override { return 3; }
