@@ -42,6 +42,18 @@ namespace backEndApp.Controllers {
                 return Ok(users);
             }
         }
+        
+        [HttpGet("ADMIN")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        public IActionResult GetAdminUsers() {
+            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetAdminUsers());
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(users);
+            }
+        }
 
         [HttpGet("{userId}")]
         [ProducesResponseType(200, Type = typeof(User))]
@@ -59,19 +71,6 @@ namespace backEndApp.Controllers {
                 return Ok(user);
             }
         }
-
-        // [HttpGet("{userType}")]
-        // [ProducesResponseType(200, Type = typeof(User))]
-        // [ProducesResponseType(400)]
-        // public IActionResult GetUsersByType(string userType) {
-        //     var users = _mapper.Map<List<UserDTO>>(_userRepository.GetUsersWithType(userType));
-
-        //     if(!ModelState.IsValid) {
-        //         return BadRequest(ModelState);
-        //     } else {
-        //         return Ok(users);
-        //     }
-        // }
 
         [HttpGet("{userFirstName}.{userLastName}:{userPassword}")]
         [ProducesResponseType(200, Type = typeof(User))]
@@ -144,6 +143,7 @@ namespace backEndApp.Controllers {
                 // }
 
                 var userMap = _mapper.Map<User>(newUser);
+                userMap.UserIsDeleted = false;
 
                 if(!_userRepository.CreateUser(userMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");

@@ -19,17 +19,20 @@ namespace backEndApp.Controllers {
         private readonly IMapper _mapper;
         private readonly IUserDeviceRepository _userDeviceRepository;
         private readonly ISensorRepository _sensorRepository;
+        private readonly IUserRepository _userRepository;
 
         public DeviceController(
             IDeviceRepository deviceRepository, 
             IMapper mapper,
             IUserDeviceRepository userDeviceRepository,
-            ISensorRepository sensorRepository
+            ISensorRepository sensorRepository,
+            IUserRepository userRepository
         ) {
             _deviceRepository = deviceRepository;
             _mapper = mapper;
             _userDeviceRepository = userDeviceRepository;
             _sensorRepository = sensorRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
@@ -64,7 +67,7 @@ namespace backEndApp.Controllers {
         // This endpoint is only used by the device to check if a device by `deviceIdent`
         // already exists, so only return fields relevant to the device.
         [HttpGet("ident/{deviceIdent}")]
-        public IActionResult GetDevice(String deviceIdent) {
+        public IActionResult GetDeviceIdent(String deviceIdent) {
             Console.WriteLine("DeviceIdent: " + deviceIdent);
             var device = _deviceRepository.GetDevices() 
                 .Where(e => e.DeviceIdent == deviceIdent)
@@ -83,20 +86,6 @@ namespace backEndApp.Controllers {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             });
         }
-
-        [HttpGet("DeviceName")]
-        [ProducesResponseType(200, Type = typeof(Device))]
-        [ProducesResponseType(400)]
-        public IActionResult GetDeviceWithName([FromQuery] string deviceName) {
-            var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDeviceWithName(deviceName));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(device);
-            }
-        }
-
         
         [HttpGet("{deviceId}/DeviceConfig")]
         [ProducesResponseType(200, Type = typeof(DeviceConfig))]
@@ -190,19 +179,38 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             } else {
+                var defaultUpdateInterval = 60 * 60 * 24;
                 
                 var deviceMap = _mapper.Map<Device>(newDevice);
+                deviceMap.DeviceIsDeleted = false;
+                deviceMap.DeviceUpdateInterval = defaultUpdateInterval;
 
                 if(!_deviceRepository.CreateDevice(deviceMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
                     return StatusCode(500, ModelState);
                 }
 
-                var defaultPollingInterval = 60 * 60 * 24;
+                var users = _userRepository.GetAdminUsers();
+
+                foreach(var user in users) {
+                    var userDevice = new UserDevice() {
+                            UserID = user.UserID,
+                            User = user,
+                            DeviceID = deviceMap.DeviceID,
+                            Device = deviceMap,
+                        };
+
+                    if(!_userDeviceRepository.CreateUserDevice(userDevice)) {
+                        ModelState.AddModelError("", "Something Went Wrong While Saving the UserDevice.");
+                        return StatusCode(500, ModelState);
+                    }
+                }
+
+
                 
                 var dto = new DeviceDTO {
                     DeviceID = deviceMap.DeviceID,
-                    DeviceUpdateInterval = defaultPollingInterval,
+                    DeviceUpdateInterval = defaultUpdateInterval,
                 };
                 return new JsonResult(dto, new JsonSerializerOptions() {
                     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,

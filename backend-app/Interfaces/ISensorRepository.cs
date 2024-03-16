@@ -7,7 +7,6 @@ namespace backEndApp.Interfaces {
         ICollection<Sensor> GetSensors();
         Sensor GetSensor(int sensorId);
         ICollection<SensorData> GetSensorDatas(int sensorId);
-        Device GetSensorDevice(int deviceId);
         bool SensorExists(int sensorId);
         bool CreateSensor(Sensor sensor);
         bool UpdateSensor(Sensor sensor);

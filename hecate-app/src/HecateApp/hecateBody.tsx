@@ -12,7 +12,7 @@ import ManageUsers from "./ConfigPages/ManageUsers.tsx";
 interface HecateBodyProps {
     loggedInUserID: number;
     isAdmin: boolean;
-    manageUsers: (isManagingUsers: boolean) => void;
+    manageUsers: ((isManagingUsers: boolean) => void);
     isManagingUsers: boolean;
     isLoggingOut: boolean;
 }

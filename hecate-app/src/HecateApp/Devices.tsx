@@ -5,9 +5,9 @@ import axios from "axios";
 
 interface DeviceProps {
     loggedInUserID: number;
-    selectDevice: (selectedDeviceID: number, resetSensorID: boolean) => void;
+    selectDevice: ((selectedDeviceID: number, resetSensorID: boolean) => void);
     selectedDeviceID: number;
-    configureDevice: (configuringDevice: boolean, resetDevices: boolean) => void;
+    configureDevice: ((configuringDevice: boolean, resetDevices: boolean) => void);
     isAdmin: boolean;
     configuringSensor: boolean;
     isManagingUsers: boolean;
@@ -27,20 +27,31 @@ const Devices: React.FC<DeviceProps> = ({
     const [devices, setDevices] = useState([] as DeviceType[]);
 
     const getDevices = useCallback(async(loggedInUserID: number) => {
-        let tempDevices: DeviceType[] = [];
+        let tempAllDevices: DeviceType[] = [];
+        let tempNonDeletedDevices: DeviceType[] = [];
 
         if(loggedInUserID !== undefined && loggedInUserID !== 0) {
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/User/${loggedInUserID}/Devices`,
             })
-                .then(function (response) {
-                    tempDevices = response.data;
-                }).catch(error => {
-                    console.log(error);
-                })
-    
-            setDevices(tempDevices);
+            .then(function (response) {
+                tempAllDevices = response.data;
+                
+            }).catch(error => {
+                console.log(error);
+            })
+
+            console.log('tempAllDevices', tempAllDevices)
+
+            tempAllDevices.forEach((device) => {
+                if(!device.deviceIsDeleted) {
+                    tempNonDeletedDevices.push(device);
+                }
+            }) 
+
+            console.log('tempNonDeletedDevices', tempNonDeletedDevices)
+            setDevices(tempNonDeletedDevices);
 
             if(isManagingUsers || isLoggingOut) {
                 selectDevice(0, true);

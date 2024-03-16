@@ -5,10 +5,10 @@ import { CurrentUserType, UserType } from "../interfaces.js";
 import axios from "axios";
 
 interface HeaderProps {
-    logIn: (user: UserType) => void;
+    logIn: ((user: UserType) => void);
     loggedInUser: CurrentUserType;
     isAdmin: boolean;
-    manageUsers: (isManagingUsers: boolean) => void;
+    manageUsers: ((isManagingUsers: boolean) => void);
 }
 var shajs = require('sha.js');
 
@@ -29,11 +29,12 @@ const HecateHeader: React.FC<HeaderProps> = ({
         const userNames = userName.split('.');
         let tempUser: UserType;
         const hashedPassword = shajs('sha256').update(userPassword).digest('hex');
-        // const hashedPassword1 = shajs('sha256').update('123').digest('hex');
+        const hashedPassword1 = shajs('sha256').update('123').digest('hex');
         // const hashedPassword2 = shajs('sha256').update('456').digest('hex');
         // const hashedPassword3 = shajs('sha256').update('789').digest('hex');
-        // console.log('hashedPassword', hashedPassword)
-        // console.log('hashedPassword1', hashedPassword1)
+        console.log('userPassword', userPassword)
+        console.log('hashedPassword', hashedPassword)
+        console.log('123', hashedPassword1)
         // console.log('hashedPassword2', hashedPassword2)
         // console.log('hashedPassword3', hashedPassword3)
 

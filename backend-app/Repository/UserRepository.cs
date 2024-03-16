@@ -31,6 +31,10 @@ namespace backEndApp.Repository {
             return _context.UserDevices.Where(ud => ud.UserID == userId).Select(ud => ud.Device).ToList();
         }
 
+        public ICollection<User> GetAdminUsers() {
+            return _context.Users.Where(ud => ud.UserType == "ADMIN").Select(u => u).ToList();
+        }
+
         public User GetUserWithLogin(string userFirstName, string userLastName, string userPassword) {
             return _context.Users.Where(ud => (
                 ud.UserFirstName == userFirstName && 
@@ -51,17 +55,7 @@ namespace backEndApp.Repository {
             } else {
                 return false;
             }
-
-            // return _context.Users.Where(ud => (
-            //     ud.UserFirstName == userFirstName && 
-            //     ud.UserLastName == userLastName &&
-            //     ud.UserPassword == userPassword
-            // )).FirstOrDefault();
         }
-
-        // public ICollection<User> GetUsersWithType(string userType) {
-        //     return _context.Users.Where(u => u.UserType.Trim().ToUpper() == userType.Trim().ToUpper()).ToList();
-        // }
 
         public bool UserExists(int userId) {
             return _context.Users.Any(d => d.UserID == userId); 
