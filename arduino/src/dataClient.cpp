@@ -36,7 +36,12 @@ int SerialDataClient::post(const char* url, const char* body, char* response, un
 	http.stop();
 	serial_client.flush_input();
 	serial_client.print("\nREQUEST\n");
-	http.post(url, CONTENT_TYPE, body);
+	if(body) {
+		http.post(url, CONTENT_TYPE, body);
+	}
+	else {
+		http.post(url);
+	}
 	serial_client.print("\nREQUEST END\n");
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
@@ -46,7 +51,12 @@ int SerialDataClient::put(const char* url, const char* body, char* response, uns
 	http.stop();
 	serial_client.flush_input();
 	serial_client.print("\nREQUEST\n");
-	http.put(url, CONTENT_TYPE, body);
+	if(body) {
+		http.put(url, CONTENT_TYPE, body);
+	}
+	else {
+		http.put(url);
+	}
 	serial_client.print("\nREQUEST END\n");
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
@@ -62,14 +72,24 @@ int LTEDataClient::get(const char* url, char* response, unsigned response_size)
 int LTEDataClient::post(const char* url, const char* body, char* response, unsigned response_size)
 {
 	http.stop();
-	http.post(url, CONTENT_TYPE, body);
+	if(body) {
+		http.post(url, CONTENT_TYPE, body);
+	}
+	else {
+		http.post(url);
+	}
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
 int LTEDataClient::put(const char* url, const char* body, char* response, unsigned response_size)
 {
 	http.stop();
-	http.put(url, CONTENT_TYPE, body);
+	if(body) {
+		http.put(url, CONTENT_TYPE, body);
+	}
+	else {
+		http.put(url);
+	}
 	return handle_httpclient_response(this->http, url, response, response_size);
 }
 
