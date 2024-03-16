@@ -152,13 +152,13 @@ const Selectors: React.FC<SelectorProps> = ({
                     onChange={(e) => {
                         const tempStringID = (e.target as HTMLSelectElement).value;
                         if(tempStringID === '---') {
-                            selectChannel(0);
+                            selectChannel(-1);
                         } else {
                             const tempChannelID = parseInt((tempStringID != null) ? tempStringID : "");
                             selectChannel(tempChannelID);
                         }
                     }}>
-                        <option value={'---'} selected={selectedChannelID === 0}>---</option>
+                        <option value={'---'} selected={selectedChannelID === -1}>---</option>
                         {
                             (selectedSensorID !== 0) ? 
                                 sensorChannels.map((sensor) => {
@@ -169,11 +169,11 @@ const Selectors: React.FC<SelectorProps> = ({
                                                 // console.log('channel', channel)
                                                 return (
                                                     <option 
-                                                        value={channel} 
-                                                        key={channel} 
-                                                        selected={(selectedChannelID === (i + 1))}
+                                                        value={channel - 1} 
+                                                        key={channel - 1} 
+                                                        selected={(selectedChannelID === (i))}
                                                     >
-                                                        {channel}
+                                                        {channel - 1}
                                                     </option>
                                                 )
                                             }) : null
