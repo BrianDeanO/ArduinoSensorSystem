@@ -140,15 +140,15 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
                 break;
 
             case 'HOUR': 
-                setNewDeviceUpdateInterval(intervalValue * (1000 * 60 * 60));
+                setNewDeviceUpdateInterval(intervalValue * (60 * 60));
                 break;
 
             case 'MIN':
-                setNewDeviceUpdateInterval(intervalValue * (1000 * 60));
+                setNewDeviceUpdateInterval(intervalValue * 60);
                 break;
 
             case 'SEC': 
-                setNewDeviceUpdateInterval(intervalValue * 1000);
+                setNewDeviceUpdateInterval(intervalValue);
                 break;
 
             default:

@@ -34,6 +34,7 @@ public:
 		if(interval < MIN_UPDATE_INTERVAL) {
 			DEBUG("ERR: getConfig interval too short, using minimum %d seconds\n", MIN_UPDATE_INTERVAL);
 			_update_interval = MIN_UPDATE_INTERVAL;
+			return;
 		}
 		_update_interval = interval;
 	}
