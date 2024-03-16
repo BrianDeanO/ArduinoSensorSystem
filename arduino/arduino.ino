@@ -20,7 +20,7 @@ char _dbg_msg[256]; // Used in the DEBUG macros, declared in common.hpp
     SerialDataClient client(&Serial, DEFAULT_SERVER_ADDRESS, DEFAULT_SERVER_PORT);
 #endif
 
-Device device(sensors, 1, &client);
+Device device(sensors, NUM_SENSORS, &client);
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);

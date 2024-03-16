@@ -1,3 +1,4 @@
+#pragma once
 #include "../../common.hpp"
 #include "../sensor.hpp"
 #include "../lib/ArduinoJson.h"

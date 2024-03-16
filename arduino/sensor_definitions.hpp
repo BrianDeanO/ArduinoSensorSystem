@@ -12,3 +12,4 @@ BME280Sensor sen1("bme280_sensor1");
 ExampleSensor sen2("demo_sensor1");
 
 Sensor* sensors[] = { &sen1 };
+const unsigned NUM_SENSORS = 1;
