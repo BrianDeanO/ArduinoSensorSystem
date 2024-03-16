@@ -106,18 +106,18 @@ const ConfigureDevice: React.FC<ConfigureDeviceProps> = (
             updateLabel = 'DAY';
         }
 
-        else if((deviceUpdateInterval % (1000 * 60 * 60)) === 0) {
-            updateValue = deviceUpdateInterval / (1000 * 60 * 60);
+        else if((deviceUpdateInterval % (60 * 60)) === 0) {
+            updateValue = deviceUpdateInterval / (60 * 60);
             updateLabel = 'HOUR';
         }
 
-        else if((deviceUpdateInterval % (1000 * 60)) === 0) {
-            updateValue = deviceUpdateInterval / (1000 * 60);
+        else if((deviceUpdateInterval % (60)) === 0) {
+            updateValue = deviceUpdateInterval / (60);
             updateLabel = 'MIN';
         }
 
-        else if((deviceUpdateInterval % 1000) === 0) {
-            updateValue = deviceUpdateInterval / 1000;
+        else {
+            updateValue = deviceUpdateInterval;
             updateLabel = 'SEC';
         }
 
