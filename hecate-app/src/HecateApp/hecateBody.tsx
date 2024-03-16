@@ -51,7 +51,7 @@ const HecateBody: React.FC<HecateBodyProps>  = ({
             setSelectedDeviceID(0);
             setSelectedTimeFrame(0);
             setSelectedSensorID(0);
-            setSelectedChannelID(0);
+            setSelectedChannelID(-1);
             setConfiguringSensor(false);
             setConfiguringDevice(false);
             setIsAddingUser(false);
