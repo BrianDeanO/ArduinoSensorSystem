@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "../config.hpp"
+#include "../common.hpp"
+#include "../sensor_definitions.hpp"
 #include "sim_client.hpp"
 #include "device.hpp"
 #include "drivers/example_driver.hpp"
@@ -8,7 +9,7 @@
 #include <unistd.h>
 #include <vector>
 
-// Used by DEBUG macros defined in config.hpp
+// Used by DEBUG macros defined in common.hpp
 #if DEBUG_MODE == 1
 char _dbg_msg[256];
 #endif
@@ -25,11 +26,9 @@ void print_menu() {
 void run_sim_device(std::string addr, unsigned port) {
 	SimClient client(addr.c_str(), port);
 
-	std::vector<Sensor*> sensors;
 	std::string input;
 
-	sensors.push_back(new ExampleSensor("sim_temp"));
-	Device device(sensors.data(), sensors.size(), &client);
+	Device device(sensors, NUM_SENSORS, &client);
 
 	std::cout << "Registering device..." << std::endl;
 	device.init();

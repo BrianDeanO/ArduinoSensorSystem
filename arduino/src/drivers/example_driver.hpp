@@ -1,4 +1,5 @@
-#include "../../config.hpp"
+#pragma once
+#include "../../common.hpp"
 #include "../sensor.hpp"
 #include "../lib/ArduinoJson.h"
 
@@ -22,7 +23,7 @@ public:
 		return true;
 	}
 
-	virtual bool read_config(JsonObject config) override { return true; }
+	virtual bool read_config(JsonObject& config) override { return true; }
 	virtual bool write_config(JsonObject config) override { return true; }
 
 	virtual uint8_t channel_count() const override { return 2; }

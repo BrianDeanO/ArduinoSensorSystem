@@ -1,5 +1,5 @@
 #include "device.hpp"
-#include "../config.hpp"
+#include "../common.hpp"
 
 #define DEFAULT_DEVICE_JSON \
 	R"({"deviceIdent":")" DEVICE_IDENT \
@@ -43,9 +43,10 @@ void Device::get_config() {
 void Device::poke_device() {
 	DEBUG("Poking device\n");
 	char url[100];
+	char buf[RESPONSE_BUFFER_SIZE];
 	sprintf(url, "/api/Device/Poke/%d", _id);
 
-	client->post(url, nullptr, nullptr, RESPONSE_BUFFER_SIZE);
+	client->post(url, buf, nullptr, RESPONSE_BUFFER_SIZE);
 }
 
 bool Device::register_device() {
