@@ -26,5 +26,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+    - name: Installing
+      working-directory: ./hecate-app
+      run: npm ci
+    - name: Building
+      working-directory: ./hecate-app
+      run: npm run build --if-present
