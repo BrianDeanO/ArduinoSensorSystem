@@ -1,4 +1,5 @@
-## Web App In Progress
+[![build](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/build-validation.yml/badge.svg?branch=main)](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/build-validation.yml)
+## Arduino Sensor System In Progress
 ### Front Page - Device, Sensor, and Channel Selected:
 ![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/1b96d607-6e2c-4cef-81e2-6c33739b4a0f)
 
