@@ -43,10 +43,9 @@ void Device::get_config() {
 void Device::poke_device() {
 	DEBUG("Poking device\n");
 	char url[100];
-	char buf[RESPONSE_BUFFER_SIZE];
 	sprintf(url, "/api/Device/Poke/%d", _id);
 
-	client->post(url, buf, nullptr, RESPONSE_BUFFER_SIZE);
+	client->post(url, nullptr, nullptr, 0);
 }
 
 bool Device::register_device() {
