@@ -13,7 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      working-directory: ./hecate-app
+      node-version: 20.x
+  
     strategy:
       matrix:
         node-version: [20.x]
@@ -21,14 +24,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ env.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.node-version }}
         cache: 'npm'
+        cache-dependency-path: ${{ env.working-directory }}/package-lock.json
     - name: Installing
-      working-directory: ./hecate-app
+      working-directory: ${{ env.working-directory }}
       run: npm ci
     - name: Building
-      working-directory: ./hecate-app
+      working-directory: ${{ env.working-directory }}
       run: npm run build --if-present
