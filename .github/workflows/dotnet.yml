@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  test-api:
 
     runs-on: ubuntu-latest
 
@@ -20,5 +20,27 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Build
-      run: dotnet build --no-restore
+    
+    - name: Setup Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v4
+
+    - name: Build Backend Server
+      run: |
+        cd backend-app
+        dotnet build --no-restore
+
+    - name: Build Arduino Simulator
+      uses: threeal/cmake-action@v1.3.0
+      with:
+        source-dir: arduino
+        build-dir: arduino/build
+        generator: Ninja
+
+    - name: Test API
+      run: |
+        cd backend-app
+        dotnet run --no-restore &
+        cd ../arduino/build
+        ./api-test
+        killall dotnet
+
