@@ -97,7 +97,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userRepository.GetUserDevices(userId));
+            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userDeviceRepository.GetUserDevices(userId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -114,7 +114,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var devices = _mapper.Map<List<DeviceDTO>>(_userRepository.GetDevicesFromUser(userId));
+            var devices = _mapper.Map<List<DeviceDTO>>(_deviceRepository.GetDevicesForUser(userId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -204,7 +204,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var userDevicesToDelete = _userRepository.GetUserDevices(userId);
+            var userDevicesToDelete = _userDeviceRepository.GetUserDevices(userId);
             var userToDelete = _userRepository.GetUser(userId);
 
             if(!ModelState.IsValid) {

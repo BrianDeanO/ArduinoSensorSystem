@@ -16,9 +16,23 @@ namespace backEndApp.Repository {
             return _context.UserDevices.OrderBy(ud => ud.UserID).ToList();
         }
 
-        public UserDevice GetUserDevice(int userId, int deviceId) {
+        public UserDevice? GetUserDevice(int userId, int deviceId) {
             return _context.UserDevices
                 .Where(ud => ((ud.UserID == userId) && (ud.DeviceID == deviceId))).FirstOrDefault();
+        }
+
+        public ICollection<UserDevice> GetUserDevices(int userId) {
+            return _context.UserDevices
+                .Where(ud => ud.UserID == userId)
+                .OrderBy(ud => ud.DeviceID)
+                .ToList();
+        }
+
+        public ICollection<UserDevice> GetDeviceUsers(int deviceId) {
+            return _context.UserDevices
+                .Where(ud => ud.DeviceID == deviceId)
+                .OrderBy(ud => ud.DeviceID)
+                .ToList();
         }
 
         public bool UserDeviceExists(int userId, int deviceId) {

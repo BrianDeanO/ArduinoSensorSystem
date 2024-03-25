@@ -17,7 +17,15 @@ namespace backEndApp.Repository {
             return _context.Sensors.OrderBy(s => s.SensorID).ToList();
         }
 
-        public Sensor GetSensor(int sensorId) {
+        public ICollection<Sensor> GetDeviceSensors(int deviceId)
+        {
+            return _context.Sensors
+                .Where(s => s.DeviceID == deviceId)
+                .OrderBy(s => s.SensorID)
+                .ToList();
+        }
+
+        public Sensor? GetSensor(int sensorId) {
             return _context.Sensors.Where(s => s.SensorID == sensorId).FirstOrDefault();
         }
 

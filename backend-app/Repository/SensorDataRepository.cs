@@ -16,6 +16,13 @@ namespace backEndApp.Repository {
             return _context.SensorDatas.OrderBy(sd => sd.SensorDataID).ToList();
         }
 
+        public ICollection<SensorData> GetSensorDatas(int sensorId) {
+            return _context.SensorDatas
+                .Where(sd => sd.SensorID == sensorId)
+                .OrderBy(sd => sd.SensorDataID)
+                .ToList();
+        }
+
         public bool CreateSensorData(SensorData sensorData) {
             _context.Add(sensorData);
             return Save();

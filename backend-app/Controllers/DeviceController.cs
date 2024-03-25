@@ -116,7 +116,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensors = _deviceRepository.GetDeviceSensors(deviceId);
+            var sensors = _sensorRepository.GetDeviceSensors(deviceId);
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -133,7 +133,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_deviceRepository.GetUserDevices(deviceId));
+            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userDeviceRepository.GetDeviceUsers(deviceId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -150,7 +150,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var users = _mapper.Map<List<UserDTO>>(_deviceRepository.GetUsersFromDevice(deviceId));
+            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetDeviceUsers(deviceId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -284,9 +284,9 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var userDevicesToDelete = _deviceRepository.GetUserDevices(deviceId);
+            var userDevicesToDelete = _userDeviceRepository.GetUserDevices(deviceId);
             var deviceToDelete = _deviceRepository.GetDevice(deviceId);
-            var sensorsToDelete = _deviceRepository.GetDeviceSensors(deviceId);
+            var sensorsToDelete = _sensorRepository.GetDeviceSensors(deviceId);
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);

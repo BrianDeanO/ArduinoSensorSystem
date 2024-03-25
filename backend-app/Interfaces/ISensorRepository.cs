@@ -5,8 +5,8 @@ namespace backEndApp.Interfaces {
 
     public interface ISensorRepository {
         ICollection<Sensor> GetSensors();
-        Sensor GetSensor(int sensorId);
-        ICollection<SensorData> GetSensorDatas(int sensorId);
+        Sensor? GetSensor(int sensorId);
+        ICollection<Sensor> GetDeviceSensors(int deviceId);
         bool SensorExists(int sensorId);
         bool CreateSensor(Sensor sensor);
         bool UpdateSensor(Sensor sensor);
