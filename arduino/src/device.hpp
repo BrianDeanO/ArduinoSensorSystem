@@ -18,8 +18,8 @@ public:
 	// to the server if the data does not fit in a single buffer.
 	virtual void update(uint64_t current_time);
 
-	virtual void get_config();
-	void poke_device();
+	virtual bool get_config();
+	bool poke_device();
 
 	// The timestamp of the next update
 	uint64_t next_update() {
@@ -44,6 +44,14 @@ public:
 
 	// Register this device with the server. This should be called once on startup.
 	virtual bool register_device();
+
+	uint32_t id() {
+		return _id;
+	}
+
+	unsigned update_interval() {
+		return _update_interval;
+	}
 
 private:
 	Sensor** sensors;
