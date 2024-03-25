@@ -8,6 +8,8 @@ using System.Data.SqlClient;
 using backEndApp.DTO;
 using backEndApp.Interfaces;
 using backEndApp.Models;
+using backEndApp.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -17,12 +19,18 @@ namespace backEndApp.Controllers {
         private readonly ISensorDataRepository _sensorDataRepository;
         private readonly IMapper _mapper;
         private readonly ISensorRepository _sensorRepository;
+        private IHubContext<RealTimeDataHub> _hub;
 
-
-        public SensorDataController(ISensorDataRepository sensorDataRepository, ISensorRepository sensorRepository, IMapper mapper) {
+        public SensorDataController(
+            ISensorDataRepository sensorDataRepository, 
+            ISensorRepository sensorRepository, 
+            IMapper mapper,
+            IHubContext<RealTimeDataHub> hub
+        ) {
             _sensorDataRepository = sensorDataRepository;
             _mapper = mapper;
             _sensorRepository = sensorRepository;
+            _hub = hub;
         }
 
         [HttpGet]
@@ -127,6 +135,8 @@ namespace backEndApp.Controllers {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
                     return StatusCode(500, ModelState);
                 }
+
+                var updateWebAppResult = _hub.Clients.All.SendAsync("frontEndWebApp", $"New Data Received @ {sensorDataMap.TimeRecorded}");
 
                 return Ok("Successfully Created.");
             }

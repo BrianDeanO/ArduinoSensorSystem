@@ -237,7 +237,7 @@ namespace backEndApp.Controllers {
             }
 
             else if(deviceId != updatedDevice.DeviceID) {
-                ModelState.AddModelError("", "Include DeviceID..."); /// CUSTOM ERROR MESSAGE??????? POSSIBLY?
+                ModelState.AddModelError("", "Include DeviceID...");
                 return BadRequest(ModelState);
             }
 

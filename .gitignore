@@ -1,5 +1,5 @@
 node_modules
-hecate-app/node_modules
+frontend-app/node_modules
 .vscode
 backend-app/bin
 backend-app/obj

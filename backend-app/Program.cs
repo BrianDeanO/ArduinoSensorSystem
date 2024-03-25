@@ -4,6 +4,7 @@ using backEndApp.Models;
 using backEndApp.Data;
 using backEndApp.Interfaces;
 using backEndApp.Repository;
+using backEndApp.Hubs;
 using System.Text.Json.Serialization;
 
 var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -40,7 +41,7 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddDbContext<SensorSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HecateAppCon")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("FrontendAppCon")));
 
 // builder.Services.AddDbContext<SensorSystemContext>(options =>
 //     options.UseSqlServer("Server=localhost,1433; Database=DockerDB;"));
@@ -49,6 +50,7 @@ builder.Services.AddDistributedMemoryCache();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -79,14 +81,15 @@ app.UseRouting();
 // app.UseCors(MyAllowSpecificOrigins);
 
 app.UseCors(x => x
-     .AllowAnyMethod()
-     .AllowAnyHeader()
-     .AllowCredentials()
-      //.WithOrigins("https://localhost:3000))
-      .SetIsOriginAllowed(origin => true));
+    
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials()
+    .SetIsOriginAllowed(origin => true));
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<RealTimeDataHub>("realTimeDataHub");
 
 app.Run();
