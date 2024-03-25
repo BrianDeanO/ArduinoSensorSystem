@@ -8,6 +8,7 @@ namespace backEndApp.Repository {
 
     public class LocalSensorRepository: ISensorRepository {
         private static List<Sensor> _sensors = new() {};
+        private static int _lastSensorId = 0;
 
         // ICollections can only be read
         public ICollection<Sensor> GetSensors() {
@@ -31,9 +32,10 @@ namespace backEndApp.Repository {
         }
         
         public bool CreateSensor(Sensor sensor) {
-            if (_sensors.Find(d => d.DeviceID == sensor.SensorID) != null)
+            sensor.SensorID = _lastSensorId++;
+            if (_sensors.Find(d => d.SensorIdent == sensor.SensorIdent) != null)
             {
-                throw new DuplicateNameException("Sensor with id '" + sensor.DeviceID + "' already exists");
+                throw new DuplicateNameException("Sensor with ident '" + sensor.SensorIdent + "' already exists");
             }
             _sensors.Add(sensor);
             return Save();

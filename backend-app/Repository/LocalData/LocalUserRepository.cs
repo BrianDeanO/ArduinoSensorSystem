@@ -8,6 +8,7 @@ namespace backEndApp.Repository {
 
     public class LocalUserRepository: IUserRepository {
         private static List<User> _users = new() {};
+        private static int _lastUserId = 0;
         private IUserDeviceRepository _userDeviceRepository;
 
         public LocalUserRepository(IUserDeviceRepository userDeviceRepository) {
@@ -60,6 +61,7 @@ namespace backEndApp.Repository {
         }
         
         public bool CreateUser(User user) {
+            user.UserID = _lastUserId++;
             if (_users.Find(d => d.UserID == user.UserID) != null)
             {
                 throw new DuplicateNameException("Device with id '" + user.UserID + "' already exists");

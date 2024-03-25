@@ -166,6 +166,10 @@ namespace backEndApp.Controllers {
             if(newDevice == null) {
                 return BadRequest(ModelState);
             }
+            if(newDevice.DeviceIdent == null) {
+                ModelState.AddModelError("", "DeviceIdent is required.");
+                return BadRequest(ModelState);
+            }
 
             var device = _deviceRepository.GetDevices()
                 .Where(d => d.DeviceIdent == newDevice.DeviceIdent)
@@ -179,11 +183,17 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             } else {
-                var defaultUpdateInterval = 60 * 60 * 24;
                 
                 var deviceMap = _mapper.Map<Device>(newDevice);
                 deviceMap.DeviceIsDeleted = false;
-                deviceMap.DeviceUpdateInterval = defaultUpdateInterval;
+
+                if(newDevice.DeviceUpdateInterval != null) {
+                    deviceMap.DeviceUpdateInterval = (int)newDevice.DeviceUpdateInterval;
+                }
+                else {
+                    var defaultUpdateInterval = 60 * 60 * 24;
+                    deviceMap.DeviceUpdateInterval = defaultUpdateInterval;
+                }
 
                 if(!_deviceRepository.CreateDevice(deviceMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
@@ -205,12 +215,10 @@ namespace backEndApp.Controllers {
                         return StatusCode(500, ModelState);
                     }
                 }
-
-
                 
                 var dto = new DeviceDTO {
                     DeviceID = deviceMap.DeviceID,
-                    DeviceUpdateInterval = defaultUpdateInterval,
+                    DeviceUpdateInterval = deviceMap.DeviceUpdateInterval,
                 };
                 return new JsonResult(dto, new JsonSerializerOptions() {
                     DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,

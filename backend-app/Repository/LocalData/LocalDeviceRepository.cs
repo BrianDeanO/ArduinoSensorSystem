@@ -11,6 +11,7 @@ namespace backEndApp.Repository
     public class LocalDeviceRepository : IDeviceRepository
     {
         private static List<Device> _devices = new() { };
+        private static int _lastDeviceId = 0;
         private IUserDeviceRepository _userDeviceRepository;
 
         public LocalDeviceRepository(IUserDeviceRepository userDeviceRepository)
@@ -45,9 +46,10 @@ namespace backEndApp.Repository
 
         public bool CreateDevice(Device device)
         {
-            if (_devices.Find(d => d.DeviceID == device.DeviceID) != null)
+            device.DeviceID = _lastDeviceId++;
+            if (_devices.Find(d => d.DeviceIdent == device.DeviceIdent) != null)
             {
-                throw new DuplicateNameException("Device with id '" + device.DeviceID + "' already exists");
+                throw new DuplicateNameException("Device with ident '" + device.DeviceIdent + "' already exists");
             }
             _devices.Add(device);
             return true;
