@@ -5,3 +5,5 @@ backend-app/bin
 backend-app/obj
 arduino/.cache
 arduino/build
+UnitTests/bin
+UnitTests/obj
