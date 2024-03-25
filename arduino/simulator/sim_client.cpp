@@ -6,6 +6,9 @@ int SimClient::handle_result(httplib::Result res, char* response, unsigned respo
 {
 	if (res) {
 		if(res->status / 100 != 2) {
+			if(res->status == 400) {
+				DEBUG("Bad request: %s\n", res->body.c_str());
+			}
 			return -res->status; // Bad status code
 		}
 

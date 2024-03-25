@@ -39,7 +39,7 @@ jobs:
     - name: Test API
       run: |
         cd backend-app
-        dotnet run --no-restore &
+        dotnet run --no-restore --launch-profile api-test &
         cd ../arduino/build
         ./api-test
         killall dotnet

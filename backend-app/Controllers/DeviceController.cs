@@ -68,7 +68,6 @@ namespace backEndApp.Controllers {
         // already exists, so only return fields relevant to the device.
         [HttpGet("ident/{deviceIdent}")]
         public IActionResult GetDeviceIdent(String deviceIdent) {
-            Console.WriteLine("DeviceIdent: " + deviceIdent);
             var device = _deviceRepository.GetDevices() 
                 .Where(e => e.DeviceIdent == deviceIdent)
                 .FirstOrDefault();
