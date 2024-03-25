@@ -11,13 +11,20 @@ set(CMAKE_BUILD_TYPE DEBUG)
 
 # find_package(OpenSSL)
 
-add_executable(device-sim
-	simulator/main.cpp
+add_library(sim STATIC
 	simulator/sim_client.cpp
 	src/device.cpp
 	src/dataClient.cpp
 	src/sensor.cpp
 )
-target_include_directories(device-sim PRIVATE simulator src src/lib)
+target_compile_definitions(sim PRIVATE SIMULATOR)
+target_include_directories(sim PUBLIC simulator src src/lib)
+
+add_executable(device-sim simulator/main.cpp)
 target_compile_definitions(device-sim PRIVATE SIMULATOR)
+target_link_libraries(device-sim PRIVATE sim)
 # target_compile_definitions(device-sim PRIVATE NO_LTE)
+
+add_executable(api-test simulator/api_test.cpp)
+target_compile_definitions(api-test PRIVATE SIMULATOR)
+target_link_libraries(api-test PRIVATE sim)

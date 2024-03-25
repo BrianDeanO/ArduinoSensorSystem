@@ -16,11 +16,22 @@ builder.Services.AddTransient<Seed>();
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ISensorRepository, SensorRepository>();
-builder.Services.AddScoped<ISensorDataRepository, SensorDataRepository>();
-builder.Services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
+
+var databaseMode = Environment.GetEnvironmentVariable("APPLICATION_DATABASE_MODE");
+if(databaseMode != null && databaseMode == "InMemory") {
+    builder.Services.AddScoped<IDeviceRepository, LocalDeviceRepository>();
+    builder.Services.AddScoped<IUserRepository, LocalUserRepository>();
+    builder.Services.AddScoped<ISensorRepository, LocalSensorRepository>();
+    builder.Services.AddScoped<ISensorDataRepository, LocalSensorDataRepository>();
+    builder.Services.AddScoped<IUserDeviceRepository, LocalUserDeviceRepository>();
+}
+else {
+    builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<ISensorRepository, SensorRepository>();
+    builder.Services.AddScoped<ISensorDataRepository, SensorDataRepository>();
+    builder.Services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
+}
 
 builder.Services.AddCors(options => {
     options.AddPolicy(name: MyAllowSpecificOrigins,

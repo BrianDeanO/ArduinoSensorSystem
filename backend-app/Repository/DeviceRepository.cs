@@ -17,7 +17,7 @@ namespace backEndApp.Repository {
             return _context.Devices.OrderBy(d => d.DeviceID).ToList();
         }
 
-        public Device GetDevice(int deviceId) {
+        public Device? GetDevice(int deviceId) {
             return _context.Devices.Where(d => d.DeviceID == deviceId).FirstOrDefault();
         }
 
@@ -26,14 +26,12 @@ namespace backEndApp.Repository {
             return _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
         }
 
-        public ICollection<UserDevice> GetUserDevices(int deviceId) {
-            // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
-            return _context.UserDevices.Where(ud => (ud.DeviceID == deviceId)).ToList();
-        }
-
-        public ICollection<User> GetUsersFromDevice(int deviceId) {
-            // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
-            return _context.UserDevices.Where(ud => ud.DeviceID == deviceId).Select(ud => ud.User).ToList();
+        public ICollection<Device> GetDevicesForUser(int userId) {
+            var deviceIds = _context.UserDevices
+                .Where(ud => ud.UserID == userId)
+                .Select(ud => ud.DeviceID)
+                .ToList();
+            return _context.Devices.Where(d => deviceIds.Contains(d.DeviceID)).ToList();
         }
 
 

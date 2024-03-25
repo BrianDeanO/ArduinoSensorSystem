@@ -17,13 +17,14 @@ namespace backEndApp.Repository {
             return _context.Users.OrderBy(u => u.UserID).ToList();
         }
 
-        public User GetUser(int userId) {
+        public User? GetUser(int userId) {
             return _context.Users.Where(u => u.UserID == userId).FirstOrDefault();
         }
 
-        public ICollection<UserDevice> GetUserDevices(int userId) {
-            // var sensorList = _context.Sensors.Where(s => (s.UserID == userId)).ToList();
-            return _context.UserDevices.Where(ud => (ud.UserID == userId)).ToList();
+        public ICollection<User> GetDeviceUsers(int deviceId)
+        {
+            var userDevices = _context.UserDevices.Where(ud => ud.DeviceID == deviceId).ToList();
+            return _context.Users.Where(u => userDevices.Any(ud => ud.UserID == u.UserID)).ToList();
         }
 
         public ICollection<Device> GetDevicesFromUser(int userId) {

@@ -90,7 +90,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorRepository.GetSensorDatas(sensorId));
+            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDatas(sensorId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -181,7 +181,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(sensorId);
+            var sensorDatasToDelete = _sensorDataRepository.GetSensorDatas(sensorId);
             var sensorToDelete = _sensorRepository.GetSensor(sensorId);
 
             if(!ModelState.IsValid) {

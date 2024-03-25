@@ -19,13 +19,14 @@ void Device::init() {
 	}
 }
 
-void Device::get_config() {
+bool Device::get_config() {
 	DEBUG("Getting config\n");
 	char buf[RESPONSE_BUFFER_SIZE];
 	char url[100];
 	sprintf(url, "/api/Device/%d/DeviceConfig/", _id);
 
 	int result = client->get(url, buf, RESPONSE_BUFFER_SIZE);
+	bool success = true;
 	if(result > 0) {
 		JsonDocument j;
 		deserializeJson(j, buf);
@@ -36,17 +37,27 @@ void Device::get_config() {
 		}
 		else {
 			DEBUG("ERR: getConfig missing deviceUpdateInterval\n");
+			success = false;
 		}
+
+		return success;
 	}
+
+	return false; // Request failed
 }
 
-void Device::poke_device() {
+bool Device::poke_device() {
 	DEBUG("Poking device\n");
 	char url[100];
 	char buf[RESPONSE_BUFFER_SIZE];
 	sprintf(url, "/api/Device/Poke/%d", _id);
 
-	client->post(url, buf, nullptr, RESPONSE_BUFFER_SIZE);
+	auto res = client->post(url, buf, nullptr, RESPONSE_BUFFER_SIZE);
+	if(res < 0) {
+		DEBUG("ERR: poking device: %d\n", res);
+		return false;
+	}
+	return true;
 }
 
 bool Device::register_device() {
