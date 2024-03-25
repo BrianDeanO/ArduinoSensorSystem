@@ -205,8 +205,6 @@ namespace backEndApp.Controllers {
                         return StatusCode(500, ModelState);
                     }
                 }
-
-
                 
                 var dto = new DeviceDTO {
                     DeviceID = deviceMap.DeviceID,
@@ -229,7 +227,7 @@ namespace backEndApp.Controllers {
             }
 
             else if(deviceId != updatedDevice.DeviceID) {
-                ModelState.AddModelError("", "Include DeviceID..."); /// CUSTOM ERROR MESSAGE??????? POSSIBLY?
+                ModelState.AddModelError("", "Include DeviceID...");
                 return BadRequest(ModelState);
             }
 
