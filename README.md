@@ -2,7 +2,8 @@
 [![Node.js CI](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml)
 ## Arduino Sensor System In Progress
 ### Front Page - Device, Sensor, and Channel Selected:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/9ed064d0-20ba-4b10-8675-b33fd53438cb)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/d39851e7-3a7f-468c-b8a3-76f413241de4)
+
 
 ### Device Configuration Page:
 ![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/a5905139-b1b6-4550-b27f-733aaef510ad)
