@@ -2,20 +2,21 @@
 [![Node.js CI](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml)
 ## Arduino Sensor System In Progress
 ### Front Page - Device, Sensor, and Channel Selected:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/1b96d607-6e2c-4cef-81e2-6c33739b4a0f)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/9ed064d0-20ba-4b10-8675-b33fd53438cb)
 
 ### Device Configuration Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/0e9aa709-2c5f-45c9-b805-166ebaba635a)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/a5905139-b1b6-4550-b27f-733aaef510ad)
 
 ### Sensor Configuration Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/2d356e80-b3a6-4018-bf1f-8f973a35bad1)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/46d72965-f845-481f-b81d-90d3c554ba26)
 
 ### Manage Users Main Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/f1827080-ae26-49c2-93f1-6a4c424fa975)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/b81c1661-c0ee-4133-9ec1-6e12f6d413da)
 
 ### Edit User Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/52971dd5-ca0b-42d9-b25c-4b49f1f236df)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/a22629e1-6c2c-4e65-ba97-04c468efaef4)
 
 ### Add User Page:
-![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/b736fd76-dfc0-4361-b2df-8949acebc633)
+![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/5ba64801-e6cf-4a4b-8dff-5637450dfdb6)
+
 
