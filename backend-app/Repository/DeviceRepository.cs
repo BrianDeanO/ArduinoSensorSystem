@@ -12,7 +12,6 @@ namespace backEndApp.Repository {
             _context = context;
         }
 
-        // ICollections can only be read
         public ICollection<Device> GetDevices() {
             return _context.Devices.OrderBy(d => d.DeviceID).ToList();
         }

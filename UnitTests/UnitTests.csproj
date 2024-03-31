@@ -24,8 +24,8 @@
     <ProjectReference Include="../backend-app/backend-app.csproj" />
   </ItemGroup>
 
-      <ItemGroup>
+  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
+  </ItemGroup>
 
 </Project>

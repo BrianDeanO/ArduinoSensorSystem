@@ -12,10 +12,11 @@ namespace backEndApp.Data;
         public DbSet<UserDevice> UserDevices { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<SensorData> SensorDatas { get; set; }
+        public DbSet<SensorConfig> SensorConfigs { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             
-            // Creating composite key table
+            // Creating UserDevice composite key table
             modelBuilder.Entity<UserDevice>()
                 .HasKey(ud => new {ud.UserID, ud.DeviceID});
 
@@ -33,12 +34,28 @@ namespace backEndApp.Data;
             modelBuilder.Entity<Device>()
                 .HasMany(d => d.Sensors)
                 .WithOne(s => s.Device);
-
-            // Configures Device + Sensors, one-to-many relationship
             modelBuilder.Entity<Sensor>()
                 .HasOne(s => s.Device)
                 .WithMany(d => d.Sensors)
                 .HasForeignKey(d => d.DeviceID);
+                
+            // Configures Sensors + SensorData, one-to-many relationship
+            modelBuilder.Entity<Sensor>()
+                .HasMany(d => d.SensorDatas)
+                .WithOne(s => s.Sensor);
+            modelBuilder.Entity<SensorData>()
+                .HasOne(s => s.Sensor)
+                .WithMany(d => d.SensorDatas)
+                .HasForeignKey(d => d.SensorID);
+
+            // Configures Sensors + SensorConfig, one-to-many relationship
+            modelBuilder.Entity<Sensor>()
+                .HasMany(d => d.SensorConfigs)
+                .WithOne(s => s.Sensor);
+            modelBuilder.Entity<SensorConfig>()
+                .HasOne(s => s.Sensor)
+                .WithMany(d => d.SensorConfigs)
+                .HasForeignKey(d => d.SensorID);
         }
     }
 

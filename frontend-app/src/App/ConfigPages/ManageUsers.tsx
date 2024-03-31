@@ -30,6 +30,9 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     const [newUserFirstName, setNewUserFirstName] = useState('');
     const [newUserLastName, setNewUserLastName] = useState('');
     const [newUserType, setNewUserType] = useState('');
+    const [newUserEmail, setNewUserEmail] = useState('');
+    const [newUserPhone, setNewUserPhone] = useState('');
+    const [newuserNotifications, setNewuserNotifications] = useState(false);
 
     const [updatePassword, setUpdatePassword] = useState(false);
     const [newUserPassword, setNewUserPassword] = useState('');
@@ -127,6 +130,9 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         setNewUserFirstName(user.userFirstName);
         setNewUserLastName(user.userLastName);
         setNewUserType(user.userType);
+        setNewUserEmail(user.userEmail);
+        setNewUserPhone(user.userPhone);
+        setNewuserNotifications(user.userNotifications);
     }
 
     const getUsers = useCallback(async() => {
@@ -193,11 +199,13 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     async function updateUserInDB(deletedUser: boolean) {
         let postedCorrectly: Promise<boolean>;
         let deletedCorrectly: Promise<boolean>;
-
         let canUpdate = true;
 
         let tempUserPassword = updatePassword ? newUserPassword : selectedUser.userPassword;
-        const hashedPassword = shajs('sha256').update(tempUserPassword).digest('hex');
+
+        if(updatePassword) {
+            tempUserPassword = shajs('sha256').update(tempUserPassword).digest('hex');
+        }
 
         setUpdateUserAttempt(true);
 
@@ -205,7 +213,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
             if(
                 user.userFirstName === newUserFirstName &&
                 user.userLastName === newUserLastName &&
-                user.userPassword === hashedPassword &&
+                user.userPassword === tempUserPassword &&
                 user.userID !== selectedUserID
             ) {
                 canUpdate = false;
@@ -220,10 +228,10 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 userType: newUserType,
                 userFirstName: newUserFirstName,
                 userLastName: newUserLastName,
-                userPassword: hashedPassword,
-                userEmail: '',
-                userPhone: '',
-                userNotification: false,
+                userPassword: tempUserPassword,
+                userEmail: newUserEmail,
+                userPhone: newUserPhone,
+                userNotifications: newuserNotifications,
                 userIsDeleted: deletedUser,
             }, {
                 headers: {
@@ -316,9 +324,9 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 userFirstName: newUserFirstName,
                 userLastName: newUserLastName,
                 userPassword: hashedPassword,
-                userEmail: '',
-                userPhone: '',
-                userNotification: false,
+                userEmail: newUserEmail,
+                userPhone: newUserPhone,
+                userNotifications: newuserNotifications,
             }, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -385,9 +393,12 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         setNewUserFirstName('');
         setNewUserLastName('');
         setNewUserType('');
+        setNewUserEmail('');
+        setNewUserPhone('');
         setUpdatePassword(false);
         setOldUserPassword('');
         setNewUserPassword('');
+        setNewuserNotifications(false);
     }
 
     useEffect(() => {
@@ -467,7 +478,6 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         cols={1}
                         rows={1} >{newUserFirstName}</textarea>
                     </div>
-
                     <div className="UserListMainBox">
                         <div className="userTitleText">
                             Last Name
@@ -481,7 +491,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         cols={1}
                         rows={1} >{newUserLastName}</textarea>
                     </div>
-
+                    
                     
                     <div className="UserListMainBox">
                         <div className="userTitleText">
@@ -509,6 +519,61 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                             </button>
                         </div>
                     </div>
+
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Receive Notifications
+                        </div>
+                        <div className="EditUserTypeSubBox">
+                            <button
+                                className={newuserNotifications ? 
+                                    "EditUserTypeButtonSelected" : "EditUserTypeButton"}
+                                onClick={() => {
+                                    setNewuserNotifications(true);
+                                }}
+                                >
+                                Yes 
+                            </button>
+                            
+                            <button 
+                                className={!newuserNotifications ? 
+                                    "EditUserTypeButtonSelected" : "EditUserTypeButton"}
+                                onClick={() => {
+                                    setNewuserNotifications(false);
+                                }}
+                                >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Email
+                        </div>
+                        <textarea
+                        className="manageUserTextArea"
+                        value={newUserEmail}
+                        id={'EMAIL'}
+                        onChange={(e) => {setNewUserEmail(e.target.value.toString());}}
+                        spellCheck={false}
+                        cols={1}
+                        rows={1} >{newUserEmail}</textarea>
+                    </div>
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Phone Number
+                        </div>
+                        <textarea
+                        className="manageUserTextArea"
+                        value={newUserPhone}
+                        id={'PHONE'}
+                        onChange={(e) => {setNewUserPhone(e.target.value.toString());}}
+                        spellCheck={false}
+                        cols={1}
+                        rows={1} >{newUserPhone}</textarea>
+                    </div>
+
+
                     {
                         updatePassword ? null :
                         <div className="UserListMainBox">
@@ -581,7 +646,13 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 })
                                 
                                 return (
-                                    <div className={(i === 0) ? "DeviceOptionTopSubBox" : "DeviceOptionSubBox"} key={i}>
+                                    <div
+                                        className={
+                                            (i === 0) ? 
+                                                ((i === (devices.length - 1)) ? "DeviceOptionSingleSubBox" : "DeviceOptionTopSubBox") : 
+                                                ((i === (devices.length - 1)) ? "DeviceOptionBottomSubBox" : "DeviceOptionSubBox")
+                                        } 
+                                        key={i}>
                                         <span 
                                             className={
                                                 (newUserType.toUpperCase() === ADMIN) ? "DeviceOptionButtonADMIN" :
@@ -621,7 +692,6 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         cols={1}
                         rows={1} >{newUserFirstName}</textarea>
                     </div>
-
                     <div className="UserListMainBox">
                         <div className="userTitleText">
                             Last Name
@@ -635,8 +705,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         cols={1}
                         rows={1} >{newUserLastName}</textarea>
                     </div>
-
-                    
+                
                     <div className="UserListMainBox">
                         <div className="userTitleText">
                             User Type
@@ -662,6 +731,59 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 Basic
                             </button>
                         </div>    
+                    </div>
+
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Receive Notifications
+                        </div>
+                        <div className="EditUserTypeSubBox">
+                            <button
+                                className={newuserNotifications ? 
+                                    "EditUserTypeButtonSelected" : "EditUserTypeButton"}
+                                onClick={() => {
+                                    setNewuserNotifications(true);
+                                }}
+                                >
+                                Yes 
+                            </button>
+                            
+                            <button 
+                                className={!newuserNotifications ? 
+                                    "EditUserTypeButtonSelected" : "EditUserTypeButton"}
+                                onClick={() => {
+                                    setNewuserNotifications(false);
+                                }}
+                                >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Email
+                        </div>
+                        <textarea
+                        className="manageUserTextArea"
+                        value={newUserEmail}
+                        id={'EMAIL'}
+                        onChange={(e) => {setNewUserEmail(e.target.value.toString());}}
+                        spellCheck={false}
+                        cols={1}
+                        rows={1} >{newUserEmail}</textarea>
+                    </div>
+                    <div className="UserListMainBox">
+                        <div className="userTitleText">
+                            Phone Number
+                        </div>
+                        <textarea
+                        className="manageUserTextArea"
+                        value={newUserPhone}
+                        id={'PHONE'}
+                        onChange={(e) => {setNewUserPhone(e.target.value.toString());}}
+                        spellCheck={false}
+                        cols={1}
+                        rows={1} >{newUserPhone}</textarea>
                     </div>
 
                     <div className="UserListMainBox">
@@ -778,7 +900,11 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                             className="ManageUserPrimaryButton"
                             onClick={(e) => {
                                 const oldUserPasswordHashed = shajs('sha256').update(oldUserPassword).digest('hex');
-
+                                console.log('newUserPassword', newUserPassword)
+                                console.log('selectedUser.userPassword', selectedUser.userPassword)
+                                console.log('oldUserPassword', oldUserPassword)
+                                console.log('oldUserPasswordHashed', oldUserPasswordHashed);
+                                
                                 if((updatePassword && 
                                         (oldUserPasswordHashed === selectedUser.userPassword) && (newUserPassword !== '')) ||
                                     !updatePassword) {
@@ -851,6 +977,9 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 setOldUserPassword('');
                                 setNewUserPassword('');
                                 setNewUserType('');
+                                setNewUserEmail('');
+                                setNewUserPhone('');
+                                setNewuserNotifications(false);
                                 setSelectedUserID(0);
                             }}>
                                 Add User

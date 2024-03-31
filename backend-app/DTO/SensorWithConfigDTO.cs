@@ -1,7 +1,7 @@
 using backEndApp.Models;
 namespace backEndApp.DTO;
 
-public class SensorDTO {
+public class SensorWithConfigDTO {
     public int SensorID { get; set; }    
     public string? SensorIdent { get; set; }    
     public string? SensorName { get; set; }
@@ -11,4 +11,7 @@ public class SensorDTO {
     
     // Device ID Foreign Key
     public int DeviceID { get; set; }
+    
+    // The relationship to possbily MANY sensorConfigs
+    public string[][]? SensorConfigArray { get; set; }
 }

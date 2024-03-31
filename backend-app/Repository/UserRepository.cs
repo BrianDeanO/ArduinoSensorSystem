@@ -12,7 +12,7 @@ namespace backEndApp.Repository {
             _context = context;
         }
 
-        // ICollections can only be read
+        
         public ICollection<User> GetUsers() {
             return _context.Users.OrderBy(u => u.UserID).ToList();
         }

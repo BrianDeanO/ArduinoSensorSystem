@@ -50,7 +50,7 @@ export interface UserType {
     userPassword: string;
     userEmail: string;
     userPhone: string;
-    userNotification: boolean;
+    userNotifications: boolean;
     userIsDeleted: boolean;
 }
 
@@ -79,6 +79,13 @@ export interface SensorDataType {
     dataUnit: string;
     timeRecorded: string;
     sensorID: number;
+}
+
+export interface SensorConfigType {
+    sensorConfigID: number;
+    sensorID: number;
+    sensorConfigKey: string;
+    sensorConfigValue: string;
 }
 
 export interface SensorChannels {

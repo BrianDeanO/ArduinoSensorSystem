@@ -62,25 +62,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        // [HttpGet("{selectedTimeFrame}")]
-        // [ProducesResponseType(200, Type = typeof(SensorData))]
-        // [ProducesResponseType(400)]
-        // public IActionResult GetSensorDataInDateRange(string selectedTimeFrame) {
-        //     var parsedDateTime = DateTime.Parse(selectedTimeFrame);
-
-        //     if(parsedDateTime != null) {
-        //         var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDataInDateRange(parsedDateTime));
-
-        //         if(!ModelState.IsValid) {
-        //             return BadRequest(ModelState);
-        //         } else {
-        //             return Ok(sensorDatas);
-        //         }
-        //     } else {
-        //         return BadRequest("Issue With Parsing DateTime");
-        //     }
-        // }
-
         [HttpGet("{sensorDataId}/Sensor")]
         [ProducesResponseType(200, Type = typeof(Sensor))]
         [ProducesResponseType(400)]
@@ -187,7 +168,10 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-
+            if(sensorDataToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the SensorData");
+                return StatusCode(500, ModelState);
+            }
             if(!_sensorDataRepository.DeleteSensorData(sensorDataToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the SensorData");
             }

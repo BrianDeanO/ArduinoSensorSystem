@@ -82,6 +82,23 @@ namespace backEndApp.Controllers {
             });
         }
 
+        [HttpGet("{sensorId}/SensorConfigs")]
+        [ProducesResponseType(200, Type = typeof(ICollection<SensorConfig>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetSensorConfigs(int sensorId) {
+            if(!_sensorRepository.SensorExists(sensorId)) {
+                return NotFound();
+            }
+
+            var sensorConfigs = _mapper.Map<List<SensorConfigDTO>>(_sensorRepository.GetSensorConfigs(sensorId));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(sensorConfigs);
+            }
+        }
+
         [HttpGet("{sensorId}/SensorDatas")]
         [ProducesResponseType(200, Type = typeof(ICollection<SensorData>))]
         [ProducesResponseType(400)]
@@ -102,7 +119,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateSensor([FromBody] SensorDTO newSensor) {
+        public IActionResult CreateSensor([FromBody] SensorWithConfigDTO newSensor) {
             if(newSensor == null) {
                 return BadRequest(ModelState);
             }
@@ -129,6 +146,22 @@ namespace backEndApp.Controllers {
                 if(!_sensorRepository.CreateSensor(sensorMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
                     return StatusCode(500, ModelState);
+                }
+
+                if(newSensor.SensorConfigArray != null && newSensor.SensorConfigArray.Length > 0) {
+                    for(int i = 0; i < newSensor.SensorConfigArray.Length; i++) {
+                        var sensorConfig = new SensorConfig() {
+                            SensorID = sensorMap.SensorID,
+                            SensorConfigKey = newSensor.SensorConfigArray[i][0],
+                            SensorConfigValue = newSensor.SensorConfigArray[i][1],
+                            Sensor = _sensorRepository.GetSensor(sensorMap.SensorID)
+                        };
+
+                        if(!_sensorRepository.CreateSensorConfig(sensorConfig)) {
+                            ModelState.AddModelError("", "Something Went Wrong While Saving.");
+                            return StatusCode(500, ModelState);
+                        }
+                    }
                 }
 
                 var dto = new SensorDTO {
@@ -191,7 +224,10 @@ namespace backEndApp.Controllers {
             if(!_sensorDataRepository.DeleteSensorDatas(sensorDatasToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting SensorDatas");
             }
-
+            if(sensorToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the Sensor");
+                return StatusCode(500, ModelState);
+            }
             if(!_sensorRepository.DeleteSensor(sensorToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the Sensor");
             }

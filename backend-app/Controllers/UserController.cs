@@ -175,16 +175,6 @@ namespace backEndApp.Controllers {
                 return BadRequest();
             }
 
-            // var tempUser = _userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
-            
-            // if((tempUser != null) && (tempUser.UserID != updatedUser.UserID)) {
-            //     return BadRequest(ModelState);
-            // }
-
-            // if(_userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword)) {
-            //     return BadRequest(ModelState);
-            // }
-
             var userMap = _mapper.Map<User>(updatedUser);
 
             if(!_userRepository.UpdateUser(userMap)) {
@@ -214,7 +204,10 @@ namespace backEndApp.Controllers {
             if(!_userDeviceRepository.DeleteUserDevices(userDevicesToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting UserDevices");
             }
-
+            if(userToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the User");
+                return StatusCode(500, ModelState);
+            }
             if(!_userRepository.DeleteUser(userToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the User");
             }

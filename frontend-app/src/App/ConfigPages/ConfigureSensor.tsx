@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { SensorType, DeviceType } from "../../interfaces.js";
+import { SensorType, DeviceType, SensorConfigType } from "../../interfaces.js";
 import { proxyURL } from "../../variables.js";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ interface ConfigureSensorProps {
     configureSensor: ((configuringSensor: boolean) => void);
     selectedSensorID: number;
 }
+
 
 const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     {
@@ -27,13 +28,17 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     const [newSensorChannelCount, setNewSensorChannelCount] = useState(0);
 
     const [newSensorDeviceID, setNewSensorDeviceID] = useState(0);
+    
+    const [newSensorConfigs, setNewSensorConfigs] = useState([] as SensorConfigType[]);
+    const [sensorConfigsIsEditArray, setSensorConfigsIsEditArray] = useState([] as boolean[]);
+    const [sensorConfigIsBeingEdited, setSensorConfigIsBeingEdited] = useState(false);
 
     const [isDeletingSensor, setIsDeletingSensor] = useState(false);
 
     const [sensorUpdateAttempt, setSensorUpdateAttempt] = useState(false);
     const [updatedCorrectly, setUpdatedCorrectly] = useState(false);
     const [updateDeleteMessage, setUpdateDeleteMessage] = useState('');
-    const [postError, setPostError] = useState('');
+    const [error, setError] = useState('');
 
     const getDevices = useCallback(async() => {
         let tempDevices: DeviceType[] = [];
@@ -56,8 +61,10 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
 
     const getSensor = useCallback(async(sensorID: number) => {
         let tempSensor: SensorType;
+        let tempSensorConfigs: SensorConfigType[];
 
         if(sensorID !== 0) {
+            // Getting sensor
             await axios({
                 method: 'get',
                 url: `${proxyURL}/api/Sensor/${sensorID}`,
@@ -72,7 +79,21 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                     setNewSensorDeviceID(tempSensor.deviceID);
                 }).catch(error => {
                     console.log(error);
-                })
+                });
+            
+            // Getting Sensor Configs
+            await axios({
+                method: 'get',
+                url: `${proxyURL}/api/Sensor/${sensorID}/SensorConfigs`,
+            })
+                .then(function (response) {
+                    tempSensorConfigs = response.data;
+
+                    setNewSensorConfigs(tempSensorConfigs);
+                    setSensorConfigsIsEditArray(new Array(tempSensorConfigs.length).fill(false));
+                }).catch(error => {
+                    console.log(error);
+                });            
         }
     }, []);
 
@@ -80,6 +101,29 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
         getDevices();
         getSensor(selectedSensorID);
     }, [getDevices, getSensor, selectedSensorID])
+
+    async function updateSensorConfig(sensorConfig: SensorConfigType): Promise<boolean> {
+        let updatedCorrectly = false;
+
+        await axios.put(`${proxyURL}/api/SensorConfig/${sensorConfig.sensorConfigID}`, {
+            sensorConfigID: sensorConfig.sensorConfigID,
+            sensorConfigKey: sensorConfig.sensorConfigKey,
+            sensorConfigValue: sensorConfig.sensorConfigValue,
+            sensorID: sensorConfig.sensorID
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+                }
+        })
+        .then(function (response) {
+            updatedCorrectly =  true;
+        }).catch(function (error) {
+            setError(error);
+            console.log(error);
+        });
+
+        return Promise.resolve(updatedCorrectly);
+    }
 
     async function updateSensor(deletedSensor: boolean) {
         await axios.put(`${proxyURL}/api/Sensor/${selectedSensorID}`, {
@@ -101,14 +145,59 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                     ? 'Successfully Deleted Sensor.' : 'Successfully Updated Sensor.');
         }).catch(function (error) {
             console.log(error);
-            setPostError(error.code)
+            setError(error.code)
         });
+
+        let originalSensorConfigs: SensorConfigType[] = [];
+
+        // Getting Original Sensor Configs Again (due to previous unwanted behaivor)
+        await axios({
+            method: 'get',
+            url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorConfigs`,
+        })
+            .then(function (response) {
+                originalSensorConfigs = response.data;
+            }).catch(error => {
+                console.log(error);
+            });         
+
+        newSensorConfigs.forEach((sc, i) => {
+            if(sc.sensorConfigValue !== originalSensorConfigs[i].sensorConfigValue) {
+                updateSensorConfig(sc);
+            }
+
+            if(!updatedCorrectly) {
+                return;
+            }
+        })
         
         setSensorUpdateAttempt(true);
         setNewSensorType("");
         setNewSensorName("");
         setNewSensorChannelCount(0);
         setNewSensorDeviceID(0);
+        setNewSensorConfigs([]);
+        setSensorConfigsIsEditArray([]);
+    }
+
+    function updateConfigValue(index: number, value: string) {
+        newSensorConfigs.forEach((sc, i) => {
+            if(i === index) {
+                sc.sensorConfigValue = value;
+                return;
+            }
+        });
+        setNewSensorConfigs(newSensorConfigs);
+    }
+
+    function updateConfigValueEdits(index: number, value: boolean) {
+        sensorConfigsIsEditArray.forEach((sc, i) => {
+            if(i === index) {
+                sc = value;
+                return;
+            }
+        });
+        setSensorConfigIsBeingEdited(!sensorConfigIsBeingEdited);
     }
 
     return (
@@ -124,7 +213,7 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                                 </span>
                             </div> : 
                             <div className="UpdateSensorErrorSubText">
-                                <span> { `${postError}`} </span>
+                                <span> { `${error}`} </span>
                                 <span> Unable to Updated Sensor </span>
                             </div>
                         }
@@ -217,6 +306,56 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
                             </div>
                         </div>
                     </div>
+                           
+                    {
+                        (newSensorConfigs.length === 0) ? null :
+                            <div className="SensorConfigMainBox">
+                                <div className="SensorConfigTitleText">
+                                    <div>Sensor Configuration Fields</div>
+                                </div>
+                                { 
+                                    newSensorConfigs.map((sensorConfig, i) => {
+                                        return (
+                                            <div className={
+                                                    (i === 0) ? 
+                                                        ((i === (newSensorConfigs.length - 1)) ? "SensorConfigSingleSubBox" : "SensorConfigTopSubBox") : 
+                                                        ((i === (newSensorConfigs.length - 1)) ? "SensorConfigBottomSubBox" : "SensorConfigSubBox")
+                                                } 
+                                                key={i}>
+                                                <div className="ConfigSensorFieldTitleText">
+                                                    {sensorConfig.sensorConfigKey}
+                                                </div>
+                                                {sensorConfigsIsEditArray[i] ? 
+                                                    <textarea
+                                                        className="SensorConfigFieldTextArea"
+                                                        defaultValue={newSensorConfigs[i].sensorConfigValue}
+                                                        id={`CONFIG_VALUE_${i}`}
+                                                        onChange={(e) => {updateConfigValue(i, e.target.value.toString());}}
+                                                        spellCheck={false}
+                                                        cols={1}
+                                                        rows={1}></textarea> : 
+                                                    <div className="ConfigSensorFieldTextBox">
+                                                        <div className="ConfigSensorFieldText">
+                                                            {newSensorConfigs[i].sensorConfigValue}
+                                                        </div>
+                                                    </div>
+                                                }
+                                                <button 
+                                                    className="SensorConfigValueEditButton"
+                                                    onClick={(e) => {
+                                                            sensorConfigsIsEditArray[i] = !sensorConfigsIsEditArray[i];
+                                                            updateConfigValueEdits(i, !sensorConfigsIsEditArray[i]);
+                                                        }}
+                                                        >{sensorConfigsIsEditArray[i] ? 'save' : 'edit'}
+                                                </button>
+                                        </div>
+
+                                            
+                                        )
+                                    })
+                                }
+                            </div>
+                    }
 
                     <div className="SensorAttributeMainBox">
                         <div className="ConfigSensorTitleText">Associated Device</div>

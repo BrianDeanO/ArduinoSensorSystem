@@ -306,6 +306,11 @@ namespace backEndApp.Controllers {
             if(!_sensorRepository.DeleteSensors(sensorsToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting Sensors");
             }
+            
+            if(deviceToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the Device");
+                return StatusCode(500, ModelState);
+            }
 
             if(!_deviceRepository.DeleteDevice(deviceToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the Device");

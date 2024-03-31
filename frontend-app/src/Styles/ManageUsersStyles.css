@@ -17,7 +17,7 @@ CSS Styles for the Manage Users Page
     display: flex;
     flex-direction: column;
     width: 550px;
-    height: 700px;
+    height: 800px;
     /* background-color: rgb(230, 230, 230);
     background-color: rgb(27, 132, 69); */
     margin: 0px 0px 0px 0px;
@@ -38,7 +38,7 @@ CSS Styles for the Manage Users Page
 .UserListMainBox {
     display: flex;
     flex-direction: row;
-    height: 50px;
+    height: 45px;
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
@@ -132,7 +132,7 @@ CSS Styles for the Manage Users Page
 .manageUserTextArea {
     font-size: 12pt;
     width: 245px;
-    height: 31px;
+    height: 26px;
     margin: 6px 0px 0px 0px;
     border-style: solid;
     border-width: 2px;
@@ -191,7 +191,7 @@ CSS Styles for the Manage Users Page
 .UpdatingPasswordMainBox {
     display: flex;
     flex-direction: row;
-    height: 120px;
+    height: 100px;
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
@@ -204,15 +204,15 @@ CSS Styles for the Manage Users Page
 .UpdatePasswordFieldsBox {
     display: flex;
     flex-direction: column;
-    height: 100px;
+    height: 90px;
     width: 465px;
-    margin: 5px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     text-align: center;
 }
 .UpdatingPasswordSubBox {
     display: flex;
     flex-direction: row;
-    height: 50px;
+    height: 45px;
     width: 500px;
     margin: 5px 0px 0px 0px;
     text-align: center;
@@ -250,7 +250,7 @@ CSS Styles for the Manage Users Page
 .UpdatePasswordTextArea {
     font-size: 12pt;
     width: 245px;
-    height: 31px;
+    height: 26px;
     margin: 6px 0px 0px 0px;
     border-style: solid;
     border-width: 2px;
@@ -278,7 +278,8 @@ CSS Styles for the Manage Users Page
 .DeviceOptionMainBox {
     display: flex;
     flex-direction: column;
-    height: 350px;
+    height: auto;
+    max-height: 300px;
     width: 500px;
     margin: 5px 0px 0px 5px;
     text-align: center;
@@ -291,12 +292,38 @@ CSS Styles for the Manage Users Page
     overflow-y: auto;
     scroll-behavior: auto;  /*need hiden and auto*/
 }
+.DeviceOptionSingleSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 52px;
+    width: 450px;
+    margin: 40px 0px 5px 5px;
+    text-align: center;
+    background-color: #a2b7cf;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+}
 .DeviceOptionTopSubBox {
     display: flex;
     flex-direction: row;
     height: 52px;
     width: 450px;
     margin: 40px 0px 0px 5px;
+    text-align: center;
+    background-color: #a2b7cf;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+}
+.DeviceOptionBottomSubBox {
+    display: flex;
+    flex-direction: row;
+    height: 52px;
+    width: 450px;
+    margin: 5px 0px 5px 5px;
     text-align: center;
     background-color: #a2b7cf;
     border-radius: 5px;

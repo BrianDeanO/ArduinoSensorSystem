@@ -7,12 +7,12 @@ public class SensorData {
     public int SensorDataID { get; set; }    
     public int ChannelID { get; set; }
     public float DataValue { get; set; }
-    public string DataUnit { get; set; }
+    public string? DataUnit { get; set; }
 
     [JsonConverter(typeof(UnixTimeJsonConverter))]
     public DateTime TimeRecorded { get; set; }
 
     // The SensorID and Sensor object for the ONE sensor 
     public int SensorID { get; set; }
-    public Sensor Sensor { get; set; }
+    public Sensor? Sensor { get; set; }
 }

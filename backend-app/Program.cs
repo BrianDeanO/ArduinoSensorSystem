@@ -30,6 +30,7 @@ else {
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<ISensorRepository, SensorRepository>();
     builder.Services.AddScoped<ISensorDataRepository, SensorDataRepository>();
+    builder.Services.AddScoped<ISensorConfigRepository, SensorConfigRepository>();
     builder.Services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
 }
 
@@ -81,7 +82,6 @@ app.UseRouting();
 // app.UseCors(MyAllowSpecificOrigins);
 
 app.UseCors(x => x
-    
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
