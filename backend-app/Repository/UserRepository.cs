@@ -36,7 +36,7 @@ namespace backEndApp.Repository {
             return _context.Users.Where(ud => ud.UserType == "ADMIN").Select(u => u).ToList();
         }
 
-        public User GetUserWithLogin(string userFirstName, string userLastName, string userPassword) {
+        public User? GetUserWithLogin(string userFirstName, string userLastName, string userPassword) {
             return _context.Users.Where(ud => (
                 ud.UserFirstName == userFirstName && 
                 ud.UserLastName == userLastName &&

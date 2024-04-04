@@ -136,11 +136,12 @@ namespace backEndApp.Controllers {
             } 
 
             else {
-                // var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
+                var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
                 
-                // if(tempUser != null) {
-                //     return BadRequest(ModelState);
-                // }
+                if(tempUser != null) {
+                    ModelState.AddModelError("", "New User Info Matches Another User.");
+                    return BadRequest(ModelState);
+                }
 
                 var userMap = _mapper.Map<User>(newUser);
                 userMap.UserIsDeleted = false;
@@ -175,14 +176,25 @@ namespace backEndApp.Controllers {
                 return BadRequest();
             }
 
-            var userMap = _mapper.Map<User>(updatedUser);
+            else {
+                var tempUser = _userRepository.GetUserWithLogin(updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
+                
+                if(tempUser != null) {
+                    ModelState.AddModelError("", "New User Info Matches Another User.");
+                    return BadRequest(ModelState);
+                }
 
-            if(!_userRepository.UpdateUser(userMap)) {
-                ModelState.AddModelError("", "Something Went Wrong While Updating User.");
-                return StatusCode(500, ModelState);
+                var userMap = _mapper.Map<User>(updatedUser);
+
+                if(!_userRepository.UpdateUser(userMap)) {
+                    ModelState.AddModelError("", "Something Went Wrong While Updating User.");
+                    return StatusCode(500, ModelState);
+                }
+
+                return Ok("Successfully Updated.");
             }
 
-            return Ok("Successfully Updated.");
+
         }
 
         [HttpDelete("{userId}")]

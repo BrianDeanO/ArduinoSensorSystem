@@ -32,7 +32,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     const [newUserType, setNewUserType] = useState('');
     const [newUserEmail, setNewUserEmail] = useState('');
     const [newUserPhone, setNewUserPhone] = useState('');
-    const [newuserNotifications, setNewuserNotifications] = useState(false);
+    const [newUserNotifications, setNewUserNotifications] = useState(false);
 
     const [updatePassword, setUpdatePassword] = useState(false);
     const [newUserPassword, setNewUserPassword] = useState('');
@@ -132,7 +132,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         setNewUserType(user.userType);
         setNewUserEmail(user.userEmail);
         setNewUserPhone(user.userPhone);
-        setNewuserNotifications(user.userNotifications);
+        setNewUserNotifications(user.userNotifications);
     }
 
     const getUsers = useCallback(async() => {
@@ -199,7 +199,6 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
     async function updateUserInDB(deletedUser: boolean) {
         let postedCorrectly: Promise<boolean>;
         let deletedCorrectly: Promise<boolean>;
-        let canUpdate = true;
 
         let tempUserPassword = updatePassword ? newUserPassword : selectedUser.userPassword;
 
@@ -209,92 +208,76 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
 
         setUpdateUserAttempt(true);
 
-        users.forEach((user) => {
-            if(
-                user.userFirstName === newUserFirstName &&
-                user.userLastName === newUserLastName &&
-                user.userPassword === tempUserPassword &&
-                user.userID !== selectedUserID
-            ) {
-                canUpdate = false;
-                return;
-            }
+        // Update user in User Table
+        await axios.put(`${proxyURL}/api/User/${selectedUserID}`, {
+            userID: selectedUserID,
+            userType: newUserType,
+            userFirstName: newUserFirstName,
+            userLastName: newUserLastName,
+            userPassword: tempUserPassword,
+            userEmail: newUserEmail,
+            userPhone: newUserPhone,
+            userNotifications: newUserNotifications,
+            userIsDeleted: deletedUser,
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+                }
+        })
+        .then(function (response) {
+            setUsers(response.data);
+            setUpdatedCorrectly(true);
+            setUpdateDeleteMessage(deletedUser 
+                    ? 'Successfully Deleted User.' : 'Successfully Updated User.');
+        }).catch(error => {
+            console.log(error);
+            setError('New User Info Matches Another User.')
         });
 
-        if(canUpdate) {
-            // Update user in User Table
-            await axios.put(`${proxyURL}/api/User/${selectedUserID}`, {
-                userID: selectedUserID,
-                userType: newUserType,
-                userFirstName: newUserFirstName,
-                userLastName: newUserLastName,
-                userPassword: tempUserPassword,
-                userEmail: newUserEmail,
-                userPhone: newUserPhone,
-                userNotifications: newuserNotifications,
-                userIsDeleted: deletedUser,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
+
+        if(!deletedUser) {
+            // Update user devices in UserDevices Table
+            if (newUserType.toUpperCase() === ADMIN) {
+                userDevices.forEach((ud, i) => {
+                    let isFound = false;
+                    allUserDevices.forEach((ud2) => {
+                        if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
+                            isFound = true;
+                            return;
+                        }
+                    })
+
+                    if (!isFound) {
+                        postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
                     }
-            })
-            .then(function (response) {
-                setUsers(response.data);
-                setUpdatedCorrectly(true);
-                setUpdateDeleteMessage(deletedUser 
-                        ? 'Successfully Deleted User.' : 'Successfully Updated User.');
-            }).catch(error => {
-                console.log(error);
-                setError(error);
-            });
 
-            if(!deletedUser) {
-                // Update user devices in UserDevices Table
-                if (newUserType.toUpperCase() === ADMIN) {
-                    userDevices.forEach((ud, i) => {
-                        let isFound = false;
-                        allUserDevices.forEach((ud2) => {
-                            if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
-                                isFound = true;
-                                return;
-                            }
-                        })
-
-                        if (!isFound) {
-                            postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
-                        }
-
-                        if(!postedCorrectly || !deletedCorrectly) {
-                            return;
-                        }
-                    })
-                } 
-                
-                else {
-                    userDevices.forEach((ud, i) => {
-                        let isFound = false;
-                        allUserDevices.forEach((ud2) => {
-                            if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
-                                isFound = true;
-                                return;
-                            }
-                        })
+                    if(!postedCorrectly || !deletedCorrectly) {
+                        return;
+                    }
+                })
+            } 
             
-                        if(ud.isSelected && !isFound) {
-                            postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
-                        }
-                        else if(!(ud.isSelected) && isFound) {
-                            deletedCorrectly = deleteUserDevice(selectedUserID, ud.deviceID);
-                        }
-                        if(!postedCorrectly || !deletedCorrectly) {
+            else {
+                userDevices.forEach((ud, i) => {
+                    let isFound = false;
+                    allUserDevices.forEach((ud2) => {
+                        if((selectedUserID === ud2.userID) && (ud.deviceID === ud2.deviceID)) {
+                            isFound = true;
                             return;
                         }
                     })
-                }
+        
+                    if(ud.isSelected && !isFound) {
+                        postedCorrectly = postUserDevice(selectedUserID, ud.deviceID);
+                    }
+                    else if(!(ud.isSelected) && isFound) {
+                        deletedCorrectly = deleteUserDevice(selectedUserID, ud.deviceID);
+                    }
+                    if(!postedCorrectly || !deletedCorrectly) {
+                        return;
+                    }
+                })
             }
-        } else {
-            setUpdatedCorrectly(false);
-            setError('New User Info Matches Another User.')
         }
 
         updateUser(false);
@@ -304,84 +287,67 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
 
     async function addUserToDB() {
         setAddUserAttempt(true);
-        let canAdd = true;
         const hashedPassword = shajs('sha256').update(newUserPassword).digest('hex');
 
-        users.forEach((user) => {
-            if(
-                user.userFirstName === newUserFirstName &&
-                user.userLastName === newUserLastName &&
-                user.userPassword === hashedPassword
-            ) {
-                canAdd = false;
-                return;
-            }
+        await axios.post(`${proxyURL}/api/User`, {
+            userType: newUserType,
+            userFirstName: newUserFirstName,
+            userLastName: newUserLastName,
+            userPassword: hashedPassword,
+            userEmail: newUserEmail,
+            userPhone: newUserPhone,
+            userNotifications: newUserNotifications,
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+                }
+        })
+        .then(function (response) {
+            setUsers(response.data);
+            setAddedCorrectly(true);
+        }).catch(error => {
+            console.log(error);
+            setError('New User Info Matches Another User.');
         });
 
-        if(canAdd) {
-            await axios.post(`${proxyURL}/api/User`, {
-                userType: newUserType,
-                userFirstName: newUserFirstName,
-                userLastName: newUserLastName,
-                userPassword: hashedPassword,
-                userEmail: newUserEmail,
-                userPhone: newUserPhone,
-                userNotifications: newuserNotifications,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                    }
-            })
+        let tempUser: UserType;
+
+        // Get User to then add their UserDevices
+        await axios({
+            method: 'get',
+            url: `${proxyURL}/api/User/${newUserFirstName}.${newUserLastName}:${hashedPassword}`,
+        })
             .then(function (response) {
-                setUsers(response.data);
-                setAddedCorrectly(true);
-            }).catch(error => {
-                console.log(error);
-                setError(error)
-            });
-    
-            let tempUser: UserType;
+                tempUser = response.data;
 
-            // Get User to then add their UserDevices
-            await axios({
-                method: 'get',
-                url: `${proxyURL}/api/User/${newUserFirstName}.${newUserLastName}:${hashedPassword}`,
-            })
-                .then(function (response) {
-                    tempUser = response.data;
+                if(tempUser) {
+                    let postedCorrectly: Promise<boolean>;
 
-                    if(tempUser) {
-                        let postedCorrectly: Promise<boolean>;
-    
-                        if (tempUser.userType.toUpperCase() === ADMIN) {
-                            devices.forEach((device) => {
-                                postedCorrectly = postUserDevice(tempUser.userID, device.deviceID);
-                                if(!postedCorrectly) {
-                                    return;
-                                }
-                            })
-                        } 
-                        
-                        else {
-                            userDevices.forEach((ud) => {
-                                if(ud.isSelected) {
-                                    postedCorrectly = postUserDevice(tempUser.userID, ud.deviceID);
-                                }
+                    if (tempUser.userType.toUpperCase() === ADMIN) {
+                        devices.forEach((device) => {
+                            postedCorrectly = postUserDevice(tempUser.userID, device.deviceID);
+                            if(!postedCorrectly) {
+                                return;
+                            }
+                        })
+                    } 
+                    
+                    else {
+                        userDevices.forEach((ud) => {
+                            if(ud.isSelected) {
+                                postedCorrectly = postUserDevice(tempUser.userID, ud.deviceID);
+                            }
 
-                                if(!postedCorrectly) {
-                                    return;
-                                }
-                            })
-                        }
+                            if(!postedCorrectly) {
+                                return;
+                            }
+                        })
                     }
-                }).catch(error => {
-                    setError(error);
-                    console.log(error);
-                })
-        } else {
-            setAddedCorrectly(false);
-            setError('New User Info Matches Another User.')
-        }
+                }
+            }).catch(error => {
+                setError(error);
+                console.log(error);
+            })
 
         addUser(false);
         resetState();
@@ -398,7 +364,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
         setUpdatePassword(false);
         setOldUserPassword('');
         setNewUserPassword('');
-        setNewuserNotifications(false);
+        setNewUserNotifications(false);
     }
 
     useEffect(() => {
@@ -526,20 +492,20 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         </div>
                         <div className="EditUserTypeSubBox">
                             <button
-                                className={newuserNotifications ? 
+                                className={newUserNotifications ? 
                                     "EditUserTypeButtonSelected" : "EditUserTypeButton"}
                                 onClick={() => {
-                                    setNewuserNotifications(true);
+                                    setNewUserNotifications(true);
                                 }}
                                 >
                                 Yes 
                             </button>
                             
                             <button 
-                                className={!newuserNotifications ? 
+                                className={!newUserNotifications ? 
                                     "EditUserTypeButtonSelected" : "EditUserTypeButton"}
                                 onClick={() => {
-                                    setNewuserNotifications(false);
+                                    setNewUserNotifications(false);
                                 }}
                                 >
                                 No
@@ -739,20 +705,20 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                         </div>
                         <div className="EditUserTypeSubBox">
                             <button
-                                className={newuserNotifications ? 
+                                className={newUserNotifications ? 
                                     "EditUserTypeButtonSelected" : "EditUserTypeButton"}
                                 onClick={() => {
-                                    setNewuserNotifications(true);
+                                    setNewUserNotifications(true);
                                 }}
                                 >
                                 Yes 
                             </button>
                             
                             <button 
-                                className={!newuserNotifications ? 
+                                className={!newUserNotifications ? 
                                     "EditUserTypeButtonSelected" : "EditUserTypeButton"}
                                 onClick={() => {
-                                    setNewuserNotifications(false);
+                                    setNewUserNotifications(false);
                                 }}
                                 >
                                 No
@@ -818,7 +784,13 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 })
                                 
                                 return (
-                                    <div className={(i === 0) ? "DeviceOptionTopSubBox" : "DeviceOptionSubBox"} key={i}>
+                                    <div
+                                        className={
+                                            (i === 0) ? 
+                                                ((i === (devices.length - 1)) ? "DeviceOptionSingleSubBox" : "DeviceOptionTopSubBox") : 
+                                                ((i === (devices.length - 1)) ? "DeviceOptionBottomSubBox" : "DeviceOptionSubBox")
+                                        } 
+                                        key={i}>
                                         <span 
                                             className={
                                                 (newUserType.toUpperCase() === ADMIN) ? "DeviceOptionButtonADMIN" :
@@ -900,14 +872,8 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                             className="ManageUserPrimaryButton"
                             onClick={(e) => {
                                 const oldUserPasswordHashed = shajs('sha256').update(oldUserPassword).digest('hex');
-                                console.log('newUserPassword', newUserPassword)
-                                console.log('selectedUser.userPassword', selectedUser.userPassword)
-                                console.log('oldUserPassword', oldUserPassword)
-                                console.log('oldUserPasswordHashed', oldUserPasswordHashed);
                                 
-                                if((updatePassword && 
-                                        (oldUserPasswordHashed === selectedUser.userPassword) && (newUserPassword !== '')) ||
-                                    !updatePassword) {
+                                if((updatePassword && (oldUserPasswordHashed === selectedUser.userPassword) && (newUserPassword !== '')) || !updatePassword) {
                                     updateUserInDB(false);
                                 } else {
                                     setUpdateUserAttempt(true);
@@ -979,7 +945,7 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                                 setNewUserType('');
                                 setNewUserEmail('');
                                 setNewUserPhone('');
-                                setNewuserNotifications(false);
+                                setNewUserNotifications(false);
                                 setSelectedUserID(0);
                             }}>
                                 Add User
