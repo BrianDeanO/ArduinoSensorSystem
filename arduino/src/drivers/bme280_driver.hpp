@@ -21,8 +21,8 @@ class BME280Sensor : public Sensor {
 	TwoWire* wire;
 	uint8_t addr;
 	#endif
-	int gain = 0;
-	int offset = 0;
+	float gain = 1;
+	float offset = 0;
 
 public:
 #ifndef SIMULATOR
@@ -89,9 +89,9 @@ public:
 				offset = config["offset"].as<String>().toInt();
 		#else
 			if(config.containsKey("gain"))
-				gain = atoi(config["gain"].as<const char*>());
+				gain = atof(config["gain"].as<const char*>());
 			if(config.containsKey("offset"))
-				offset = atoi(config["offset"].as<const char*>());
+				offset = atof(config["offset"].as<const char*>());
 		#endif
 
 		return true;
