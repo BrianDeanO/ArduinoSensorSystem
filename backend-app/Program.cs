@@ -23,6 +23,7 @@ if(databaseMode != null && databaseMode == "InMemory") {
     builder.Services.AddScoped<IUserRepository, LocalUserRepository>();
     builder.Services.AddScoped<ISensorRepository, LocalSensorRepository>();
     builder.Services.AddScoped<ISensorDataRepository, LocalSensorDataRepository>();
+    builder.Services.AddScoped<ISensorConfigRepository, LocalSensorConfigRepository>();
     builder.Services.AddScoped<IUserDeviceRepository, LocalUserDeviceRepository>();
 }
 else {

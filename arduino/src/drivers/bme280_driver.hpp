@@ -8,12 +8,16 @@
 
 #ifndef SIMULATOR
 #include <Adafruit_BME280.h>
+#else
+#include <string>
 #endif
 
 class BME280Sensor : public Sensor {
 	#ifndef SIMULATOR
 	Adafruit_BME280 bme;
 	#endif
+	int gain = 0;
+	int offset = 0;
 
 public:
 	BME280Sensor(const char* id) : Sensor(id) {}
@@ -49,8 +53,31 @@ public:
 		return true;
 	}
 
-	virtual bool read_config(JsonObject& config) override { return true; }
-	virtual bool write_config(JsonObject config) override { return true; }
+	virtual bool read_config(JsonObject& config) override { 
+		#ifndef SIMULATOR
+			config["gain"] = String(gain);
+			config["offset"] = String(offset);
+		#else
+			config["gain"] = std::to_string(gain);
+			config["offset"] = std::to_string(offset);
+		#endif
+		return true;
+	}
+	virtual bool write_config(JsonObject config) override {
+		#ifndef SIMULATOR
+			if(config.containsKey("gain"))
+				gain = config["gain"].as<String>().toInt();
+			if(config.containsKey("offset"))
+				offset = config["offset"].as<String>().toInt();
+		#else
+			if(config.containsKey("gain"))
+				gain = atoi(config["gain"].as<const char*>());
+			if(config.containsKey("offset"))
+				offset = atoi(config["offset"].as<const char*>());
+		#endif
+
+		return true;
+	}
 
 	virtual uint8_t channel_count() const override { return 3; }
 	virtual const char* channel_units(uint8_t channel) const override

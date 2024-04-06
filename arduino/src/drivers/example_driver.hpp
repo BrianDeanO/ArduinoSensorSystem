@@ -19,12 +19,21 @@ public:
 			break;
 		}
 
-		fake_value += 1;
+		fake_value += incrementer;
 		return true;
 	}
 
-	virtual bool read_config(JsonObject& config) override { return true; }
-	virtual bool write_config(JsonObject config) override { return true; }
+	virtual bool read_config(JsonObject& config) override { 
+		config["incrementer"] = fake_value;
+		return true;
+	}
+
+	virtual bool write_config(JsonObject config) override { 
+		if(config.containsKey("incrementer")) {
+			incrementer = atoi(config["incrementer"].as<const char*>());
+		}
+		return true;
+	}
 
 	virtual uint8_t channel_count() const override { return 2; }
 	virtual const char* channel_units(uint8_t channel) const override
@@ -40,4 +49,5 @@ public:
 
 private:
 	double fake_value = 0;
+	int incrementer = 1;
 };

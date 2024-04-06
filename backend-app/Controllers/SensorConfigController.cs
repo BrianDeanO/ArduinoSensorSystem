@@ -11,10 +11,12 @@ namespace backEndApp.Controllers {
     [ApiController]
     public class SensorConfigController: Controller {
         private readonly ISensorConfigRepository _sensorConfigRepository;
+        private readonly ISensorRepository _sensorRepository;
         private readonly IMapper _mapper;
 
-        public SensorConfigController(ISensorConfigRepository sensorRepository, IMapper mapper) {
-            _sensorConfigRepository = sensorRepository;
+        public SensorConfigController(ISensorConfigRepository sensorConfigRepository, ISensorRepository sensorRepository, IMapper mapper) {
+            _sensorConfigRepository = sensorConfigRepository;
+            _sensorRepository = sensorRepository;
             _mapper = mapper;
         }
 
@@ -27,6 +29,22 @@ namespace backEndApp.Controllers {
                 return BadRequest(ModelState);
             } else {
                 return Ok(sensorConfigs);
+            }
+        }
+
+        [HttpGet("ForSensor/{sensorId}")]
+        [ProducesResponseType(200, Type = typeof(Dictionary<String, String>))]
+        public IActionResult GetSensorConfigs(int sensorId) {
+            var sensorConfigs = _sensorConfigRepository.GetSensorConfigs(sensorId);
+            var dict = new Dictionary<String, String>();
+            foreach (var sensorConfig in sensorConfigs) {
+                dict.Add(sensorConfig.SensorConfigKey, sensorConfig.SensorConfigValue);
+            }
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(dict);
             }
         }
 
@@ -75,7 +93,7 @@ namespace backEndApp.Controllers {
                 var sensorConfigMap = _mapper.Map<SensorConfig>(newSensorConfig);
 
                 sensorConfigMap.SensorID = newSensorConfig.SensorID;
-                sensorConfigMap.Sensor = _sensorConfigRepository.GetSensor(newSensorConfig.SensorID);
+                sensorConfigMap.Sensor = _sensorRepository.GetSensor(newSensorConfig.SensorID);
 
                 if(!_sensorConfigRepository.CreateSensorConfig(sensorConfigMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");

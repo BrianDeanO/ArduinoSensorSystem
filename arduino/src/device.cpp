@@ -20,15 +20,16 @@ void Device::init() {
 }
 
 bool Device::get_config() {
+	JsonDocument j;
+	bool success = true;
+
 	DEBUG("Getting config\n");
 	char buf[RESPONSE_BUFFER_SIZE];
 	char url[100];
 	sprintf(url, "/api/Device/%d/DeviceConfig/", _id);
 
 	int result = client->get(url, buf, RESPONSE_BUFFER_SIZE);
-	bool success = true;
 	if(result > 0) {
-		JsonDocument j;
 		deserializeJson(j, buf);
 		DEBUG("Got config: %s\n", buf);
 		if(j.containsKey("deviceUpdateInterval")) {
@@ -40,10 +41,22 @@ bool Device::get_config() {
 			success = false;
 		}
 
-		return success;
+		for(unsigned i = 0; i < num_sensors; i++) {
+			int sensorId = sensors[i]->id();
+			sprintf(url, "/api/SensorConfig/ForSensor/%d/", sensorId);
+			result = client->get(url, buf, RESPONSE_BUFFER_SIZE);
+			if(result > 0) {
+				deserializeJson(j, buf);
+				this->sensors[i]->write_config(j.as<JsonObject>());
+			}
+			else {
+				DEBUG("ERR: get_config failed to get sensor config for sensor id %d\n", sensorId);
+				success = false;
+			}
+		}
 	}
 
-	return false; // Request failed
+	return success;
 }
 
 bool Device::poke_device() {
