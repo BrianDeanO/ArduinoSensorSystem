@@ -151,6 +151,11 @@ namespace backEndApp.Controllers {
                     SensorConfigs = new List<SensorConfig>()
                 };
 
+                if(!_sensorRepository.CreateSensor(sensorMap)) {
+                    ModelState.AddModelError("", "Something Went Wrong While Saving.");
+                    return StatusCode(500, ModelState);
+                }
+
                 if(newSensor.SensorConfigs != null) {
                     foreach (var sensorConfig in newSensor.SensorConfigs) {
                         var sensorConfigMap = new SensorConfig() {
@@ -167,11 +172,6 @@ namespace backEndApp.Controllers {
                             return StatusCode(500, ModelState);
                         }
                     }
-                }
-
-                if(!_sensorRepository.CreateSensor(sensorMap)) {
-                    ModelState.AddModelError("", "Something Went Wrong While Saving.");
-                    return StatusCode(500, ModelState);
                 }
 
                 var dto = new SensorDTO {

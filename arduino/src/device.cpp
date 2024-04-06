@@ -64,7 +64,7 @@ bool Device::poke_device() {
 	char url[100];
 	sprintf(url, "/api/Device/Poke/%d", _id);
 
-	auto res = client->post(url, buf, nullptr, RESPONSE_BUFFER_SIZE);
+	auto res = client->post(url, nullptr, nullptr, 0);
 	if(res < 0) {
 		DEBUG("ERR: poking device: %d\n", res);
 		return false;
