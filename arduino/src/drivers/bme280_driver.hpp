@@ -1,6 +1,9 @@
 // REQUIRED LIBRARIES:
 // https://github.com/adafruit/Adafruit_Sensor
 // https://github.com/adafruit/Adafruit_BME280_Library
+// Dependencies for SoftWire:
+//     https://github.com/stevemarple/AsyncDelay
+
 #pragma once
 #include "../../common.hpp"
 #include "../sensor.hpp"
@@ -15,19 +18,31 @@
 class BME280Sensor : public Sensor {
 	#ifndef SIMULATOR
 	Adafruit_BME280 bme;
+	TwoWire* wire;
+	uint8_t addr;
 	#endif
 	int gain = 0;
 	int offset = 0;
 
 public:
+#ifndef SIMULATOR
+	BME280Sensor(const char* id, uint8_t addr = BME280_ADDRESS, TwoWire* wire = nullptr) : Sensor(id), addr(addr), wire(wire) {}
+#else
 	BME280Sensor(const char* id) : Sensor(id) {}
+#endif
 	 
 	virtual void init() override
 	{
-		DEBUG("Initializing BME280 sensor...\n");
 		#ifndef SIMULATOR
-		if(!bme.begin()) {
-			DEBUG("Could not find a valid BME280 sensor!\n");
+		bool result;
+		DEBUG("Connecting to BME280 sensor at 0x%02X\n", addr);
+		if(wire) {
+			result = bme.begin(addr, wire);
+		} else {
+			result = bme.begin(addr);
+		}
+		if(!result) {
+			DEBUG("Could not find a valid BME280 sensor! (%s)\n", ident());
 		}
 		#endif
 	}

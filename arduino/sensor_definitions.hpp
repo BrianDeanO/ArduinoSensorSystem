@@ -8,8 +8,16 @@
 #include "src/drivers/bme280_driver.hpp"
 #include "src/drivers/example_driver.hpp"
 
-BME280Sensor sen1(DEVICE_IDENT "_bme280");
-ExampleSensor sen2(DEVICE_IDENT "_example");
+#ifndef SIMULATOR
+	BME280Sensor sen1(DEVICE_IDENT "_bme280", BME280_ADDRESS);
+	BME280Sensor sen2(DEVICE_IDENT "_bme280_2", BME280_ADDRESS_ALTERNATE);
 
-Sensor* sensors[] = { &sen1 };
-const unsigned NUM_SENSORS = 1;
+	Sensor* sensors[] = { &sen1, &sen2 };
+	const unsigned NUM_SENSORS = 2;
+#else
+	BME280Sensor sen1(DEVICE_IDENT "_bme280");
+	ExampleSensor sen3(DEVICE_IDENT "_example");
+
+	Sensor* sensors[] = { &sen1, &sen3 };
+	const unsigned NUM_SENSORS = 2;
+#endif
