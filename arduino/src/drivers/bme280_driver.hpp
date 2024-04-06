@@ -65,6 +65,9 @@ public:
 		value = 0;
 		#endif
 
+		value *= gain;
+		value += offset;
+
 		return true;
 	}
 
