@@ -13,5 +13,5 @@ public class SensorWithConfigDTO {
     public int DeviceID { get; set; }
     
     // The relationship to possbily MANY sensorConfigs
-    public string[][]? SensorConfigArray { get; set; }
+    public Dictionary<string, string>? SensorConfigs { get; set; }
 }

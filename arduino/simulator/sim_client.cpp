@@ -30,14 +30,26 @@ int SimClient::get(const char* url, char* response, unsigned response_size)
 
 int SimClient::post(const char* url, const char* body, char* response, unsigned response_size)
 {
-	auto res = http.Post(url, body, "application/json");
-	return handle_result(std::move(res), response, response_size);
+	if(body) {
+		auto res = http.Post(url, body, "application/json");
+		return handle_result(std::move(res), response, response_size);
+	}
+	else {
+		auto res = http.Post(url);
+		return handle_result(std::move(res), response, response_size);
+	}
 }
 
 int SimClient::put(const char* url, const char* body, char* response, unsigned response_size)
 {
-	auto res = http.Put(url, body, "application/json");
-	return handle_result(std::move(res), response, response_size);
+	if(body) {
+		auto res = http.Put(url, body, "application/json");
+		return handle_result(std::move(res), response, response_size);
+	}
+	else {
+		auto res = http.Put(url);
+		return handle_result(std::move(res), response, response_size);
+	}
 }
 
 uint64_t SimClient::get_time() {
