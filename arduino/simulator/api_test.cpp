@@ -33,12 +33,17 @@ public:
 
 	bool read_config(JsonObject& config) override {
 		std::cout << "TestSensor::read_config()" << std::endl;
+		config["test"] = "value";
 		return true;
 	}
 
 	bool write_config(JsonObject config) override {
 		std::cout << "TestSensor::write_config()" << std::endl;
-		return true;
+		if(config.containsKey("test")) {
+			return strncmp(config["test"].as<const char*>(), "value2", 6) == 0;
+		}
+
+		return false;
 	}
 
 	uint8_t channel_count() const override {

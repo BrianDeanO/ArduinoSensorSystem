@@ -53,14 +53,17 @@ bool Sensor::register_sensor(DataClient* client, char* buf, uint16_t buf_size, u
 	// Check for 400 level response codes, indicating the identifier does not 
 	// yet exist
 	else if(result / -100 == 4) {
-		// Register a new device with our defaults
+		// Register a new sensor with our defaults
 		JsonDocument j;
 		j["sensorIdent"] = this->ident();
 		j["sensorName"] = this->ident();
 		j["sensorType"] = this->sensor_type();
 		j["channelCount"] = this->channel_count();
+		JsonObject sensorConfig = j["sensorConfigs"].to<JsonObject>();
+		this->read_config(sensorConfig);
 		j["deviceID"] = deviceID;
 		serializeJson(j, buf, buf_size);
+		DEBUG("New Sensor: %s\n", buf);
 
 		result = client->post("/api/Sensor", buf, buf, RESPONSE_BUFFER_SIZE);
 		if(result > 0) {

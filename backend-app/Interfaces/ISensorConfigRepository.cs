@@ -4,8 +4,8 @@ using backEndApp.Models;
 namespace backEndApp.Interfaces {
     public interface ISensorConfigRepository {
         ICollection<SensorConfig> GetSensorConfigs();
+        ICollection<SensorConfig> GetSensorConfigs(int sensorId);
         SensorConfig? GetSensorConfig(int sensorConfigID);
-        Sensor? GetSensor(int sensorConfigID);
         bool SensorConfigExists(int sensorId);
         bool CreateSensorConfig(SensorConfig sensorConfig);
         bool UpdateSensorConfig(SensorConfig sensorConfig);

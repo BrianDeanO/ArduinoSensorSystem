@@ -13,11 +13,11 @@ namespace backEndApp.Repository {
         public ICollection<SensorConfig> GetSensorConfigs() {
             return _context.SensorConfigs.OrderBy(s => s.SensorConfigID).ToList();
         }
+        public ICollection<SensorConfig> GetSensorConfigs(int sensorId) {
+            return _context.SensorConfigs.Where(s => s.SensorID == sensorId).OrderBy(s => s.SensorConfigID).ToList();
+        }
         public SensorConfig? GetSensorConfig(int sensorConfigID) {
             return _context.SensorConfigs.Where(sc => sc.SensorConfigID == sensorConfigID).FirstOrDefault();
-        }
-        public Sensor? GetSensor(int sensorID) {
-            return _context.Sensors.Where(sc => sc.SensorID == sensorID).FirstOrDefault();
         }
         public bool SensorConfigExists(int sensorConfigID) {
             return _context.SensorConfigs.Any(s => s.SensorConfigID == sensorConfigID);
