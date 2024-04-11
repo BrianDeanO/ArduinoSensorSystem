@@ -7,7 +7,7 @@ namespace backEndApp.Interfaces {
         ICollection<User> GetUsers();
         User? GetUser(int userId);
         User? GetUserWithLogin(string userFirstName, string userLastName, string userPassword);
-        ICollection<User> GetDeviceUsers(int deviceId);
+        ICollection<User>? GetDeviceUsers(int deviceId);
         bool UserExistsWithLogin(int userID, string userFirstName, string userLastName, string userPassword);
         ICollection<User> GetAdminUsers();
         bool UserExists(int userId);

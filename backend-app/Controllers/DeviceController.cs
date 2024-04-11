@@ -141,23 +141,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("{deviceId}/Users")]
-        [ProducesResponseType(200, Type = typeof(ICollection<User>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUsersFromDevice(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetDeviceUsers(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(users);
-            }
-        }
-
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]

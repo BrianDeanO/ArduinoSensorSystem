@@ -27,8 +27,11 @@ namespace backEndApp.Repository {
             return _context.Sensors.Where(s => s.SensorID == sensorId).FirstOrDefault();
         }
 
-        public ICollection<SensorData> GetSensorDatas(int sensorId) {
-            return _context.SensorDatas.Where(sd => sd.SensorID == sensorId).ToList();
+       public ICollection<SensorData> GetSensorDatas(int sensorId) {
+            return _context.SensorDatas
+                .Where(sd => sd.SensorID == sensorId)
+                .OrderBy(sd => sd.SensorDataID)
+                .ToList();
         }
         
         public ICollection<SensorConfig> GetSensorConfigs(int sensorId) {

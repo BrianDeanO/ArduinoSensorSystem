@@ -107,7 +107,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDatas(sensorId));
+            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorRepository.GetSensorDatas(sensorId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);

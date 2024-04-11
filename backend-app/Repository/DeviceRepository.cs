@@ -19,12 +19,6 @@ namespace backEndApp.Repository {
         public Device? GetDevice(int deviceId) {
             return _context.Devices.Where(d => d.DeviceID == deviceId).FirstOrDefault();
         }
-
-        public ICollection<Sensor> GetDeviceSensors(int deviceId) {
-            // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
-            return _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
-        }
-
         public ICollection<Device> GetDevicesForUser(int userId) {
             var deviceIds = _context.UserDevices
                 .Where(ud => ud.UserID == userId)
@@ -32,7 +26,6 @@ namespace backEndApp.Repository {
                 .ToList();
             return _context.Devices.Where(d => deviceIds.Contains(d.DeviceID)).ToList();
         }
-
 
         public bool DeviceExists(int deviceId) {
             return _context.Devices.Any(d => d.DeviceID == deviceId); 

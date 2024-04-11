@@ -8,6 +8,7 @@ namespace backEndApp.Repository {
 
     public class LocalSensorRepository: ISensorRepository {
         private static List<Sensor> _sensors = new() {};
+        private static List<SensorData> _sensorDatas = new() {};
         private static int _lastSensorId = 0;
         private static List<SensorConfig> _sensorConfigs = new() {};
         private static int _lastSensorConfigId = 0;
@@ -20,6 +21,13 @@ namespace backEndApp.Repository {
             return _sensors.Where(s => s.SensorID == sensorId).FirstOrDefault();
         }
 
+       public ICollection<SensorData> GetSensorDatas(int sensorId) {
+            return _sensorDatas
+                .Where(sd => sd.SensorID == sensorId)
+                .OrderBy(sd => sd.SensorDataID)
+                .ToList();
+        }
+        
         public ICollection<Sensor> GetDeviceSensors(int deviceId)
         {
             return _sensors

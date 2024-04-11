@@ -11,7 +11,6 @@ namespace backEndApp.Repository {
         public UserRepository(SensorSystemContext context) {
             _context = context;
         }
-
         
         public ICollection<User> GetUsers() {
             return _context.Users.OrderBy(u => u.UserID).ToList();
@@ -25,11 +24,6 @@ namespace backEndApp.Repository {
         {
             var userDevices = _context.UserDevices.Where(ud => ud.DeviceID == deviceId).ToList();
             return _context.Users.Where(u => userDevices.Any(ud => ud.UserID == u.UserID)).ToList();
-        }
-
-        public ICollection<Device> GetDevicesFromUser(int userId) {
-            // var sensorList = _context.Sensors.Where(s => (s.DeviceID == deviceId)).ToList();
-            return _context.UserDevices.Where(ud => ud.UserID == userId).Select(ud => ud.Device).ToList();
         }
 
         public ICollection<User> GetAdminUsers() {
