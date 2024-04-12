@@ -11,7 +11,7 @@ public class Device {
     public int DeviceID { get; set; }    
 
     [Required]
-    public string DeviceIdent { get; set; }
+    public required string DeviceIdent { get; set; }
 
     // Device Configuration Fields
     
@@ -25,8 +25,8 @@ public class Device {
     public bool DeviceIsDeleted { get; set; }
 
     // The relationship to MANY sensors
-    public ICollection<Sensor> Sensors { get; set; }
+    public ICollection<Sensor>? Sensors { get; set; }
 
     // The relationship to MANY UserDevices
-    public ICollection<UserDevice> UserDevices { get; set; }
+    public ICollection<UserDevice>? UserDevices { get; set; }
 }

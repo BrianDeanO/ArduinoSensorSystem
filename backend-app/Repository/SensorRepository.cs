@@ -11,8 +11,6 @@ namespace backEndApp.Repository {
         public SensorRepository(SensorSystemContext context) {
             _context = context;
         }
-
-        // ICollections can only be read
         public ICollection<Sensor> GetSensors() {
             return _context.Sensors.OrderBy(s => s.SensorID).ToList();
         }
@@ -29,12 +27,24 @@ namespace backEndApp.Repository {
             return _context.Sensors.Where(s => s.SensorID == sensorId).FirstOrDefault();
         }
 
-        public ICollection<SensorData> GetSensorDatas(int sensorId) {
-            return _context.SensorDatas.Where(sd => (sd.SensorID == sensorId)).ToList();
+       public ICollection<SensorData> GetSensorDatas(int sensorId) {
+            return _context.SensorDatas
+                .Where(sd => sd.SensorID == sensorId)
+                .OrderBy(sd => sd.SensorDataID)
+                .ToList();
+        }
+        
+        public ICollection<SensorConfig> GetSensorConfigs(int sensorId) {
+            return _context.SensorConfigs.Where(sd => sd.SensorID == sensorId).ToList();
         }
 
         public bool SensorExists(int sensorId) {
             return _context.Sensors.Any(s => s.SensorID == sensorId);
+        }
+        
+        public bool CreateSensorConfig(SensorConfig sensorConfig) {
+            _context.Add(sensorConfig);
+            return Save();
         }
         
         public bool CreateSensor(Sensor sensor) {

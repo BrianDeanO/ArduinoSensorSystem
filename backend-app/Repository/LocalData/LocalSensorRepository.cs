@@ -8,9 +8,11 @@ namespace backEndApp.Repository {
 
     public class LocalSensorRepository: ISensorRepository {
         private static List<Sensor> _sensors = new() {};
+        private static List<SensorData> _sensorDatas = new() {};
         private static int _lastSensorId = 0;
-
-        // ICollections can only be read
+        private static List<SensorConfig> _sensorConfigs = new() {};
+        private static int _lastSensorConfigId = 0;
+        
         public ICollection<Sensor> GetSensors() {
             return _sensors.OrderBy(s => s.SensorID).ToList();
         }
@@ -19,12 +21,35 @@ namespace backEndApp.Repository {
             return _sensors.Where(s => s.SensorID == sensorId).FirstOrDefault();
         }
 
+       public ICollection<SensorData> GetSensorDatas(int sensorId) {
+            return _sensorDatas
+                .Where(sd => sd.SensorID == sensorId)
+                .OrderBy(sd => sd.SensorDataID)
+                .ToList();
+        }
+        
         public ICollection<Sensor> GetDeviceSensors(int deviceId)
         {
             return _sensors
                 .Where(s => s.DeviceID == deviceId)
                 .OrderBy(s => s.SensorID)
                 .ToList();
+        }
+
+        public ICollection<SensorConfig> GetSensorConfigs(int sensorId) {
+            return _sensorConfigs.Where(sd => sd.SensorID == sensorId).ToList();
+        }
+
+        public bool CreateSensorConfig(SensorConfig sensorConfig) {
+            sensorConfig.SensorConfigID = _lastSensorConfigId++;
+            if (_sensorConfigs.Find(d => 
+                d.SensorConfigID == sensorConfig.SensorConfigID && 
+                d.SensorConfigKey == sensorConfig.SensorConfigKey
+            ) != null) {
+                throw new DuplicateNameException("Sensor with Config Key - '" + sensorConfig.SensorConfigKey + "' already exists");
+            }
+            _sensorConfigs.Add(sensorConfig);
+            return Save();
         }
 
         public bool SensorExists(int sensorId) {

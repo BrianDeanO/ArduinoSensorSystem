@@ -1,6 +1,3 @@
-using System;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 namespace backEndApp.DTO;
 
 public class UserDTO {

@@ -18,8 +18,8 @@ namespace backEndApp
                         UserFirstName = "Han",
                         UserLastName = "Solo",
                         UserPassword = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",  // 123
-                        UserEmail = "",
-                        UserPhone = "",
+                        UserEmail = "Han.Solo@gmail.com",
+                        UserPhone = "5091234567",
                         UserNotifications = true,
                         UserIsDeleted = false
                     },
@@ -28,8 +28,8 @@ namespace backEndApp
                         UserFirstName = "Luke",
                         UserLastName = "Skywalker",
                         UserPassword = "b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0", // 456
-                        UserEmail = "",
-                        UserPhone = "",
+                        UserEmail = "Luke.Skywalker@gmail.com",
+                        UserPhone = "5094734201",
                         UserNotifications = false,
                         UserIsDeleted = false
                     },
@@ -38,8 +38,8 @@ namespace backEndApp
                         UserFirstName = "Leia",
                         UserLastName = "Organa",
                         UserPassword = "35a9e381b1a27567549b5f8a6f783c167ebf809f1c4d6a9e367240484d8ce281", // 789
-                        UserEmail = "",
-                        UserPhone = "",
+                        UserEmail = "Leia.Organa@gmail.com",
+                        UserPhone = "5099814556",
                         UserNotifications = true,
                         UserIsDeleted = false
                     },
@@ -51,7 +51,7 @@ namespace backEndApp
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99352",
                         DeviceUpdateInterval = 86400000,
-                        DeviceLastSeen = DateTime.Parse("2024-03-10T11:42:27.069Z"),
+                        DeviceLastSeen = DateTime.Parse("2024-03-30T11:42:27.069Z"),
                         DeviceIsDeleted = false,
 
                         Sensors = new List<Sensor>() {
@@ -62,227 +62,235 @@ namespace backEndApp
                                 SensorIsDeleted = false,
                                 ChannelCount = 3,
                                 DeviceID = 1,
+                                SensorConfigs = new List<SensorConfig> () {
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Gain",
+                                        SensorConfigValue = "17.3",
+                                    },
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Offset",
+                                        SensorConfigValue = "22",
+                                    }
+                                },
                                 SensorDatas = new List<SensorData>() {
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 56, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-01T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 57, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-02T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 58, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-03T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 68, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-04T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 46, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-05T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 0, 
-                                        DataValue = 49, 
-                                        DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-03-06T18:42:27.069Z")
-                                    },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 44,
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-01T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 52, 
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-02T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-12T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 51, 
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-03T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-13T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 57, 
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-04T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-14T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 62, 
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-05T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-15T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 61, 
                                         DataUnit = "F", 
-                                        TimeRecorded = DateTime.Parse("2024-02-07T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-17T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 56, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-21T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 57, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-22T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 58, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-23T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 68, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-24T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 46, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-25T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 0, 
+                                        DataValue = 49, 
+                                        DataUnit = "F", 
+                                        TimeRecorded = DateTime.Parse("2024-03-26T18:42:27.069Z")
                                     },
                                     
-
-                                    new SensorData() {
-                                        ChannelID = 1,
-                                        DataValue = 1300, 
-                                        DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-03-01T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 1, 
-                                        DataValue = 1361, 
-                                        DataUnit = "W/m^2",  
-                                        TimeRecorded = DateTime.Parse("2024-03-02T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 1, 
-                                        DataValue = 1411, 
-                                        DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-03-03T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 1, 
-                                        DataValue = 1391, 
-                                        DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-03-04T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 1, 
-                                        DataValue = 1390, 
-                                        DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-03-05T18:42:27.069Z")
-                                    },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1200, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-06T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-16T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1,
                                         DataValue = 1310, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-01T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1399, 
                                         DataUnit = "W/m^2",  
-                                        TimeRecorded = DateTime.Parse("2024-02-02T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-12T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1378, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-03T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-13T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1290,
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-04T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-14T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1368, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-05T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-15T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 1, 
                                         DataValue = 1340, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-07T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-17T18:42:27.069Z")
                                     },
-
+                                    new SensorData() {
+                                        ChannelID = 1,
+                                        DataValue = 1300, 
+                                        DataUnit = "W/m^2", 
+                                        TimeRecorded = DateTime.Parse("2024-03-21T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 1, 
+                                        DataValue = 1361, 
+                                        DataUnit = "W/m^2",  
+                                        TimeRecorded = DateTime.Parse("2024-03-22T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 1, 
+                                        DataValue = 1411, 
+                                        DataUnit = "W/m^2", 
+                                        TimeRecorded = DateTime.Parse("2024-03-23T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 1, 
+                                        DataValue = 1391, 
+                                        DataUnit = "W/m^2", 
+                                        TimeRecorded = DateTime.Parse("2024-03-24T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 1, 
+                                        DataValue = 1390, 
+                                        DataUnit = "W/m^2", 
+                                        TimeRecorded = DateTime.Parse("2024-03-25T18:42:27.069Z")
+                                    },
 
                                     new SensorData() {
                                         ChannelID = 2,
                                         DataValue = 30,
                                         DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-03-01T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2, 
-                                        DataValue = 25,
-                                        DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-03-02T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2, 
-                                        DataValue = 24,
-                                        DataUnit = "atm", 
-                                        TimeRecorded = DateTime.Parse("2024-03-03T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2, 
-                                        DataValue = 31,
-                                        DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-03-04T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2, 
-                                        DataValue = 32,
-                                        DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-03-05T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2, 
-                                        DataValue = 29,
-                                        DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-03-06T18:42:27.069Z")
-                                    },
-                                    new SensorData() {
-                                        ChannelID = 2,
-                                        DataValue = 30,
-                                        DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-02-01T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 2, 
                                         DataValue = 26,
                                         DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-02-02T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-12T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 2, 
                                         DataValue = 28,
                                         DataUnit = "atm", 
-                                        TimeRecorded = DateTime.Parse("2024-02-03T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-13T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 2, 
                                         DataValue = 27,
                                         DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-02-04T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-14T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 2, 
                                         DataValue = 35,
                                         DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-02-05T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-15T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 2, 
                                         DataValue = 23,
                                         DataUnit = "atm",
-                                        TimeRecorded = DateTime.Parse("2024-02-07T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-17T18:42:27.069Z")
                                     },
+                                    new SensorData() {
+                                        ChannelID = 2,
+                                        DataValue = 30,
+                                        DataUnit = "atm",
+                                        TimeRecorded = DateTime.Parse("2024-03-21T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 2, 
+                                        DataValue = 25,
+                                        DataUnit = "atm",
+                                        TimeRecorded = DateTime.Parse("2024-03-22T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 2, 
+                                        DataValue = 24,
+                                        DataUnit = "atm", 
+                                        TimeRecorded = DateTime.Parse("2024-03-23T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 2, 
+                                        DataValue = 31,
+                                        DataUnit = "atm",
+                                        TimeRecorded = DateTime.Parse("2024-03-24T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 2, 
+                                        DataValue = 32,
+                                        DataUnit = "atm",
+                                        TimeRecorded = DateTime.Parse("2024-03-25T18:42:27.069Z")
+                                    },
+                                    new SensorData() {
+                                        ChannelID = 2, 
+                                        DataValue = 29,
+                                        DataUnit = "atm",
+                                        TimeRecorded = DateTime.Parse("2024-03-26T18:42:27.069Z")
+                                    }
                                 }
                             },
                             new Sensor() {
@@ -292,18 +300,28 @@ namespace backEndApp
                                 ChannelCount = 1,
                                 DeviceID = 1,
                                 SensorIsDeleted = false,
+                                SensorConfigs = new List<SensorConfig> () {
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Gain",
+                                        SensorConfigValue = "9",
+                                    },
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Offset",
+                                        SensorConfigValue = "2.4",
+                                    }
+                                },
                                 SensorDatas = new List<SensorData>() {
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 1361, 
                                         DataUnit = "W/m^2", 
-                                        TimeRecorded = DateTime.Parse("2024-02-07T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-17T18:42:27.069Z")
                                     },
                                     new SensorData() {
                                         ChannelID = 0, 
                                         DataValue = 1459,
                                         DataUnit = "W/m^2",
-                                        TimeRecorded = DateTime.Parse("2024-02-08T18:42:27.069Z")
+                                        TimeRecorded = DateTime.Parse("2024-03-18T18:42:27.069Z")
                                     },
                                 }
                             }
@@ -315,7 +333,7 @@ namespace backEndApp
                         DeviceType = "ARDUINO",
                         DeviceZipCode = "99336",
                         DeviceUpdateInterval = 86400000,
-                        DeviceLastSeen = DateTime.Parse("2024-03-09T11:42:27.069Z"),
+                        DeviceLastSeen = DateTime.Parse("2024-03-29T11:42:27.069Z"),
                         DeviceIsDeleted = false,
                         
                         Sensors = new List<Sensor>() {
@@ -326,6 +344,16 @@ namespace backEndApp
                                 ChannelCount = 2,
                                 DeviceID = 2,
                                 SensorIsDeleted = false,
+                                SensorConfigs = new List<SensorConfig> () {
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Gain",
+                                        SensorConfigValue = "1.3",
+                                    },
+                                    new SensorConfig() {
+                                        SensorConfigKey = "Offset",
+                                        SensorConfigValue = "0",
+                                    }
+                                },
                                 SensorDatas = new List<SensorData>() {
                                     new SensorData() {
                                         ChannelID = 0, 

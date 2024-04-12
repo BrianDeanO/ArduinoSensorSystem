@@ -15,7 +15,6 @@ namespace backEndApp.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class SensorDataController : Controller {
-
         private readonly ISensorDataRepository _sensorDataRepository;
         private readonly IMapper _mapper;
         private readonly ISensorRepository _sensorRepository;
@@ -59,43 +58,6 @@ namespace backEndApp.Controllers {
                 return BadRequest(ModelState);
             } else {
                 return Ok(sensorData);
-            }
-        }
-
-        // [HttpGet("{selectedTimeFrame}")]
-        // [ProducesResponseType(200, Type = typeof(SensorData))]
-        // [ProducesResponseType(400)]
-        // public IActionResult GetSensorDataInDateRange(string selectedTimeFrame) {
-        //     var parsedDateTime = DateTime.Parse(selectedTimeFrame);
-
-        //     if(parsedDateTime != null) {
-        //         var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDataInDateRange(parsedDateTime));
-
-        //         if(!ModelState.IsValid) {
-        //             return BadRequest(ModelState);
-        //         } else {
-        //             return Ok(sensorDatas);
-        //         }
-        //     } else {
-        //         return BadRequest("Issue With Parsing DateTime");
-        //     }
-        // }
-
-        [HttpGet("{sensorDataId}/Sensor")]
-        [ProducesResponseType(200, Type = typeof(Sensor))]
-        [ProducesResponseType(400)]
-        public IActionResult GetSensorDataSensor(int sensorDataId) {
-            if(!_sensorDataRepository.SensorDataExists(sensorDataId)) {
-                return NotFound();
-            }
-
-            var sensorId = _sensorDataRepository.GetSensorData(sensorDataId).SensorID;
-            var sensor = _mapper.Map<SensorDTO>(_sensorRepository.GetSensor(sensorId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(sensor);
             }
         }
 
@@ -187,7 +149,10 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-
+            if(sensorDataToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the SensorData");
+                return StatusCode(500, ModelState);
+            }
             if(!_sensorDataRepository.DeleteSensorData(sensorDataToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the SensorData");
             }

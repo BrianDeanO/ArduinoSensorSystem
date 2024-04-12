@@ -69,7 +69,7 @@ namespace backEndApp.Controllers {
             [FromQuery] int deviceId
         ) {
             var tempUserDevice = _userDeviceRepository.GetUserDevices()
-                .Where(ud => ((ud.DeviceID == deviceId) && (ud.UserID == userId)))
+                .Where(ud => (ud.DeviceID == deviceId) && (ud.UserID == userId))
                 .FirstOrDefault();
 
             if(tempUserDevice != null) {
@@ -111,9 +111,13 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
-
+            if(userDeviceToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the UserDevice");
+                return StatusCode(500, ModelState);
+            }
             if(!_userDeviceRepository.DeleteUserDevice(userDeviceToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the UserDevice");
+                return StatusCode(500, ModelState);
             }
 
             return Ok("Successfully Deleted.");

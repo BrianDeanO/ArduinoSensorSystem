@@ -18,7 +18,7 @@ namespace backEndApp.Repository {
 
         public UserDevice? GetUserDevice(int userId, int deviceId) {
             return _context.UserDevices
-                .Where(ud => ((ud.UserID == userId) && (ud.DeviceID == deviceId))).FirstOrDefault();
+                .Where(ud => (ud.UserID == userId) && (ud.DeviceID == deviceId)).FirstOrDefault();
         }
 
         public ICollection<UserDevice> GetUserDevices(int userId) {
@@ -37,7 +37,7 @@ namespace backEndApp.Repository {
 
         public bool UserDeviceExists(int userId, int deviceId) {
             return _context.UserDevices
-                .Any(ud => ((ud.UserID == userId) && (ud.DeviceID == deviceId)));
+                .Any(ud => (ud.UserID == userId) && (ud.DeviceID == deviceId));
         }
         
         public bool CreateUserDevice(UserDevice userDevice) {

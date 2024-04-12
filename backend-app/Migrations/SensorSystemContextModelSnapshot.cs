@@ -97,6 +97,32 @@ namespace backEndApp.Migrations
                     b.ToTable("Sensors");
                 });
 
+            modelBuilder.Entity("backEndApp.Models.SensorConfig", b =>
+                {
+                    b.Property<int>("SensorConfigID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SensorConfigID"));
+
+                    b.Property<string>("SensorConfigKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SensorConfigValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SensorID")
+                        .HasColumnType("int");
+
+                    b.HasKey("SensorConfigID");
+
+                    b.HasIndex("SensorID");
+
+                    b.ToTable("SensorConfigs");
+                });
+
             modelBuilder.Entity("backEndApp.Models.SensorData", b =>
                 {
                     b.Property<int>("SensorDataID")
@@ -109,7 +135,6 @@ namespace backEndApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DataUnit")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("DataValue")
@@ -137,7 +162,6 @@ namespace backEndApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
                     b.Property<string>("UserEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserFirstName")
@@ -159,7 +183,6 @@ namespace backEndApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserPhone")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserType")
@@ -195,6 +218,17 @@ namespace backEndApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("backEndApp.Models.SensorConfig", b =>
+                {
+                    b.HasOne("backEndApp.Models.Sensor", "Sensor")
+                        .WithMany("SensorConfigs")
+                        .HasForeignKey("SensorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sensor");
                 });
 
             modelBuilder.Entity("backEndApp.Models.SensorData", b =>
@@ -236,6 +270,8 @@ namespace backEndApp.Migrations
 
             modelBuilder.Entity("backEndApp.Models.Sensor", b =>
                 {
+                    b.Navigation("SensorConfigs");
+
                     b.Navigation("SensorDatas");
                 });
 

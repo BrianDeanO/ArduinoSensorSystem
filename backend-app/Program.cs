@@ -23,6 +23,7 @@ if(databaseMode != null && databaseMode == "InMemory") {
     builder.Services.AddScoped<IUserRepository, LocalUserRepository>();
     builder.Services.AddScoped<ISensorRepository, LocalSensorRepository>();
     builder.Services.AddScoped<ISensorDataRepository, LocalSensorDataRepository>();
+    builder.Services.AddScoped<ISensorConfigRepository, LocalSensorConfigRepository>();
     builder.Services.AddScoped<IUserDeviceRepository, LocalUserDeviceRepository>();
 }
 else {
@@ -30,6 +31,7 @@ else {
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<ISensorRepository, SensorRepository>();
     builder.Services.AddScoped<ISensorDataRepository, SensorDataRepository>();
+    builder.Services.AddScoped<ISensorConfigRepository, SensorConfigRepository>();
     builder.Services.AddScoped<IUserDeviceRepository, UserDeviceRepository>();
 }
 
@@ -81,7 +83,6 @@ app.UseRouting();
 // app.UseCors(MyAllowSpecificOrigins);
 
 app.UseCors(x => x
-    
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()

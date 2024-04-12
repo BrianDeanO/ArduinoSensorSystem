@@ -124,40 +124,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("{deviceId}/UserDevices")]
-        [ProducesResponseType(200, Type = typeof(ICollection<UserDevice>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDevices(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userDeviceRepository.GetDeviceUsers(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(userDevices);
-            }
-        }
-
-        [HttpGet("{deviceId}/Users")]
-        [ProducesResponseType(200, Type = typeof(ICollection<User>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUsersFromDevice(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var users = _mapper.Map<List<UserDTO>>(_userRepository.GetDeviceUsers(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(users);
-            }
-        }
-
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -305,6 +271,11 @@ namespace backEndApp.Controllers {
 
             if(!_sensorRepository.DeleteSensors(sensorsToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting Sensors");
+            }
+            
+            if(deviceToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the Device");
+                return StatusCode(500, ModelState);
             }
 
             if(!_deviceRepository.DeleteDevice(deviceToDelete)) {

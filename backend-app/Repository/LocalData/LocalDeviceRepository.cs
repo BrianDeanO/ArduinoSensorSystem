@@ -19,7 +19,6 @@ namespace backEndApp.Repository
             _userDeviceRepository = userDeviceRepository;
         }
 
-        // ICollections can only be read
         public ICollection<Device> GetDevices()
         {
             return _devices.OrderBy(d => d.DeviceID).ToList();

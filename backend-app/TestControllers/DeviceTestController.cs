@@ -12,324 +12,93 @@ using System.Text.Json;
 
 namespace backEndApp.TestControllers {
     public class DeviceTestController : Controller {
-
         private readonly IDeviceRepository _deviceRepository;
-        private readonly IMapper _mapper;
-        private readonly IUserDeviceRepository _userDeviceRepository;
-        private readonly ISensorRepository _sensorRepository;
-        private readonly IUserRepository _userRepository;
 
         public DeviceTestController(
-            IDeviceRepository deviceRepository, 
-            IMapper mapper,
-            IUserDeviceRepository userDeviceRepository,
-            ISensorRepository sensorRepository,
-            IUserRepository userRepository
-        ) {
-            _deviceRepository = deviceRepository;
-            _mapper = mapper;
-            _userDeviceRepository = userDeviceRepository;
-            _sensorRepository = sensorRepository;
-            _userRepository = userRepository;
-        }
-
-        public DeviceTestController (
             IDeviceRepository deviceRepository
+
         ) {
             _deviceRepository = deviceRepository;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Device>))]        
-        public List<Device> GetDevices() {
-            List<Device> devices = new List<Device>() {
-                new Device {
-                        DeviceID = 1,
-                        DeviceIdent = "ARD-123",
-                        DeviceName = "PAWNEE_NW_1",
-                        DeviceType = "ARDUINO",
-                        DeviceZipCode = "98309",
-                        DeviceUpdateInterval = 86400000,
-                        DeviceLastSeen = DateTime.Parse("2024-03-10T11:42:27.069Z"),
-                        DeviceIsDeleted = false,
-                }, 
-                new Device {
-                        DeviceID = 2,
-                        DeviceIdent = "ARD-456",
-                        DeviceName = "LOTHAL_N_1",
-                        DeviceType = "ARDUINO",
-                        DeviceZipCode = "17715",
-                        DeviceUpdateInterval = 86400000,
-                        DeviceLastSeen = DateTime.Parse("2024-03-09T11:42:27.069Z"),
-                        DeviceIsDeleted = false,
-                },
-                new Device {
-                    DeviceID = 3,
-                    DeviceIdent = "ARD-789",
-                    DeviceName = "TIPOCA_E_1",
-                    DeviceType = "ARDUINO",
-                    DeviceZipCode = "88899",
-                    DeviceUpdateInterval = 86400000,
-                    DeviceLastSeen = DateTime.Parse("2024-03-10T10:42:27.069Z"),
-                    DeviceIsDeleted = false,
-
-                    Sensors = new List<Sensor> {
-                        new Sensor() {
-                            SensorID = 1,
-                            SensorIdent = "SEN-323",
-                            SensorName = "BME_4", 
-                            SensorType = "Adafruit BME280", 
-                            ChannelCount = 2,
-                            SensorIsDeleted = false,
-                        }
-                    }
-                }
-            };
+        public ICollection<Device> GetDevices() {
+            var devices = _deviceRepository.GetDevices();
             return devices;
         }
 
-        [HttpGet("{deviceId}")]
-        [ProducesResponseType(200, Type = typeof(Device))]
-        [ProducesResponseType(400)]
-        public DeviceDTO GetDevice(int deviceId) {
-            var device = new DeviceDTO{
-                DeviceID = deviceId,
-                DeviceIdent = "ARD-123",
-                DeviceName = "PAWNEE_NW_1",
-             };
-
+        public Device? GetDevice(int deviceID) {
+            var device = _deviceRepository.GetDevice(deviceID);
             return device;  
         }
-        
-        [HttpGet("ident/{deviceIdent}")]
-        public DeviceDTO GetDeviceIdent(string deviceIdent) {
-            var device = new DeviceDTO{
-                DeviceID = 1,
-                DeviceIdent = deviceIdent,
-                DeviceName = "PAWNEE_NW_1",
-            };
 
-            return device;
-        }
-        
-        [HttpGet("{deviceId}/DeviceConfig")]
-        [ProducesResponseType(200, Type = typeof(DeviceConfig))]
-        [ProducesResponseType(400)]
-        public IActionResult GetDeviceConfigInfo(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
+        public DeviceConfig GetDeviceConfigInfo(int deviceID) {
+            var device = _deviceRepository.GetDevice(deviceID);
+
+            if (device == null) {
+                return new DeviceConfig() {
+                    DeviceUpdateInterval = -1
+                };
             }
 
-            var device = _mapper.Map<DeviceDTO>(_deviceRepository.GetDevice(deviceId));
-
-            var deviceConfig = new DeviceConfig {
+            return new DeviceConfig() {
                 DeviceUpdateInterval = device.DeviceUpdateInterval
             };
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(deviceConfig);
-            }
         }
 
-        [HttpGet("{deviceId}/Sensors")]
-        [ProducesResponseType(200, Type = typeof(ICollection<Sensor>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetDeviceSensors(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
+        public Device CreateDevice(Device newDevice) {            
+            var badDevice = new Device {
+                DeviceID = -1,
+                DeviceIdent = "BAD",
+                DeviceName = "BAD",
+                DeviceUpdateInterval = 0
+            };
 
-            var sensors = _sensorRepository.GetDeviceSensors(deviceId);
+            if(!_deviceRepository.DeviceExists(newDevice.DeviceID)) {
 
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(sensors);
-            }
-        }
-
-        [HttpGet("{deviceId}/UserDevices")]
-        [ProducesResponseType(200, Type = typeof(ICollection<UserDevice>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDevices(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userDeviceRepository.GetDeviceUsers(deviceId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(userDevices);
-            }
-        }
-
-        [HttpGet("{deviceId}/Users")]
-        [ProducesResponseType(200, Type = typeof(ICollection<User>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUsersFromDevice(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var userDevices = _userDeviceRepository.GetUserDevices(deviceId).ToList();
-            var allUsers = _userRepository.GetUsers().ToList();
-            var users = _mapper.Map<List<UserDTO>>(allUsers.Where(u => userDevices.Any(ud => ud.UserID == u.UserID)));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(users);
-            }
-        }
-
-        [HttpPost]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        public IActionResult CreateDevice([FromBody] DeviceDTO newDevice) {            
-            if(newDevice == null) {
-                return BadRequest(ModelState);
-            }
-
-            var device = _deviceRepository.GetDevices()
-                .Where(d => d.DeviceIdent == newDevice.DeviceIdent)
-                .FirstOrDefault();
-
-            if(device != null) {
-                ModelState.AddModelError("", "Device Already Exists.");
-                return StatusCode(422, ModelState);
-            }
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
                 var defaultUpdateInterval = 60 * 60 * 24;
-                
-                var deviceMap = _mapper.Map<Device>(newDevice);
-                deviceMap.DeviceIsDeleted = false;
-                deviceMap.DeviceUpdateInterval = defaultUpdateInterval;
+                newDevice.DeviceIsDeleted = false;
+                newDevice.DeviceUpdateInterval = defaultUpdateInterval;
 
-                if(!_deviceRepository.CreateDevice(deviceMap)) {
-                    ModelState.AddModelError("", "Something Went Wrong While Saving.");
-                    return StatusCode(500, ModelState);
+                var deviceCreated = _deviceRepository.CreateDevice(newDevice);
+                if(deviceCreated) {
+                    return newDevice;
+                } else {
+                    return badDevice;
                 }
+            } 
 
-                var users = _userRepository.GetAdminUsers();
+            return badDevice;
+        }
 
-                foreach(var user in users) {
-                    var userDevice = new UserDevice() {
-                            UserID = user.UserID,
-                            User = user,
-                            DeviceID = deviceMap.DeviceID,
-                            Device = deviceMap,
-                        };
+        public Device UpdateDevice(Device device, string newDeviceName) {            
+            var badDevice = new Device {
+                DeviceID = -1,
+                DeviceIdent = "BAD",
+                DeviceName = "BAD",
+                DeviceUpdateInterval = 0
+            };
 
-                    if(!_userDeviceRepository.CreateUserDevice(userDevice)) {
-                        ModelState.AddModelError("", "Something Went Wrong While Saving the UserDevice.");
-                        return StatusCode(500, ModelState);
-                    }
+            if(!_deviceRepository.DeviceExists(device.DeviceID)) {
+                device.DeviceName = newDeviceName;
+
+                var deviceUpdated = _deviceRepository.UpdateDevice(device);
+                if(deviceUpdated) {
+                    return device;
+                } else {
+                    return badDevice;
                 }
+            } 
 
-                var dto = new DeviceDTO {
-                    DeviceID = deviceMap.DeviceID,
-                    DeviceUpdateInterval = defaultUpdateInterval,
-                };
-                return new JsonResult(dto, new JsonSerializerOptions() {
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                });
-            }
+            return badDevice;
         }
 
-        [HttpPut("{deviceId}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public IActionResult UpdateDevice(int deviceId, [FromBody] DeviceDTO updatedDevice) {
-            if(updatedDevice == null) {
-                return BadRequest(ModelState);
-            }
+        public bool DeleteDevice(Device device) {            
+            if(!_deviceRepository.DeviceExists(device.DeviceID)) {
+                var deviceDeleted = _deviceRepository.DeleteDevice(device);
+                return deviceDeleted;
+            } 
 
-            else if(deviceId != updatedDevice.DeviceID) {
-                ModelState.AddModelError("", "Include DeviceID..."); /// CUSTOM ERROR MESSAGE??????? POSSIBLY?
-                return BadRequest(ModelState);
-            }
-
-            else if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            else if(!ModelState.IsValid) {
-                return BadRequest();
-            }
-
-            var deviceMap = _mapper.Map<Device>(updatedDevice);
-
-            if(!_deviceRepository.UpdateDevice(deviceMap)) {
-                ModelState.AddModelError("", "Something Went Wrong While Updating Device.");
-                return StatusCode(500, ModelState);
-            }
-
-            return Ok("Successfully Updated.");
-        }
-
-        [HttpPost("Poke/{deviceId}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        public IActionResult PokeDevice(int deviceId) {            
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var device = _deviceRepository.GetDevice(deviceId);
-            if(device == null) {
-                ModelState.AddModelError("", "No such device found");
-                return StatusCode(422, ModelState);
-            }
-
-            device.DeviceLastSeen = DateTime.Now;
-
-            if(!_deviceRepository.UpdateDevice(device)) {
-                ModelState.AddModelError("", "Error while updating last seen time");
-                return BadRequest(ModelState);
-            } else {
-                return Ok("Successfully Updated.");
-            }
-        }
-
-        [HttpDelete("{deviceId}")]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
-        public IActionResult DeleteDevice(int deviceId) {
-            if(!_deviceRepository.DeviceExists(deviceId)) {
-                return NotFound();
-            }
-
-            var userDevicesToDelete = _userDeviceRepository.GetUserDevices(deviceId);
-            var deviceToDelete = _deviceRepository.GetDevice(deviceId);
-            var sensorsToDelete = _sensorRepository.GetDeviceSensors(deviceId);
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
-
-            if(!_userDeviceRepository.DeleteUserDevices(userDevicesToDelete.ToList())) {
-                ModelState.AddModelError("", "Something went wrong when deleting UserDevices");
-            }
-
-            if(!_sensorRepository.DeleteSensors(sensorsToDelete.ToList())) {
-                ModelState.AddModelError("", "Something went wrong when deleting Sensors");
-            }
-
-            if(!_deviceRepository.DeleteDevice(deviceToDelete)) {
-                ModelState.AddModelError("", "Something went wrong when deleting the Device");
-            }
-
-            return Ok("Successfully Deleted.");
+            return false;
         }
     }
 }

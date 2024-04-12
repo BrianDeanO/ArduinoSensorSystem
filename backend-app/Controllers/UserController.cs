@@ -89,23 +89,6 @@ namespace backEndApp.Controllers {
             }
         }
 
-        [HttpGet("{userId}/UserDevices")]
-        [ProducesResponseType(200, Type = typeof(ICollection<UserDevice>))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUserDevices(int userId) {
-            if(!_userRepository.UserExists(userId)) {
-                return NotFound();
-            }
-
-            var userDevices = _mapper.Map<List<UserDeviceDTO>>(_userDeviceRepository.GetUserDevices(userId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(userDevices); 
-            }
-        }
-
         [HttpGet("{userId}/Devices")]
         [ProducesResponseType(200, Type = typeof(ICollection<Device>))]
         [ProducesResponseType(400)]
@@ -136,11 +119,12 @@ namespace backEndApp.Controllers {
             } 
 
             else {
-                // var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
+                var tempUser = _userRepository.GetUserWithLogin(newUser.UserFirstName, newUser.UserLastName, newUser.UserPassword);
                 
-                // if(tempUser != null) {
-                //     return BadRequest(ModelState);
-                // }
+                if(tempUser != null) {
+                    ModelState.AddModelError("", "New User Info Matches Another User.");
+                    return BadRequest(ModelState);
+                }
 
                 var userMap = _mapper.Map<User>(newUser);
                 userMap.UserIsDeleted = false;
@@ -175,24 +159,25 @@ namespace backEndApp.Controllers {
                 return BadRequest();
             }
 
-            // var tempUser = _userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
-            
-            // if((tempUser != null) && (tempUser.UserID != updatedUser.UserID)) {
-            //     return BadRequest(ModelState);
-            // }
+            else {
+                var tempUser = _userRepository.GetUserWithLogin(updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword);
+                
+                if(tempUser != null) {
+                    ModelState.AddModelError("", "New User Info Matches Another User.");
+                    return BadRequest(ModelState);
+                }
 
-            // if(_userRepository.UserExistsWithLogin(userId, updatedUser.UserFirstName, updatedUser.UserLastName, updatedUser.UserPassword)) {
-            //     return BadRequest(ModelState);
-            // }
+                var userMap = _mapper.Map<User>(updatedUser);
 
-            var userMap = _mapper.Map<User>(updatedUser);
+                if(!_userRepository.UpdateUser(userMap)) {
+                    ModelState.AddModelError("", "Something Went Wrong While Updating User.");
+                    return StatusCode(500, ModelState);
+                }
 
-            if(!_userRepository.UpdateUser(userMap)) {
-                ModelState.AddModelError("", "Something Went Wrong While Updating User.");
-                return StatusCode(500, ModelState);
+                return Ok("Successfully Updated.");
             }
 
-            return Ok("Successfully Updated.");
+
         }
 
         [HttpDelete("{userId}")]
@@ -214,7 +199,10 @@ namespace backEndApp.Controllers {
             if(!_userDeviceRepository.DeleteUserDevices(userDevicesToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting UserDevices");
             }
-
+            if(userToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the User");
+                return StatusCode(500, ModelState);
+            }
             if(!_userRepository.DeleteUser(userToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the User");
             }

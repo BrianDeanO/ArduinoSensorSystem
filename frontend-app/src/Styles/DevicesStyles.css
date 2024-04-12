@@ -27,6 +27,7 @@ CSS Styles for App Device Column
     text-align: center;
     border-radius: 2px;
     overflow-y: auto;
+    border-radius: 5px;
 }
 .DeviceSelectorSubBox {
     display: flex;
@@ -50,6 +51,15 @@ CSS Styles for App Device Column
     border-bottom: 2px;
     border-color: black;
     border-bottom-style: solid;
+}
+.deviceSelectorTitleTextNoUnderline {
+    width: 175px;
+    height: 35px;
+    font-weight: bold;
+    color: black;
+    margin: 5px auto 0px auto;
+    font-size: 16pt;
+    text-align: center;
 }
 
 .DeviceButton {

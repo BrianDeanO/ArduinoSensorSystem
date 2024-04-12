@@ -32,7 +32,8 @@ export const localStorageTitles = {
     selectedSensor: "selectedSensor",
     selectedSensorData: "selectedSensorData",
     selectedTimeFrame: "selectedTimeFrame",
-    selectedChannel: "selectedChannel"
+    selectedChannel: "selectedChannel",
+    sensorConfigs: "sensorConfigs"
 }
 
 export const timeFrameConstants = {

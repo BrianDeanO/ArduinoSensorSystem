@@ -65,7 +65,7 @@ const Devices: React.FC<DeviceProps> = ({
     return (
         <div className="MainDevicesBox">
             <div className="MainDeviceSelectorBox">
-                <div className="deviceSelectorTitleText">
+                <div className={(devices.length > 0) ? "deviceSelectorTitleText" : "deviceSelectorTitleTextNoUnderline"}>
                     Devices
                 </div>
                 {

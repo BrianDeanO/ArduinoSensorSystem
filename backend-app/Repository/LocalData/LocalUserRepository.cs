@@ -15,7 +15,6 @@ namespace backEndApp.Repository {
             _userDeviceRepository = userDeviceRepository;
         }
 
-        // ICollections can only be read
         public ICollection<User> GetUsers() {
             return _users.OrderBy(u => u.UserID).ToList();
         }
@@ -26,12 +25,6 @@ namespace backEndApp.Repository {
 
         public ICollection<User> GetAdminUsers() {
             return _users.Where(ud => ud.UserType == "ADMIN").Select(u => u).ToList();
-        }
-
-        public ICollection<User> GetDeviceUsers(int deviceId)
-        {
-            var userDevices = _userDeviceRepository.GetDeviceUsers(deviceId);
-            return _users.Where(u => userDevices.Any(ud => ud.UserID == u.UserID)).ToList();
         }
 
         public User? GetUserWithLogin(string userFirstName, string userLastName, string userPassword) {

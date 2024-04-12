@@ -9,6 +9,7 @@ using backEndApp.DTO;
 using backEndApp.Interfaces;
 using backEndApp.Models;
 using System.Text.Json;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backEndApp.Controllers {
     [Route("api/[controller]")]
@@ -19,17 +20,20 @@ namespace backEndApp.Controllers {
         private readonly IMapper _mapper;
         private readonly IDeviceRepository _deviceRepository;
         private readonly ISensorDataRepository _sensorDataRepository;
+        private readonly ISensorConfigRepository _sensorConfigRepository;
 
         public SensorController(
             ISensorRepository sensorRepository, 
             IDeviceRepository deviceRepository, 
             IMapper mapper,
-            ISensorDataRepository sensorDataRepository
+            ISensorDataRepository sensorDataRepository,
+            ISensorConfigRepository sensorConfigRepository
         ) {
             _sensorRepository = sensorRepository;
             _mapper = mapper;
             _deviceRepository = deviceRepository;
             _sensorDataRepository = sensorDataRepository;
+            _sensorConfigRepository = sensorConfigRepository;
         }
 
         [HttpGet]
@@ -82,6 +86,23 @@ namespace backEndApp.Controllers {
             });
         }
 
+        [HttpGet("{sensorId}/SensorConfigs")]
+        [ProducesResponseType(200, Type = typeof(ICollection<SensorConfig>))]
+        [ProducesResponseType(400)]
+        public IActionResult GetSensorConfigs(int sensorId) {
+            if(!_sensorRepository.SensorExists(sensorId)) {
+                return NotFound();
+            }
+
+            var sensorConfigs = _mapper.Map<List<SensorConfigDTO>>(_sensorRepository.GetSensorConfigs(sensorId));
+
+            if(!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            } else {
+                return Ok(sensorConfigs);
+            }
+        }
+
         [HttpGet("{sensorId}/SensorDatas")]
         [ProducesResponseType(200, Type = typeof(ICollection<SensorData>))]
         [ProducesResponseType(400)]
@@ -90,7 +111,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorDataRepository.GetSensorDatas(sensorId));
+            var sensorDatas = _mapper.Map<List<SensorDataDTO>>(_sensorRepository.GetSensorDatas(sensorId));
 
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
@@ -102,7 +123,7 @@ namespace backEndApp.Controllers {
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateSensor([FromBody] SensorDTO newSensor) {
+        public IActionResult CreateSensor([FromBody] SensorWithConfigDTO newSensor) {
             if(newSensor == null) {
                 return BadRequest(ModelState);
             }
@@ -119,16 +140,38 @@ namespace backEndApp.Controllers {
             if(!ModelState.IsValid) {
                 return BadRequest(ModelState);
             } else {
-                var sensorMap = _mapper.Map<Sensor>(newSensor);
-
-                int deviceId = newSensor.DeviceID;
-                sensorMap.DeviceID = deviceId;
-                sensorMap.Device = _deviceRepository.GetDevice(deviceId);
-                sensorMap.SensorIsDeleted = false;
+                Sensor sensorMap = new Sensor {
+                    DeviceID = newSensor.DeviceID,
+                    Device = _deviceRepository.GetDevice(newSensor.DeviceID),
+                    SensorIdent = newSensor.SensorIdent!,
+                    SensorName = newSensor.SensorName,
+                    SensorType = newSensor.SensorType,
+                    ChannelCount = newSensor.ChannelCount ?? 0,
+                    SensorIsDeleted = false,
+                    SensorConfigs = new List<SensorConfig>()
+                };
 
                 if(!_sensorRepository.CreateSensor(sensorMap)) {
                     ModelState.AddModelError("", "Something Went Wrong While Saving.");
                     return StatusCode(500, ModelState);
+                }
+
+                if(newSensor.SensorConfigs != null) {
+                    foreach (var sensorConfig in newSensor.SensorConfigs) {
+                        var sensorConfigMap = new SensorConfig() {
+                            SensorID = sensorMap.SensorID,
+                            SensorConfigKey = sensorConfig.Key,
+                            SensorConfigValue = sensorConfig.Value,
+                            Sensor = _sensorRepository.GetSensor(sensorMap.SensorID)
+                        };
+
+                        sensorMap.SensorConfigs.Add(sensorConfigMap);
+
+                        if(!_sensorConfigRepository.CreateSensorConfig(sensorConfigMap)) {
+                            ModelState.AddModelError("", "Something Went Wrong While Saving.");
+                            return StatusCode(500, ModelState);
+                        }
+                    }
                 }
 
                 var dto = new SensorDTO {
@@ -181,7 +224,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatasToDelete = _sensorDataRepository.GetSensorDatas(sensorId);
+            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(sensorId);
             var sensorToDelete = _sensorRepository.GetSensor(sensorId);
 
             if(!ModelState.IsValid) {
@@ -191,7 +234,10 @@ namespace backEndApp.Controllers {
             if(!_sensorDataRepository.DeleteSensorDatas(sensorDatasToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting SensorDatas");
             }
-
+            if(sensorToDelete == null) {
+                ModelState.AddModelError("", "Something went wrong when getting the Sensor");
+                return StatusCode(500, ModelState);
+            }
             if(!_sensorRepository.DeleteSensor(sensorToDelete)) {
                 ModelState.AddModelError("", "Something went wrong when deleting the Sensor");
             }

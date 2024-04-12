@@ -1,10 +1,7 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+using backEndApp.Models;
 namespace backEndApp.DTO;
+
 public class SensorDTO {
-    // [Key]
     public int SensorID { get; set; }    
     public string? SensorIdent { get; set; }    
     public string? SensorName { get; set; }
