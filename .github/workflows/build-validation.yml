@@ -50,10 +50,10 @@ jobs:
         build-dir: ${{ env.arduinoBuild-directory }}
         generator: Ninja
 
+    - name: Run Backend
+      working-directory: ${{ env.backend-directory }}
+      run: dotnet run --no-restore --launch-profile api-test
+      
     - name: Test API
-      run: |
-        cd backend-app
-        dotnet run --no-restore --launch-profile api-test &
-        cd ../arduino/build
-        ./api-test
-        killall dotnet
+      working-directory: ${{ env.arduinoBuild-directory }}
+      run: ./api-test
