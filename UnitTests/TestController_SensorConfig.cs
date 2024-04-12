@@ -1,17 +1,11 @@
 using System;
-using AutoMapper;
 using Moq;
 using Xunit;
-using backEndApp.DTO;
 using backEndApp.Models;
-using backEndApp.Data;
 using backEndApp.Interfaces;
-using backEndApp.Controllers;
 using backEndApp.TestControllers;
 using backEndApp.UnitTests;
-using backEndApp.Repository;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace UnitTests
@@ -19,22 +13,10 @@ namespace UnitTests
     public class TestController_SensorConfig
     {
         private readonly Mock<ISensorConfigRepository> _ISensorConfigRepository;
-        private readonly IMapper _mapper;
-        private readonly Mock<IUserDeviceRepository> _userDeviceRepository;
-        private readonly Mock<ISensorRepository> _ISensorRepository;
-        private readonly UserRepository _userRepository;
-        public List<Device> deviceList = UnitTestHelper.GetDevices(); 
-        public List<User> userList = UnitTestHelper.GetUsers();
-        public List<Sensor> sensorList = UnitTestHelper.GetSensors();
-        public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
         public List<SensorConfig> sensorConfigList = UnitTestHelper.GetSensorConfigs();
-        public List<UserDevice> userDeviceList = UnitTestHelper.GetUserDevices();
 
         public TestController_SensorConfig() {
             _ISensorConfigRepository = new Mock<ISensorConfigRepository>();
-            // _mapper = new IMapper();
-            _userDeviceRepository = new Mock<IUserDeviceRepository>();
-            _ISensorRepository = new Mock<ISensorRepository>();
         }
 
         [Fact]
@@ -44,17 +26,35 @@ namespace UnitTests
                 .Returns(sensorConfigList);
             
             var sensorConfigController = new SensorConfigTestController(
-                _ISensorConfigRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorConfigRepository.Object
             );
 
             // Act
             var sensorConfigResult = sensorConfigController.GetSensorConfigs().ToArray();
+
+            // Assert
+            Assert.NotNull(sensorConfigResult);
+            Assert.Equal(sensorConfigList[0].SensorConfigID, sensorConfigResult[0].SensorConfigID);
+            Assert.Equal(sensorConfigList[1].SensorConfigID, sensorConfigResult[1].SensorConfigID);
+        }
+
+        [Fact]
+        public void GetAllSensorConfigsWithSensorID() {
+            // Arrange
+            var sensor = new Sensor() {
+                SensorID = 1,
+                SensorIdent = "SEN-123",
+                SensorName = "BME_TRI_SENS"
+            };
+            _ISensorConfigRepository.Setup(x => x.GetSensorConfigs(sensor.SensorID))
+                .Returns(sensorConfigList);
+            
+            var sensorConfigController = new SensorConfigTestController(
+                _ISensorConfigRepository.Object
+            );
+
+            // Act
+            var sensorConfigResult = sensorConfigController.GetSensorConfigs(sensor.SensorID).ToArray();
 
             // Assert
             Assert.NotNull(sensorConfigResult);
@@ -76,13 +76,7 @@ namespace UnitTests
                 .Returns(sensorConfig);
             
             var sensorConfigController = new SensorConfigTestController(
-                _ISensorConfigRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorConfigRepository.Object
             );
 
             // Act
@@ -109,13 +103,7 @@ namespace UnitTests
                 .Returns(true);
             
             var sensorConfigController = new SensorConfigTestController(
-                _ISensorConfigRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorConfigRepository.Object
             );
 
             // Act
@@ -143,13 +131,7 @@ namespace UnitTests
                 .Returns(true);
             
             var sensorConfigController = new SensorConfigTestController(
-                _ISensorConfigRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorConfigRepository.Object
             );
 
             // Act
@@ -175,13 +157,7 @@ namespace UnitTests
                 .Returns(true);
             
             var sensorConfigController = new SensorConfigTestController(
-                _ISensorConfigRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorConfigRepository.Object
             );
 
             // Act

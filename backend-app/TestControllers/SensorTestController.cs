@@ -13,32 +13,12 @@ using System.Text.Json;
 namespace backEndApp.TestControllers {
     public class SensorTestController : Controller {
         private readonly ISensorRepository _sensorRepository;
-        private readonly List<Device> _deviceDbContext;
-        private readonly List<User> _userDbContext;
-        private readonly List<Sensor> _sensorDbContext;
-        private readonly List<SensorData> _sensorDataDbContext;
-        private readonly List<SensorConfig> _sensorConfigDbContext;
-        private readonly List<UserDevice> _userDeviceDbContext;
 
         public SensorTestController(
-            ISensorRepository sensorRepository,
-            // ISensorRepository sensorRepository,
-            List<Device> deviceDbContext,
-            List<User> userDbContext,
-            List<Sensor> sensorDbContext,
-            List<SensorData> sensorDataDbContext,
-            List<SensorConfig> sensorConfigDbContext,
-            List<UserDevice> userDeviceDbContext
+            ISensorRepository sensorRepository
 
         ) {
             _sensorRepository = sensorRepository;
-            // _sensorRepository = sensorRepository;
-            _deviceDbContext = deviceDbContext;
-            _userDbContext = userDbContext;
-            _sensorDbContext = sensorDbContext;
-            _sensorDataDbContext = sensorDataDbContext;
-            _sensorConfigDbContext = sensorConfigDbContext;
-            _userDeviceDbContext = userDeviceDbContext;
         }
 
         public ICollection<Sensor> GetSensors() {

@@ -12,23 +12,16 @@ namespace backEndApp.Repository {
             _context = context;
         }
 
-        public SensorData? GetSensorData(int sensorDataId) {
-            return _context.SensorDatas.Find(sensorDataId);
-        }
-
         public ICollection<SensorData> GetSensorDatas() {
             return _context.SensorDatas.OrderBy(sd => sd.SensorDataID).ToList();
         }
 
-        public bool SensorDataExists(int sensorDataId) {
-            return _context.SensorDatas.Any(sd => sd.SensorDataID == sensorDataId);
+        public SensorData? GetSensorData(int sensorDataId) {
+            return _context.SensorDatas.Find(sensorDataId);
         }
 
-        public ICollection<SensorData> GetSensorDatas(int sensorId) {
-            return _context.SensorDatas
-                .Where(sd => sd.SensorID == sensorId)
-                .OrderBy(sd => sd.SensorDataID)
-                .ToList();
+        public bool SensorDataExists(int sensorDataId) {
+            return _context.SensorDatas.Any(sd => sd.SensorDataID == sensorDataId);
         }
 
         public bool CreateSensorData(SensorData sensorData) {

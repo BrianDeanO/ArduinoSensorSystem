@@ -15,7 +15,6 @@ namespace backEndApp.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class SensorDataController : Controller {
-
         private readonly ISensorDataRepository _sensorDataRepository;
         private readonly IMapper _mapper;
         private readonly ISensorRepository _sensorRepository;
@@ -59,24 +58,6 @@ namespace backEndApp.Controllers {
                 return BadRequest(ModelState);
             } else {
                 return Ok(sensorData);
-            }
-        }
-
-        [HttpGet("{sensorDataId}/Sensor")]
-        [ProducesResponseType(200, Type = typeof(Sensor))]
-        [ProducesResponseType(400)]
-        public IActionResult GetSensorDataSensor(int sensorDataId) {
-            if(!_sensorDataRepository.SensorDataExists(sensorDataId)) {
-                return NotFound();
-            }
-
-            var sensorId = _sensorDataRepository.GetSensorData(sensorDataId).SensorID;
-            var sensor = _mapper.Map<SensorDTO>(_sensorRepository.GetSensor(sensorId));
-
-            if(!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            } else {
-                return Ok(sensor);
             }
         }
 

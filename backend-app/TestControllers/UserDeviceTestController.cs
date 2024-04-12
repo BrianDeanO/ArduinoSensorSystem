@@ -12,152 +12,75 @@ using System.Text.Json;
 
 namespace backEndApp.TestControllers {
     public class UserDeviceTestController : Controller {
-        private readonly IUserRepository _userRepository;
-        // private readonly ISensorRepository _sensorRepository;
-        private readonly List<Device> _deviceDbContext;
-        private readonly List<User> _userDbContext;
-        private readonly List<Sensor> _sensorDbContext;
-        private readonly List<SensorData> _sensorDataDbContext;
-        private readonly List<SensorConfig> _sensorConfigDbContext;
-        private readonly List<UserDevice> _userDeviceDbContext;
+        private readonly IUserDeviceRepository _userDeviceRepository;
 
         public UserDeviceTestController(
-            IUserRepository userRepository,
-            // ISensorRepository sensorRepository,
-            List<Device> deviceDbContext,
-            List<User> userDbContext,
-            List<Sensor> sensorDbContext,
-            List<SensorData> sensorDataDbContext,
-            List<SensorConfig> sensorConfigDbContext,
-            List<UserDevice> userDeviceDbContext
+            IUserDeviceRepository userDeviceRepository
 
         ) {
-            _userRepository = userRepository;
-            // _sensorRepository = sensorRepository;
-            _deviceDbContext = deviceDbContext;
-            _userDbContext = userDbContext;
-            _sensorDbContext = sensorDbContext;
-            _sensorDataDbContext = sensorDataDbContext;
-            _sensorConfigDbContext = sensorConfigDbContext;
-            _userDeviceDbContext = userDeviceDbContext;
+            _userDeviceRepository = userDeviceRepository;
         }
 
-        public ICollection<User> GetUsers() {
-            var users = _userRepository.GetUsers();
-            return users;
+        public ICollection<UserDevice> GetUserDevices() {
+            var userDevices = _userDeviceRepository.GetUserDevices();
+            return userDevices;
         }
 
-        public User? GetUser(int userID) {
-            var user = _userRepository.GetUser(userID);
-            return user;  
+        public ICollection<UserDevice> GetUserDevices(int userID) {
+            var userDevices = _userDeviceRepository.GetUserDevices(userID);
+            return userDevices;
         }
 
-        // public List<UserDevice> GetUserDevices() {
-        //     List<UserDevice> userDevices = new List<UserDevice>() {
-        //         new UserDevice() {
-        //             UserID = 1,
-        //             DeviceID = 1
-        //         },
-        //         new UserDevice() {
-        //             UserID = 1,
-        //             DeviceID = 2
-        //         }
-        //     };
-        //     return userDevices;
-        // }
-
-        public ICollection<User> GetAdminUsers() {
-            var users = _userRepository.GetAdminUsers();
-            return users;  
+        public UserDevice? GetUserDevice(int userID, int deviceID) {
+            var userDevice = _userDeviceRepository.GetUserDevice(userID, deviceID);
+            return userDevice;  
         }
 
-        public User? GetUserWithLogin(
-            string userFirstName, 
-            string userLastName,
-            string userPassword
-        ) {
-            var user = _userRepository.GetUserWithLogin(
-                userFirstName, 
-                userLastName,
-                userPassword
-            );
-            return user;  
-        }
-
-
-        public User CreateUser(User newUser) {            
-            var badUser = new User() {
+        public UserDevice CreateUserDevice(UserDevice newUserDevice) {            
+            var badUserDevice = new UserDevice() {
                 UserID = -1,
-                UserType = "BAD", 
-                UserFirstName = "BAD",
-                UserLastName = "BAD",
-                UserPassword = "BAD"
+                DeviceID = -1
             };
 
-            if(!_userRepository.UserExists(newUser.UserID)) {
+            if(!_userDeviceRepository.UserDeviceExists(newUserDevice.UserID, newUserDevice.DeviceID)) {
+                var deviceCreated = _userDeviceRepository.CreateUserDevice(newUserDevice);
 
-                newUser.UserIsDeleted = false;
-
-                var deviceCreated = _userRepository.CreateUser(newUser);
                 if(deviceCreated) {
-                    return newUser;
+                    return newUserDevice;
                 } else {
-                    return badUser;
+                    return badUserDevice;
                 }
             } 
 
-            return badUser;
+            return badUserDevice;
         }
 
-        public User UpdateUser(User newUser, string newUserType) {            
-            var badUser = new User() {
-                UserID = -1,
-                UserType = "BAD", 
-                UserFirstName = "BAD",
-                UserLastName = "BAD",
-                UserPassword = "BAD"
-            };
-
-            if(!_userRepository.UserExists(newUser.UserID)) {
-                newUser.UserType = newUserType;
-
-                var userUpdated = _userRepository.UpdateUser(newUser);
-                if(userUpdated) {
-                    return newUser;
-                } else {
-                    return badUser;
-                }
-            } 
-
-            return badUser;
-        }
-
-        public bool DeleteUser(User user) {            
-            if(!_userRepository.UserExists(user.UserID)) {
-                var userDeleted = _userRepository.DeleteUser(user);
+        public bool DeleteUserDevice(UserDevice userDevice) {            
+            if(!_userDeviceRepository.UserDeviceExists(userDevice.UserID, userDevice.DeviceID)) {
+                var userDeleted = _userDeviceRepository.DeleteUserDevice(userDevice);
                 return userDeleted;
             } 
 
             return false;
         }
-        // public List<User> GetUsersFromDevice() {
-        //     var Users = new List<User>() {
-        //         new User() {
-        //             UserID = 1,
-        //             UserType = "ADMIN", 
-        //             UserFirstName = "Han",
-        //             UserLastName = "Solo",
-        //             UserPassword = "123"
-        //         },
-        //         new User() {
-        //             UserID = 2,
-        //             UserType = "BASIC", 
-        //             UserFirstName = "Luke",
-        //             UserLastName = "Skywalker",
-        //             UserPassword = "456"
-        //         }
-        //     };
-        //     return Users;
-        // }
+        public List<User> GetUsersFromDevice() {
+            var Users = new List<User>() {
+                new User() {
+                    UserID = 1,
+                    UserType = "ADMIN", 
+                    UserFirstName = "Han",
+                    UserLastName = "Solo",
+                    UserPassword = "123"
+                },
+                new User() {
+                    UserID = 2,
+                    UserType = "BASIC", 
+                    UserFirstName = "Luke",
+                    UserLastName = "Skywalker",
+                    UserPassword = "456"
+                }
+            };
+            return Users;
+        }
     }
 }

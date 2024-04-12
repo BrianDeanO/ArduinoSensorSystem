@@ -1,14 +1,10 @@
 using System;
 using Moq;
 using Xunit;
-using backEndApp.DTO;
 using backEndApp.Models;
-using backEndApp.Data;
 using backEndApp.Interfaces;
-using backEndApp.Controllers;
 using backEndApp.TestControllers;
 using backEndApp.UnitTests;
-using backEndApp.Repository;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,14 +13,13 @@ namespace UnitTests
     public class TestController_Sensor
     {
         private readonly Mock<ISensorRepository> _ISensorRepository;
-        public List<Device> deviceList = UnitTestHelper.GetDevices(); 
-        public List<User> userList = UnitTestHelper.GetUsers();
+        private readonly Mock<ISensorConfigRepository> _ISensorConfigRepository;
         public List<Sensor> sensorList = UnitTestHelper.GetSensors();
-        public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
         public List<SensorConfig> sensorConfigList = UnitTestHelper.GetSensorConfigs();
-        public List<UserDevice> userDeviceList = UnitTestHelper.GetUserDevices();
+        public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
         public TestController_Sensor() {
             _ISensorRepository = new Mock<ISensorRepository>();
+            _ISensorConfigRepository = new Mock<ISensorConfigRepository>();
         }
 
         [Fact]
@@ -34,13 +29,7 @@ namespace UnitTests
                 .Returns(sensorList);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
             // Act
             var sensorsResult = sensorController.GetSensors().ToArray();
@@ -65,13 +54,7 @@ namespace UnitTests
                 .Returns(sensor);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
 
             // Act
@@ -96,13 +79,7 @@ namespace UnitTests
                 .Returns(sensorDataList);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
 
             // Act
@@ -129,13 +106,7 @@ namespace UnitTests
                 .Returns(sensorConfigList);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
 
             // Act
@@ -151,29 +122,45 @@ namespace UnitTests
         [Fact]
         public void CreateSensor() {
             // Arrange
+            var sensorConfigCreationSuccess = true;
+
+            // Setting up Sensor
             var sensor = new Sensor() {
                 SensorID = 1,
                 SensorIdent = "SEN-123",
                 SensorName = "BME_TRI_SENS"
             };
+
             _ISensorRepository.Setup(x => x.CreateSensor(sensor))
-                .Returns(true);
+                .Returns(true);            
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
+            );
+
+
+            // Setting up for Sensor Config Creation
+            _ISensorConfigRepository.Setup(x => x.CreateSensorConfig(sensorConfigList[0]))
+                .Returns(true);
+
+            var sensorConfigController = new SensorConfigTestController(
+                _ISensorConfigRepository.Object
             );
 
             // Act
             var sensorResult = sensorController.CreateSensor(sensor);
 
+            // Create New Sensor Configs
+            foreach (var sensorConfig in sensorConfigList) {
+                var sensorConfigResult = sensorConfigController.CreateSensorConfig(sensorConfig);
+                if(sensorConfigResult == null) {
+                    sensorConfigCreationSuccess = false;
+                }
+            }
+
             // Assert
             Assert.NotNull(sensorResult);
+            Assert.True(sensorConfigCreationSuccess);
             Assert.Equal(sensor.SensorID, sensorResult.SensorID);
             Assert.Equal(sensor.SensorIdent, sensorResult.SensorIdent);
             Assert.False(sensorResult.SensorIsDeleted);
@@ -193,13 +180,7 @@ namespace UnitTests
                 .Returns(true);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
 
             // Act
@@ -224,13 +205,7 @@ namespace UnitTests
                 .Returns(true);
             
             var sensorController = new SensorTestController(
-                _ISensorRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _ISensorRepository.Object
             );
 
             // Act

@@ -27,12 +27,6 @@ namespace backEndApp.Repository {
             return _users.Where(ud => ud.UserType == "ADMIN").Select(u => u).ToList();
         }
 
-        public ICollection<User> GetDeviceUsers(int deviceId)
-        {
-            var userDevices = _userDeviceRepository.GetDeviceUsers(deviceId);
-            return _users.Where(u => userDevices.Any(ud => ud.UserID == u.UserID)).ToList();
-        }
-
         public User? GetUserWithLogin(string userFirstName, string userLastName, string userPassword) {
             return _users.Where(ud => (
                 ud.UserFirstName == userFirstName && 

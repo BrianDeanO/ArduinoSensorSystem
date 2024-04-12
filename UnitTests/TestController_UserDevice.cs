@@ -1,14 +1,10 @@
 using System;
 using Moq;
 using Xunit;
-using backEndApp.DTO;
 using backEndApp.Models;
-using backEndApp.Data;
 using backEndApp.Interfaces;
-using backEndApp.Controllers;
 using backEndApp.TestControllers;
 using backEndApp.UnitTests;
-using backEndApp.Repository;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,43 +12,59 @@ namespace UnitTests
 {
     public class TestController_UserDevice
     {
-        private readonly Mock<IUserRepository> _IUserRepository;
-        public List<Device> deviceList = UnitTestHelper.GetDevices(); 
-        public List<User> userList = UnitTestHelper.GetUsers();
-        public List<Sensor> sensorList = UnitTestHelper.GetSensors();
-        public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
-        public List<SensorConfig> sensorConfigList = UnitTestHelper.GetSensorConfigs();
+        private readonly Mock<IUserDeviceRepository> _IUserDeviceRepository;
         public List<UserDevice> userDeviceList = UnitTestHelper.GetUserDevices();
         public TestController_UserDevice() {
-            _IUserRepository = new Mock<IUserRepository>();
+            _IUserDeviceRepository = new Mock<IUserDeviceRepository>();
         }
 
         [Fact]
-        public void GetAllUsers() {
+        public void GetAllUserDevices() {
             // Arrange
-            _IUserRepository.Setup(x => x.GetUsers())
-                .Returns(userList);
+            _IUserDeviceRepository.Setup(x => x.GetUserDevices())
+                .Returns(userDeviceList);
             
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
             );
+
             // Act
-            var usersResult = userController.GetUsers().ToArray();
+            var userDevicesResult = userDeviceController.GetUserDevices().ToArray();
 
             // Assert
-            Assert.NotNull(usersResult);
-            Assert.Equal(userList[0].UserID, usersResult[0].UserID);
-            Assert.Equal(userList[1].UserID, usersResult[1].UserID);
-            Assert.Equal(userList[2].UserID, usersResult[2].UserID);
+            Assert.NotNull(userDevicesResult);
+            Assert.Equal(userDeviceList[0].UserID, userDevicesResult[0].UserID);
+            Assert.Equal(userDeviceList[0].DeviceID, userDevicesResult[0].DeviceID);
+            Assert.Equal(userDeviceList[1].UserID, userDevicesResult[1].UserID);
+            Assert.Equal(userDeviceList[1].DeviceID, userDevicesResult[1].DeviceID);
         }
+
         [Fact]
-        public void GetUserByID() {
+        public void GetUserDevicesByIDs() {
+            // Arrange
+            var userDevice = new UserDevice() {
+                UserID = 1,
+                DeviceID = 1
+            };
+
+            _IUserDeviceRepository.Setup(x => x.GetUserDevice(userDevice.UserID, userDevice.DeviceID))
+                .Returns(userDevice);
+            
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
+            );
+
+            // Act
+            var userDeviceResult = userDeviceController.GetUserDevice(userDevice.UserID, userDevice.DeviceID);
+
+            // Assert
+            Assert.NotNull(userDeviceResult);
+            Assert.Equal(userDevice.UserID, userDeviceResult.UserID);
+            Assert.Equal(userDevice.DeviceID, userDeviceResult.DeviceID);
+        }
+
+        [Fact]
+        public void GetUserDevicesByUserID() {
             // Arrange
             var user = new User() {
                 UserID = 1,
@@ -62,198 +74,67 @@ namespace UnitTests
                 UserPassword = "123"
             };
 
-            _IUserRepository.Setup(x => x.GetUser(user.UserID))
-                .Returns(user);
+            _IUserDeviceRepository.Setup(x => x.GetUserDevices(user.UserID))
+                .Returns(userDeviceList);
             
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
             );
 
             // Act
-            var userResult = userController.GetUser(user.UserID);
+            var userDeviceResult = userDeviceController.GetUserDevices(user.UserID).ToArray();
 
             // Assert
-            Assert.NotNull(userResult);
-            Assert.Equal(user.UserID, userResult.UserID);
+            Assert.NotNull(userDeviceResult);
+            Assert.Equal(user.UserID, userDeviceResult[0].UserID);
+            Assert.Equal(user.UserID, userDeviceResult[1].UserID);
         }
 
         [Fact]
-        public void GetAdminUsers() {
+        public void CreateUserDevice() {
             // Arrange
-            var users = new List<User>() {
-                new User {
-                    UserID = 1,
-                    UserType = "ADMIN", 
-                    UserFirstName = "Han",
-                    UserLastName = "Solo",
-                    UserPassword = "123"
-                }
-            };
-
-            _IUserRepository.Setup(x => x.GetAdminUsers())
-                .Returns(users);
-            
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
-            );
-
-            // Act
-            var userResult = userController.GetAdminUsers().ToArray();
-
-            // Assert
-            Assert.NotNull(userResult);
-            Assert.Equal(users.Count, userResult.Length);
-            Assert.Equal(users[0].UserID, userResult[0].UserID);
-            Assert.Equal("ADMIN", userResult[0].UserType);
-        }
-
-        [Fact]
-        public void GetUserWithLogin() {
-            // Arrange
-            var user = new User() {
+            var userDevice = new UserDevice() {
                 UserID = 1,
-                UserType = "ADMIN", 
-                UserFirstName = "Han",
-                UserLastName = "Solo",
-                UserPassword = "123"
+                DeviceID = 1
             };
 
-            _IUserRepository.Setup(x => x.GetUserWithLogin(
-                    user.UserFirstName,
-                    user.UserLastName,
-                    user.UserPassword
-                ))
-                .Returns(user);
-            
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            // Setting up the User Devices
+            _IUserDeviceRepository.Setup(x => x.CreateUserDevice(userDevice))
+                .Returns(true);
+
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
             );
 
             // Act
-            var userResult = userController.GetUserWithLogin(
-                user.UserFirstName,
-                user.UserLastName,
-                user.UserPassword
-            );
+            var userDeviceResult = userDeviceController.CreateUserDevice(userDevice);
 
             // Assert
-            Assert.NotNull(userResult);
-            Assert.Equal(user.UserID, userResult.UserID);
+            Assert.NotNull(userDeviceResult);
+            Assert.Equal(userDeviceResult.UserID, userDeviceResult.UserID);
+            Assert.Equal(userDeviceResult.DeviceID, userDeviceResult.DeviceID);
         }
 
         [Fact]
-        public void CreateUser() {
+        public void DeleteUserDevice() {
             // Arrange
-            var user = new User() {
+            var userDevice = new UserDevice() {
                 UserID = 1,
-                UserType = "ADMIN", 
-                UserFirstName = "Han",
-                UserLastName = "Solo",
-                UserPassword = "123"
+                DeviceID = 1
             };
-            _IUserRepository.Setup(x => x.CreateUser(user))
+
+            _IUserDeviceRepository.Setup(x => x.DeleteUserDevice(userDevice))
                 .Returns(true);
             
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
             );
 
             // Act
-            var userResult = userController.CreateUser(user);
+            var userDeviceResult = userDeviceController.DeleteUserDevice(userDevice);
 
             // Assert
-            Assert.NotNull(userResult);
-            Assert.Equal(user.UserID, userResult.UserID);
-            Assert.False(userResult.UserIsDeleted);
-        }
-
-        [Fact]
-        public void UpdateUser() {
-            // Arrange
-            var user = new User() {
-                UserID = 1,
-                UserType = "ADMIN", 
-                UserFirstName = "Han",
-                UserLastName = "Solo",
-                UserPassword = "123"
-            };
-            var newUserType = "BASIC";
-
-            _IUserRepository.Setup(x => x.UpdateUser(user))
-                .Returns(true);
-            
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
-            );
-
-            // Act
-            var userResult = userController.UpdateUser(user, newUserType);
-
-            // Assert
-            Assert.NotNull(userResult);
-            Assert.Equal(user.UserID, userResult.UserID);
-            Assert.Equal(newUserType, userResult.UserType);
-        }
-
-        [Fact]
-        public void DeleteUser() {
-            // Arrange
-            var user = new User() {
-                UserID = 1,
-                UserType = "ADMIN", 
-                UserFirstName = "Han",
-                UserLastName = "Solo",
-                UserPassword = "123"
-            };
-
-            _IUserRepository.Setup(x => x.DeleteUser(user))
-                .Returns(true);
-            
-            var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
-            );
-
-            // Act
-            var userResult = userController.DeleteUser(user);
-
-            // Assert
-            Assert.True(userResult);
+            Assert.True(userDeviceResult);
         }
     }
 }

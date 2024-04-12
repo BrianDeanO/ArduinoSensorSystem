@@ -1,247 +1,160 @@
 using System;
-using AutoMapper;
 using Moq;
 using Xunit;
-using backEndApp.DTO;
 using backEndApp.Models;
-using backEndApp.Data;
 using backEndApp.Interfaces;
-using backEndApp.Controllers;
 using backEndApp.TestControllers;
 using backEndApp.UnitTests;
 using backEndApp.Repository;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace UnitTests
 {
     public class TestController_SensorData
     {
-        private readonly Mock<IDeviceRepository> _IDeviceRepository;
-        private readonly IMapper _mapper;
-        private readonly Mock<IUserDeviceRepository> _userDeviceRepository;
-        private readonly Mock<ISensorRepository> _ISensorRepository;
-        private readonly UserRepository _userRepository;
-        public List<Device> deviceList = UnitTestHelper.GetDevices(); 
-        public List<User> userList = UnitTestHelper.GetUsers();
-        public List<Sensor> sensorList = UnitTestHelper.GetSensors();
+        private readonly Mock<ISensorDataRepository> _ISensorDataRepository;
         public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
-        public List<SensorConfig> sensorConfigList = UnitTestHelper.GetSensorConfigs();
-        public List<UserDevice> userDeviceList = UnitTestHelper.GetUserDevices();
 
         public TestController_SensorData() {
-            _IDeviceRepository = new Mock<IDeviceRepository>();
-            // _mapper = new IMapper();
-            _userDeviceRepository = new Mock<IUserDeviceRepository>();
-            _ISensorRepository = new Mock<ISensorRepository>();
+            _ISensorDataRepository = new Mock<ISensorDataRepository>();
         }
 
         [Fact]
-        public void GetAllDevices() {
+        public void GetAllSensorData() {
             // Arrange
-            _IDeviceRepository.Setup(x => x.GetDevices())
-                .Returns(deviceList);
+            _ISensorDataRepository.Setup(x => x.GetSensorDatas())
+                .Returns(sensorDataList);
             
-            var deviceController = new DeviceTestController(
-                _IDeviceRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var sensorDataController = new SensorDataTestController(
+                _ISensorDataRepository.Object
             );
 
             // Act
-            var devicesResult = deviceController.GetDevices().ToArray();
+            var sensorDatasResult = sensorDataController.GetSensorDatas().ToArray();
 
             // Assert
-            Assert.NotNull(devicesResult);
-            Assert.Equal(deviceList[0].DeviceID, devicesResult[0].DeviceID);
-            Assert.Equal(deviceList[1].DeviceID, devicesResult[1].DeviceID);
+            Assert.NotNull(sensorDatasResult);
+            Assert.Equal(sensorDataList[0].SensorDataID, sensorDatasResult[0].SensorDataID);
+            Assert.Equal(sensorDataList[0].SensorID, sensorDatasResult[0].SensorID);
+            Assert.Equal(sensorDataList[0].DataValue, sensorDatasResult[0].DataValue);
+            Assert.Equal(sensorDataList[1].SensorDataID, sensorDatasResult[1].SensorDataID);
+            Assert.Equal(sensorDataList[1].SensorID, sensorDatasResult[1].SensorID);
+            Assert.Equal(sensorDataList[1].DataValue, sensorDatasResult[1].DataValue);
         }
 
         [Fact]
-        public void GetDeviceByID() {
+        public void GetSensorDataByDataID() {
             // Arrange
-            var device = new Device() {
-                DeviceID = 1,
-                DeviceIdent = "ARD-123",
-                DeviceName = "PAWNEE_NW_1",
+            var sensorData = new SensorData() {
+                SensorDataID = 1,
+                SensorID = 1,
+                ChannelID = 0, 
+                DataValue = 44,
+                DataUnit = "F", 
+                TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
             };
 
-            _IDeviceRepository.Setup(x => x.GetDevice(device.DeviceID))
-                .Returns(device);
+            _ISensorDataRepository.Setup(x => x.GetSensorData(sensorData.SensorDataID))
+                .Returns(sensorData);
             
-            var deviceController = new DeviceTestController(
-                _IDeviceRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var sensorDataController = new SensorDataTestController(
+                _ISensorDataRepository.Object
             );
 
             // Act
-            var deviceResult = deviceController.GetDevice(device.DeviceID);
-
-            Console.WriteLine("Device result ID - ", deviceResult.DeviceID);
+            var sensorDataResult = sensorDataController.GetSensorData(sensorData.SensorDataID);
 
             // Assert
-            Assert.NotNull(deviceResult);
-            Assert.Equal(device.DeviceID, deviceResult.DeviceID);
-            Assert.True(device.DeviceIdent == deviceResult.DeviceIdent);
-            Assert.True(device.DeviceName == deviceResult.DeviceName);
+            Assert.NotNull(sensorDataResult);
+            Assert.Equal(sensorData.SensorDataID, sensorDataResult.SensorDataID);
+            Assert.Equal(sensorData.SensorID, sensorDataResult.SensorID);
+            Assert.Equal(sensorData.DataValue, sensorDataResult.DataValue);
+        }
+
+        
+        [Fact]
+        public void CreateSensorData() {
+            // Arrange
+            var sensorData = new SensorData() {
+                SensorDataID = 1,
+                SensorID = 1,
+                ChannelID = 0, 
+                DataValue = 44,
+                DataUnit = "F", 
+                TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
+            };
+
+            _ISensorDataRepository.Setup(x => x.CreateSensorData(sensorData))
+                .Returns(true);
+            
+            var sensorDataController = new SensorDataTestController(
+                _ISensorDataRepository.Object
+            );
+
+            // Act
+            var sensorDataResult = sensorDataController.CreateSensorData(sensorData);
+
+            // Assert
+            Assert.NotNull(sensorDataResult);
+            Assert.Equal(sensorData.SensorDataID, sensorDataResult.SensorDataID);
+            Assert.Equal(sensorData.SensorID, sensorDataResult.SensorID);
+            Assert.Equal(sensorData.DataValue, sensorDataResult.DataValue);
         }
 
         [Fact]
-        public void GetDeviceConfigInfo() {
+        public void UpdateSensorData() {
             // Arrange
-            var device = new Device() {
-                DeviceID = 1,
-                DeviceIdent = "ARD-123",
-                DeviceName = "PAWNEE_NW_1",
-                DeviceUpdateInterval = 86400000,
+            var sensorData = new SensorData() {
+                SensorDataID = 1,
+                SensorID = 1,
+                ChannelID = 0, 
+                DataValue = 44,
+                DataUnit = "F", 
+                TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
             };
-            _IDeviceRepository.Setup(x => x.GetDevice(device.DeviceID))
-                .Returns(device);
+            string newDataUnit = "C";
+
+            _ISensorDataRepository.Setup(x => x.UpdateSensorData(sensorData))
+                .Returns(true);
             
-            var deviceController = new DeviceTestController(
-                _IDeviceRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+            var sensorDataController = new SensorDataTestController(
+                _ISensorDataRepository.Object
             );
 
             // Act
-            var deviceResult = deviceController.GetDeviceConfigInfo(device.DeviceID);
+            var sensorDataResult = sensorDataController.UpdateSensorData(sensorData, newDataUnit);
 
             // Assert
-            Assert.NotNull(deviceResult);
-            Assert.Equal(device.DeviceUpdateInterval, deviceResult.DeviceUpdateInterval);
+            Assert.NotNull(sensorDataResult);
+            Assert.Equal(sensorData.SensorDataID, sensorDataResult.SensorDataID);
+            Assert.Equal(newDataUnit, sensorDataResult.DataUnit);
         }
 
-        // [Fact]
-        // public void GetDeviceSensors() {
-        //     // Arrange
-        //     var device = new Device() {
-        //         DeviceID = 1,
-        //         DeviceIdent = "ARD-123",
-        //         DeviceName = "PAWNEE_NW_1",
-        //         DeviceUpdateInterval = 86400000,
-        //     };
+        [Fact]
+        public void DeleteSensorConfig() {
+            // Arrange
+            var sensorData = new SensorData() {
+                SensorDataID = 1,
+                SensorID = 1,
+                ChannelID = 0, 
+                DataValue = 44,
+                DataUnit = "F", 
+                TimeRecorded = DateTime.Parse("2024-03-11T18:42:27.069Z")
+            };
 
-        //     var deviceController = new DeviceTestController(
-        //         _IDeviceRepository.Object,
-        //         deviceList,
-        //         userList,
-        //         sensorList,
-        //         sensorDataList,
-        //         sensorConfigList,
-        //         userDeviceList
-        //     );
-
-        //     // Act
-        //     var sensorsResult = deviceController.GetDeviceSensors();
-
-        //     // Assert
-        //     Assert.NotNull(sensorsResult);
-        //     Assert.Equal(sensorList[0].SensorID, sensorsResult[0].SensorID);
-        //     Assert.Equal(sensorList[1].SensorID, sensorsResult[1].SensorID);
-        //     Assert.Equal(device.DeviceID, sensorsResult[0].DeviceID);
-        //     Assert.Equal(device.DeviceID, sensorsResult[1].DeviceID);
-        // }
-
-        // [Fact]
-        // public void GetUserDevices() {
-        //     // Arrange
-
-        //     var user = new User() {
-        //         UserID = 1,
-        //         UserType = "ADMIN", 
-        //         UserFirstName = "Han",
-        //         UserLastName = "Solo",
-        //         UserPassword = "123"
-        //     };
+            _ISensorDataRepository.Setup(x => x.DeleteSensorData(sensorData))
+                .Returns(true);
             
+            var sensorDataController = new SensorDataTestController(
+                _ISensorDataRepository.Object
+            );
 
-            
-        //     var deviceController = new DeviceTestController(_IDeviceRepository.Object);
+            // Act
+            var sensorDataResult = sensorDataController.DeleteSensorData(sensorData);
 
-        //     // Act
-        //     var userDeviceResult = deviceController.GetUserDevices();
-
-        //     // Assert
-        //     Assert.NotNull(userDeviceResult);
-        //     Assert.Equal(userDeviceList[0].UserID, user.UserID);
-        //     Assert.Equal(userDeviceList[0].DeviceID, deviceList[0].DeviceID);
-        //     Assert.Equal(userDeviceList[1].UserID, user.UserID);
-        //     Assert.Equal(userDeviceList[1].DeviceID, deviceList[1].DeviceID);
-
-        //     Assert.Equal(userDeviceList[0].UserID, userDeviceResult[0].UserID);
-        //     Assert.Equal(userDeviceList[0].DeviceID, userDeviceResult[0].DeviceID);
-        //     Assert.Equal(userDeviceList[1].UserID, userDeviceResult[1].UserID);
-        //     Assert.Equal(userDeviceList[1].DeviceID, userDeviceResult[1].DeviceID);
-        // }
-
-        // [Fact]
-        // public void GetUsersFromDevice() {
-        //     // Arrange
-        //     var device = new Device() {
-        //         DeviceID = 1,
-        //         DeviceIdent = "ARD-123",
-        //         DeviceName = "PAWNEE_NW_1",
-        //         DeviceUpdateInterval = 86400000,
-        //     };
-            
-        //     var deviceController = new DeviceTestController(_IDeviceRepository.Object);
-
-        //     // Act
-        //     var usersFromDeviceResult = deviceController.GetUsersFromDevice();
-
-        //     // Assert
-        //     Assert.NotNull(usersFromDeviceResult);
-
-        //     Assert.Equal(userDeviceList[0].UserID, usersFromDeviceResult[0].UserID);
-        //     Assert.Equal(userDeviceList[0].UserID, usersFromDeviceResult[0].UserID);
-        //     Assert.Equal(userDeviceList[1].UserID, usersFromDeviceResult[1].UserID);
-        //     Assert.Equal(userDeviceList[1].UserID, usersFromDeviceResult[1].UserID);
-        // }
+            // Assert
+            Assert.True(sensorDataResult);
+        }
     }
-
-
 }
-
-        // [Fact]
-        // public void GetDeviceByIdent() {
-        //     // Arrange
-        //     var device = new Device() {
-        //         DeviceID = 1,
-        //         DeviceIdent = "ARD-123",
-        //         DeviceName = "PAWNEE_NW_1",
-        //     };
-            
-        //     var deviceController = new DeviceTestController(
-        //         _IDeviceRepository.Object, 
-        //         deviceList,
-        //         userList,
-        //         sensorList,
-        //         sensorDataList,
-        //         sensorConfigList,
-        //         userDeviceList
-        //     );
-
-        //     // Act
-        //     var deviceResult = deviceController.GetDeviceIdent(device.DeviceIdent);
-
-        //     // Assert
-        //     Assert.NotNull(deviceResult);
-        //     Assert.Equal(device.DeviceID, deviceResult.DeviceID);
-        //     Assert.True(device.DeviceIdent == deviceResult.DeviceIdent);
-        //     Assert.True(device.DeviceName == deviceResult.DeviceName);
-        // }

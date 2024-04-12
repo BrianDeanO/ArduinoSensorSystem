@@ -143,7 +143,7 @@ namespace backEndApp.Controllers {
                 Sensor sensorMap = new Sensor {
                     DeviceID = newSensor.DeviceID,
                     Device = _deviceRepository.GetDevice(newSensor.DeviceID),
-                    SensorIdent = newSensor.SensorIdent,
+                    SensorIdent = newSensor.SensorIdent!,
                     SensorName = newSensor.SensorName,
                     SensorType = newSensor.SensorType,
                     ChannelCount = newSensor.ChannelCount ?? 0,
@@ -224,7 +224,7 @@ namespace backEndApp.Controllers {
                 return NotFound();
             }
 
-            var sensorDatasToDelete = _sensorDataRepository.GetSensorDatas(sensorId);
+            var sensorDatasToDelete = _sensorRepository.GetSensorDatas(sensorId);
             var sensorToDelete = _sensorRepository.GetSensor(sensorId);
 
             if(!ModelState.IsValid) {

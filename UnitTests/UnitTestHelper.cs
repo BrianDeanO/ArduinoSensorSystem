@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using backEndApp.Models;
-using backEndApp.Data;
 
 namespace backEndApp.UnitTests {
     public class UnitTestHelper {
@@ -149,10 +148,6 @@ namespace backEndApp.UnitTests {
                 },
                 new UserDevice() {
                     UserID = 1,
-                    DeviceID = 2
-                },
-                new UserDevice() {
-                    UserID = 2,
                     DeviceID = 2
                 }
             };

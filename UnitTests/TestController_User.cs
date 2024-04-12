@@ -1,14 +1,10 @@
 using System;
 using Moq;
 using Xunit;
-using backEndApp.DTO;
 using backEndApp.Models;
-using backEndApp.Data;
 using backEndApp.Interfaces;
-using backEndApp.Controllers;
 using backEndApp.TestControllers;
 using backEndApp.UnitTests;
-using backEndApp.Repository;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,14 +13,12 @@ namespace UnitTests
     public class TestController_User
     {
         private readonly Mock<IUserRepository> _IUserRepository;
-        public List<Device> deviceList = UnitTestHelper.GetDevices(); 
+        private readonly Mock<IUserDeviceRepository> _IUserDeviceRepository;
         public List<User> userList = UnitTestHelper.GetUsers();
-        public List<Sensor> sensorList = UnitTestHelper.GetSensors();
-        public List<SensorData> sensorDataList = UnitTestHelper.GetSensorData();
-        public List<SensorConfig> sensorConfigList = UnitTestHelper.GetSensorConfigs();
         public List<UserDevice> userDeviceList = UnitTestHelper.GetUserDevices();
         public TestController_User() {
             _IUserRepository = new Mock<IUserRepository>();
+            _IUserDeviceRepository = new Mock<IUserDeviceRepository>();
         }
 
         [Fact]
@@ -34,14 +28,9 @@ namespace UnitTests
                 .Returns(userList);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
+
             // Act
             var usersResult = userController.GetUsers().ToArray();
 
@@ -66,13 +55,7 @@ namespace UnitTests
                 .Returns(user);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
 
             // Act
@@ -100,13 +83,7 @@ namespace UnitTests
                 .Returns(users);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
 
             // Act
@@ -138,13 +115,7 @@ namespace UnitTests
                 .Returns(user);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
 
             // Act
@@ -162,6 +133,9 @@ namespace UnitTests
         [Fact]
         public void CreateUser() {
             // Arrange
+            var userDeviceCreationSuccess = true;
+
+            // Setting Up the User
             var user = new User() {
                 UserID = 1,
                 UserType = "ADMIN", 
@@ -169,26 +143,38 @@ namespace UnitTests
                 UserLastName = "Solo",
                 UserPassword = "123"
             };
+            
             _IUserRepository.Setup(x => x.CreateUser(user))
                 .Returns(true);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
+            );
+
+            // Setting up the User Devices
+            _IUserDeviceRepository.Setup(x => x.CreateUserDevice(userDeviceList[0]))
+                .Returns(true);
+
+            var userDeviceController = new UserDeviceTestController(
+                _IUserDeviceRepository.Object
             );
 
             // Act
             var userResult = userController.CreateUser(user);
 
+            foreach (var userDevice in userDeviceList) {
+                var userDeviceResult = userDeviceController.CreateUserDevice(userDevice);
+                if(userDeviceResult == null) {
+                    userDeviceCreationSuccess = false;
+                }
+            }
+
             // Assert
             Assert.NotNull(userResult);
+            Assert.True(userDeviceCreationSuccess);
             Assert.Equal(user.UserID, userResult.UserID);
             Assert.False(userResult.UserIsDeleted);
+
         }
 
         [Fact]
@@ -207,13 +193,7 @@ namespace UnitTests
                 .Returns(true);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
 
             // Act
@@ -240,13 +220,7 @@ namespace UnitTests
                 .Returns(true);
             
             var userController = new UserTestController(
-                _IUserRepository.Object, 
-                deviceList,
-                userList,
-                sensorList,
-                sensorDataList,
-                sensorConfigList,
-                userDeviceList
+                _IUserRepository.Object
             );
 
             // Act
