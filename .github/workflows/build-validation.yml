@@ -13,12 +13,12 @@ env:
 
 jobs:
   build:
-
-    name: build-${{matrix.os}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    name: build-ubuntu-latest
+    runs-on: ubuntu-latest
+    env: 
+      unitTest-directory: ./UnitTests
+      backend-directory: ./backend-app
+      arduino-directory: ./arduino
 
     steps:
     - uses: actions/checkout@v3
@@ -27,8 +27,32 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: Setup Ninja
+      uses: seanmiddleditch/gha-setup-ninja@v4
+
     - name: Install dependencies
+      working-directory: ${{ env.backend-directory }}
       run: dotnet restore
       
     - name: Build
+      working-directory: ${{ env.backend-directory }}
       run: dotnet build --configuration Release --no-restore
+
+    - name: Unit Tests
+      working-directory: ${{ env.unitTest-directory }}
+      run: dotnet test --no-build --verbosity normal
+      
+    - name: Build Arduino Simulator
+      uses: threeal/cmake-action@v1.3.0
+      with:
+        source-dir: arduino
+        build-dir: arduino/build
+        generator: Ninja
+
+    - name: Test API
+      run: |
+        cd backend-app
+        dotnet run --no-restore --launch-profile api-test &
+        cd ../arduino/build
+        ./api-test
+        killall dotnet
