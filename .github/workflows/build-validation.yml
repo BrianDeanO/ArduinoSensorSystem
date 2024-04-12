@@ -40,4 +40,4 @@ jobs:
 
     - name: Unit Tests
       working-directory: ${{ env.unitTest-directory }}
-      run: dotnet test --verbosity normal
+      run: dotnet test --no-build
