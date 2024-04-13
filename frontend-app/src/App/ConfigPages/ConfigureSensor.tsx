@@ -8,7 +8,6 @@ interface ConfigureSensorProps {
     selectedSensorID: number;
 }
 
-
 const ConfigureSensor: React.FC<ConfigureSensorProps> = (
     {
     configureSensor,
@@ -150,7 +149,7 @@ const ConfigureSensor: React.FC<ConfigureSensorProps> = (
 
         let originalSensorConfigs: SensorConfigType[] = [];
 
-        // Getting Original Sensor Configs Again (due to previous unwanted behaivor)
+        // Getting Original Sensor Configs Again (due to previous unwanted, unavoidable behaivor)
         await axios({
             method: 'get',
             url: `${proxyURL}/api/Sensor/${selectedSensorID}/SensorConfigs`,

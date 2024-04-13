@@ -1,6 +1,8 @@
 export const version = "1.0";
-export const proxyURL_HTTPS = "https://localhost:8443"; // 7239 before
-export const proxyURL = "http://localhost:8080"; // 5270 before
+
+export const proxyURL = "http://localhost:8080";
+export const proxyURL_HTTPS = "https://localhost:8443";
+
 export const ADMIN = 'ADMIN';
 export const BASIC = 'BASIC';
 

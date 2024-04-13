@@ -45,9 +45,6 @@ builder.Services.AddCors(options => {
 builder.Services.AddDbContext<SensorSystemContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("FrontendAppCon")));
 
-// builder.Services.AddDbContext<SensorSystemContext>(options =>
-//     options.UseSqlServer("Server=localhost,1433; Database=DockerDB;"));
-
 builder.Services.AddDistributedMemoryCache();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -61,10 +58,13 @@ if (args.Length == 1 && args[0].ToLower() == "seeddata")
 
 void SeedData(IHost app) {
     var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
-
-    using (var scope = scopedFactory.CreateScope()) {
-        var service = scope.ServiceProvider.GetService<Seed>();
-        service.SeedSensorSystemContext();
+    if(scopedFactory != null) {
+        using (var scope = scopedFactory.CreateScope()) {
+            var service = scope.ServiceProvider.GetService<Seed>();
+            if(service != null) {
+                service.SeedSensorSystemContext();
+            }
+        }
     }
 }
 
@@ -74,13 +74,8 @@ if (app.Environment.IsDevelopment()) {
     app.UseSwaggerUI();
 }
 
-// app.UseDefaultFiles();
-
-// app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-// app.UseCors(MyAllowSpecificOrigins);
 
 app.UseCors(x => x
     .AllowAnyMethod()

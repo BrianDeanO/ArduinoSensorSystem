@@ -40,7 +40,6 @@ CSS Styles for Configure Sensor Page
     width: 160px;
     height: auto;
     color: black;
-    /* background-color: aliceblue; */
     font-size: 12pt;
     font-weight: bold;
     margin: 0px 0px 0px 5px;
@@ -128,7 +127,7 @@ CSS Styles for Configure Sensor Page
     border-color: black;
     
     overflow-y: auto;
-    scroll-behavior: auto;  /*need hiden and auto*/
+    scroll-behavior: auto;
 }
 .SensorConfigSingleSubBox {
     display: flex;
@@ -204,7 +203,6 @@ CSS Styles for Configure Sensor Page
     width: 150px;
     height: auto;
     color: black;
-    /* background-color: aliceblue; */
     font-size: 12pt;
     font-weight: bold;
     margin: 0px 0px 0px 5px;
@@ -339,7 +337,6 @@ CSS Styles for Configure Sensor Page
     flex-direction: row;
     height: 400px;
     width: 514px;
-    /* background-color: rgb(27, 132, 69); */
 
     margin: 8px 0px 0px 10px; 
 

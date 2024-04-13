@@ -59,8 +59,6 @@ namespace UnitTests
             // Act
             var deviceResult = deviceController.GetDevice(device.DeviceID);
 
-            Console.WriteLine("Device result ID - ", deviceResult.DeviceID);
-
             // Assert
             Assert.NotNull(deviceResult);
             Assert.Equal(device.DeviceID, deviceResult.DeviceID);

@@ -13,7 +13,11 @@
     "bootstrap": "^5.3.2",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.0",
+    "express": "^4.19.2",
+    "follow-redirects": "^1.15.6",
     "mysql": "^2.18.1",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -25,7 +29,8 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "webpack-dev-middleware": "^5.3.4"
   },
   "scripts": {
     "start": "react-scripts start",
