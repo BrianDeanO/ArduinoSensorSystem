@@ -43,12 +43,14 @@ jobs:
       working-directory: ${{ env.unitTest-directory }}
       run: dotnet test --verbosity normal
     
-    - name: Build Arduino Simulator
+    - name: Configure Arduino Simulator
       uses: threeal/cmake-action@v1.3.0
       with:
         source-dir: ${{ env.arduino-directory }}
         build-dir: ${{ env.arduinoBuild-directory }}
         generator: Ninja
+
+    - name: Configure Arduino Simulator
       run: cmake --build ${{ env.arduinoBuild-directory }}
 
     - name: Test API
