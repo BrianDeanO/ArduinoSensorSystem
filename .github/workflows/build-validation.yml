@@ -41,7 +41,7 @@ jobs:
 
     - name: Unit Tests
       working-directory: ${{ env.unitTest-directory }}
-      run: dotnet test
+      run: dotnet test --verbosity normal
 
     #- name: Build Arduino Simulator
     #  uses: threeal/cmake-action@v1.3.0
@@ -49,11 +49,10 @@ jobs:
     #    source-dir: ${{ env.arduino-directory }}
     #    build-dir: ${{ env.arduinoBuild-directory }}
     #    generator: Ninja
-
-    #- name: Run Backend
-    #  working-directory: ${{ env.backend-directory }}
-    #  run: dotnet run --no-restore --launch-profile api-test
-      
+    
     #- name: Test API
-    #  working-directory: ${{ env.arduinoBuild-directory }}
-    #  run: ./api-test
+    #  run: |
+    #    cd backend-app
+    #    dotnet run --no-restore --launch-profile api-test & cd ../arduino/build
+    #    ./api-test
+    #    killall dotnet
