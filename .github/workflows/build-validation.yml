@@ -16,10 +16,10 @@ jobs:
     name: build-ubuntu-latest
     runs-on: ubuntu-latest
     env: 
-      unitTest-directory: ./UnitTests
-      backend-directory: ./backend-app
-      arduino-directory: ./arduino
-      arduinoBuild-directory: ./arduino/build
+      unitTest-directory: UnitTests
+      backend-directory: backend-app
+      arduino-directory: arduino
+      arduinoBuild-directory: arduino/build
 
     steps:
     - uses: actions/checkout@v3
@@ -55,10 +55,10 @@ jobs:
 
     - name: Test API
       run: |
-        cd ${{ env.backend-directory }}
+        cd $github_workspace/${{ env.backend-directory }}
+        pwd
         dotnet run --no-restore --launch-profile api-test &
-        cd $github_workspace
-        cd ${{ env.arduinoBuild-directory }}
+        cd $github_workspace/${{ env.arduinoBuild-directory }}
         pwd
         ./api-test
         killall dotnet
