@@ -12,9 +12,9 @@ namespace backEndApp.Repository {
             return _userDevices.OrderBy(ud => ud.UserID).ToList();
         }
 
-        public UserDevice GetUserDevice(int userId, int deviceId) {
+        public UserDevice? GetUserDevice(int userId, int deviceId) {
             return _userDevices
-                .Where(ud => ((ud.UserID == userId) && (ud.DeviceID == deviceId))).FirstOrDefault();
+                .Where(ud => (ud.UserID == userId) && (ud.DeviceID == deviceId)).FirstOrDefault();
         }
 
         public ICollection<UserDevice> GetUserDevices(int userId) {

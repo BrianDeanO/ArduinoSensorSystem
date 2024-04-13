@@ -18,7 +18,7 @@ public class Sensor {
     public Device? Device { get; set; }
 
     // The relationship to MANY sensorDatas
-    public ICollection<SensorData> SensorDatas { get; set; }
+    public ICollection<SensorData>? SensorDatas { get; set; }
     
     // The relationship to MANY sensorConfigs
     public ICollection<SensorConfig>? SensorConfigs { get; set; }

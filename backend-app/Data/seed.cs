@@ -13,11 +13,12 @@ namespace backEndApp
         {
             if (!sensorSystemContext.UserDevices.Any()) {
                 var Users = new List<User>() {
+                    // Han is our Default Admin user
                     new User() {
                         UserType = "ADMIN", 
                         UserFirstName = "Han",
                         UserLastName = "Solo",
-                        UserPassword = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",  // 123
+                        UserPassword = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",  // Password = 123
                         UserEmail = "Han.Solo@gmail.com",
                         UserPhone = "5091234567",
                         UserNotifications = true,
@@ -27,7 +28,7 @@ namespace backEndApp
                         UserType = "BASIC", 
                         UserFirstName = "Luke",
                         UserLastName = "Skywalker",
-                        UserPassword = "b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0", // 456
+                        UserPassword = "b3a8e0e1f9ab1bfe3a36f231f676f78bb30a519d2b21e6c530c0eee8ebb4a5d0", // Password = 456
                         UserEmail = "Luke.Skywalker@gmail.com",
                         UserPhone = "5094734201",
                         UserNotifications = false,
@@ -37,7 +38,7 @@ namespace backEndApp
                         UserType = "BASIC", 
                         UserFirstName = "Leia",
                         UserLastName = "Organa",
-                        UserPassword = "35a9e381b1a27567549b5f8a6f783c167ebf809f1c4d6a9e367240484d8ce281", // 789
+                        UserPassword = "35a9e381b1a27567549b5f8a6f783c167ebf809f1c4d6a9e367240484d8ce281", // Password = 789
                         UserEmail = "Leia.Organa@gmail.com",
                         UserPhone = "5099814556",
                         UserNotifications = true,

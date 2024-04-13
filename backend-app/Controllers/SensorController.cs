@@ -68,7 +68,7 @@ namespace backEndApp.Controllers {
         // This endpoint is only used by the device to check if a device by `deviceIdent`
         // already exists, so only return fields relevant to the device.
         [HttpGet("ident/{sensorIdent}")]
-        public IActionResult GetSensorIdent(String sensorIdent) {
+        public IActionResult GetSensorIdent(string sensorIdent) {
             var sensor = _sensorRepository.GetSensors()
                 .Where(e => e.SensorIdent == sensorIdent)
                 .FirstOrDefault();
@@ -225,6 +225,7 @@ namespace backEndApp.Controllers {
             }
 
             var sensorDatasToDelete = _sensorRepository.GetSensorDatas(sensorId);
+            var sensorConfigsToDelete = _sensorRepository.GetSensorConfigs(sensorId);
             var sensorToDelete = _sensorRepository.GetSensor(sensorId);
 
             if(!ModelState.IsValid) {
@@ -232,6 +233,9 @@ namespace backEndApp.Controllers {
             }
 
             if(!_sensorDataRepository.DeleteSensorDatas(sensorDatasToDelete.ToList())) {
+                ModelState.AddModelError("", "Something went wrong when deleting SensorDatas");
+            }
+            if(!_sensorConfigRepository.DeleteSensorConfigs(sensorConfigsToDelete.ToList())) {
                 ModelState.AddModelError("", "Something went wrong when deleting SensorDatas");
             }
             if(sensorToDelete == null) {

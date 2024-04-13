@@ -68,15 +68,12 @@ const ManageUsers: React.FC<ManageUsersProps>  = ({
                 console.log(error);
             })
 
-            console.log('tempAllDevices', tempAllDevices)
-
             tempAllDevices.forEach((device) => {
                 if(!device.deviceIsDeleted) {
                     tempNonDeletedDevices.push(device);
                 }
             }) 
-
-            console.log('tempNonDeletedDevices', tempNonDeletedDevices)
+            
             setDevices(tempNonDeletedDevices);
         }
     }, [selectedUserID, isAddingUser]);

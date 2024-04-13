@@ -14,7 +14,6 @@ namespace backEndApp.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class DeviceController : Controller {
-
         private readonly IDeviceRepository _deviceRepository;
         private readonly IMapper _mapper;
         private readonly IUserDeviceRepository _userDeviceRepository;

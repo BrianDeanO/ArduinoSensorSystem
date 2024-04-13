@@ -28,7 +28,7 @@ const Graph: React.FC<GraphProps> = ({
     const [timeLabels, setTimeLabels] = useState([] as string[]);
 
     let connection = new signalR.HubConnectionBuilder()
-                            .withUrl("http://localhost:8080/realTimeDataHub", {
+                            .withUrl(`${proxyURL}/realTimeDataHub`, {
                                 skipNegotiation: true,
                                 transport: signalR.HttpTransportType.WebSockets
                               })
@@ -37,11 +37,10 @@ const Graph: React.FC<GraphProps> = ({
                             .build();
 
     connection.start().then(() => { 
-        console.log('Real Time Data Hub Connected');
+        console.log('Real Time Data Hub Connected.');
     }).catch(err => console.log(err));
 
     connection.on("frontEndWebApp", (data) => {
-        console.log(data);
         setNewDataReceived(true);
     })
 
@@ -184,7 +183,6 @@ const Graph: React.FC<GraphProps> = ({
                                             data.dataValue : null
                                         ) 
                                     }),
-                                    // Could do  different colors based on channelID
                                     borderColor: 'rgb(0, 128, 0)',
                                     backgroundColor: 'rgba(0, 128, 0, 0.856)',
                                 }

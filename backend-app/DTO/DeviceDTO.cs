@@ -9,7 +9,6 @@ public class DeviceDTO {
     public DateTime? DeviceLastSeen { get; set; }
     public bool? DeviceIsDeleted { get; set; }
 
-
     // Device Configuration Fields
     public int? DeviceUpdateInterval { get; set; }
 }

@@ -9,15 +9,6 @@ export interface DeviceType {
     deviceIsDeleted: boolean;
 }
 
-export interface DeviceDTOType {
-    deviceName: string;
-    deviceType: string;
-    deviceZipCode: string;
-    deviceUpdateInterval: number;
-    deviceLastSeen: string;
-    deviceIsDeleted: boolean;
-}
-
 export interface UserDeviceSelectedType {
     deviceID: number;
     isSelected: boolean;
@@ -64,14 +55,6 @@ export interface SensorType {
     sensorIsDeleted: boolean;
 }
 
-export interface SensorDTOType {
-    sensorName: string;
-    sensorType: string;
-    channelCount: number;
-    deviceID: number;
-    sensorIsDeleted: boolean;
-}
-
 export interface SensorDataType {
     sensorDataID: number;
     channelID: number;
@@ -91,10 +74,6 @@ export interface SensorConfigType {
 export interface SensorChannels {
     sensorID: number;
     channels: number[]
-}
-
-export interface SelectedSensorData {
-    selectedSensorID: number;
 }
 
 export interface SelectedTimeFrame {

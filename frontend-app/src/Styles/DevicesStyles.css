@@ -7,7 +7,6 @@ CSS Styles for App Device Column
     display: flex;
     flex-direction: column;
     background-color: var(--sheetBackground);
-    /* margin: 5px auto 0px auto; */
     height: 800px;
     width: 220px;
     border-right-style: solid;
@@ -20,7 +19,6 @@ CSS Styles for App Device Column
     height: auto;
     max-height: 730px;
     background-color: rgb(230, 230, 230);
-    /* background-color: blue; */
     color: black;
     margin: 5px 10px 0px 10px;
     font-size: 16pt;
@@ -131,7 +129,6 @@ CSS Styles for App Device Column
 .SelectedConfigureDeviceButton:hover, .ConfigureDeviceButton:hover {
     background-color: rgb(181, 181, 181);
     cursor: pointer;
-    /* box-shadow: 1px 1px 1px rgb(181, 181, 181); */
 }
 
 
@@ -144,7 +141,6 @@ CSS Styles for App Device Column
     height: auto;
     max-height: 740px;
     background-color: rgb(230, 230, 230);
-    /* background-color: blue; */
     color: black;
     margin: 5px 10px 0px 10px;
     font-size: 16pt;
