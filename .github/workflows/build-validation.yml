@@ -49,6 +49,7 @@ jobs:
         source-dir: ${{ env.arduino-directory }}
         build-dir: ${{ env.arduinoBuild-directory }}
         generator: Ninja
+      run: cmake --build ${{ env.arduinoBuild-directory }}
 
     - name: Test API
       run: |
