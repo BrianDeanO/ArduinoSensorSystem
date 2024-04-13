@@ -37,31 +37,17 @@ jobs:
       
     - name: Build
       working-directory: ${{ env.backend-directory }}
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release
 
     - name: Unit Tests
       working-directory: ${{ env.unitTest-directory }}
       run: dotnet test --verbosity normal
-
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
     
-    - name: Setup Ninja
-      uses: seanmiddleditch/gha-setup-ninja@v4
-
-    - name: Build Backend Server
-      run: |
-        cd backend-app
-        dotnet build --no-restore
-
     - name: Build Arduino Simulator
       uses: threeal/cmake-action@v1.3.0
       with:
-        source-dir: arduino
-        build-dir: arduino/build
+        source-dir: ${{ env.arduino-directory }}
+        build-dir: ${{ env.arduinoBuild-directory }}
         generator: Ninja
 
     - name: Test API
