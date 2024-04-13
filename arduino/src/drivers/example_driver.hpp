@@ -24,7 +24,9 @@ public:
 	}
 
 	virtual bool read_config(JsonObject& config) override { 
-		config["incrementer"] = fake_value;
+		char buf[10];
+		sprintf(buf, "%d", incrementer);
+		config["incrementer"] = buf;
 		return true;
 	}
 
