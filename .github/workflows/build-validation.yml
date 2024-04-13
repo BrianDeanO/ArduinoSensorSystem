@@ -50,13 +50,14 @@ jobs:
         build-dir: ${{ env.arduinoBuild-directory }}
         generator: Ninja
 
-    - name: Configure Arduino Simulator
+    - name: Build Arduino Simulator
       run: cmake --build ${{ env.arduinoBuild-directory }}
 
     - name: Test API
       run: |
         cd ${{ env.backend-directory }}
         dotnet run --no-restore --launch-profile api-test &
+        cd $github_workspace
         cd ${{ env.arduinoBuild-directory }}
         pwd
         ./api-test
