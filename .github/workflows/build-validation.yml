@@ -55,10 +55,10 @@ jobs:
 
     - name: Test API
       run: |
-        cd $github_workspace/${{ env.backend-directory }}
+        cd $GITHUB_WORKSPACE/${{ env.backend-directory }}
         pwd
         dotnet run --no-restore --launch-profile api-test &
-        cd $github_workspace/${{ env.arduinoBuild-directory }}
+        cd $GITHUB_WORKSPACE/${{ env.arduinoBuild-directory }}
         pwd
         ./api-test
         killall dotnet
