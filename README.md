@@ -1,9 +1,11 @@
 [![build](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/build-validation.yml/badge.svg?branch=main)](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/build-validation.yml)
 [![Node.js CI](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/BrianDeanO/ArduinoSensorSystem/actions/workflows/node.js.yml)
-## Arduino Sensor System In Progress
+## Arduino Sensor System
+
+### Arduino Device with Humidity and Temperature Sensors:![ArduinoDevice](https://github.com/user-attachments/assets/5c01d60d-839c-4331-aefd-4f534d6ab6f9)
+
 ### Front Page - Device, Sensor, and Channel Selected:
 ![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/d39851e7-3a7f-468c-b8a3-76f413241de4)
-
 
 ### Device Configuration Page:
 ![image](https://github.com/BrianDeanO/ArduinoSensorSystem/assets/54780901/a5905139-b1b6-4550-b27f-733aaef510ad)
